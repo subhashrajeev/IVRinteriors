@@ -156,7 +156,8 @@ const ProjectGrid = () => {
                                 {/* Image/Video Container */}
                                 <div className="w-full h-full absolute inset-0">
                                     {project.video ? (
-                                        <video
+                                        <motion.video
+                                            layoutId={`project-media-${project.id}`}
                                             autoPlay
                                             muted
                                             loop
@@ -164,9 +165,10 @@ const ProjectGrid = () => {
                                             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
                                         >
                                             <source src={project.video} type="video/mp4" />
-                                        </video>
+                                        </motion.video>
                                     ) : (
-                                        <img
+                                        <motion.img
+                                            layoutId={`project-media-${project.id}`}
                                             src={project.image}
                                             alt={project.title}
                                             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
@@ -270,7 +272,8 @@ const ProjectGrid = () => {
                         >
                             <div className="w-full h-full relative aspect-[16/9] md:aspect-auto flex items-center justify-center">
                                 {selectedProject.video ? (
-                                    <video
+                                    <motion.video
+                                        layoutId={`project-media-${selectedProject.id}`}
                                         autoPlay
                                         muted
                                         loop
@@ -279,9 +282,10 @@ const ProjectGrid = () => {
                                         className="w-full h-full object-contain max-h-[80vh] shadow-2xl"
                                     >
                                         <source src={selectedProject.video} type="video/mp4" />
-                                    </video>
+                                    </motion.video>
                                 ) : (
-                                    <img
+                                    <motion.img
+                                        layoutId={`project-media-${selectedProject.id}`}
                                         src={selectedProject.image}
                                         alt={selectedProject.title}
                                         className="w-full h-full object-contain max-h-[80vh] shadow-2xl"
