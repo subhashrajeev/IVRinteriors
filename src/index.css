@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Oswald:wght@400;500;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-brand-green: #8CBF3F;
+  --color-brand-red: #C1272D;
+  --color-charcoal: #050505;
+  --color-grey-surface: #121212;
+
+  --font-sans: 'Inter', 'sans-serif';
+  --font-oswald: 'Oswald', 'sans-serif';
+}
+
+@layer base {
+  :root {
+    --brand-green: #8CBF3F;
+    /* Card Green */
+    --brand-red: #C1272D;
+    /* Card Red */
+    --charcoal: #050505;
+    /* Deepest Black */
+    --white: #FFFFFF;
+    --grey-surface: #121212;
+    --radius: 0px;
+    /* The MKBHD Rule: Zero Radius */
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--charcoal);
+    color: var(--white);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Utility to force italics on headings for that specific flair */
+  .font-heading-italic {
+    font-style: italic;
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply py-24 md:py-32;
+  }
+
+  .container-custom {
+    @apply max-w-[1400px] mx-auto px-6 md:px-12;
+  }
+
+  /* Sharp Buttons - Industrial Style */
+  .btn-primary {
+    @apply bg-brand-green text-charcoal font-bold px-8 py-4 uppercase tracking-widest hover:bg-white transition-colors duration-200;
+    border-radius: var(--radius);
+  }
+
+  .btn-outline {
+    @apply border border-white/30 text-white font-bold px-8 py-4 uppercase tracking-widest hover:bg-white hover:text-charcoal transition-all duration-200;
+    border-radius: var(--radius);
+  }
+
+  /* Tile Zoom removed in favor of 3D Tilt */
+}
+
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--charcoal);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-green);
+}
