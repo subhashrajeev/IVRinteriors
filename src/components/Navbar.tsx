@@ -83,6 +83,21 @@ const Navbar = () => {
 
                 {/* Mobile Menu Overlay */}
                 <div className={`fixed inset-0 bg-charcoal z-40 flex flex-col items-center justify-center gap-10 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                    {/* Back Arrow - Top Left */}
+                    <button
+                        className="absolute top-8 left-6 text-white hover:text-brand-green transition-colors p-2"
+                        onClick={() => {
+                            triggerHaptic('light');
+                            setIsMobileMenuOpen(false);
+                        }}
+                        aria-label="Close menu"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M19 12H5" />
+                            <path d="m12 19-7-7 7-7" />
+                        </svg>
+                    </button>
+
                     {['Services', 'Projects', 'About', 'Contact'].map((item) => (
                         <a
                             key={item}
