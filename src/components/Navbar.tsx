@@ -82,7 +82,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Mobile Menu Overlay */}
-                <div className={`fixed inset-0 bg-charcoal z-40 flex flex-col items-center justify-center gap-10 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                <div className={`fixed inset-0 bg-[#050505] z-[60] flex flex-col items-center justify-center gap-10 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                     {/* Back Arrow - Top Left */}
                     <button
                         className="absolute top-8 left-6 text-white hover:text-brand-green transition-colors p-2"
