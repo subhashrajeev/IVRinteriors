@@ -6,6 +6,7 @@ import SmoothScroll from './components/SmoothScroll'
 import Services from './components/Services'
 import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
+import { SpeedInsights } from '@vercel/speed-insights/react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
@@ -77,6 +78,7 @@ const App = () => {
       <Testimonials />
       <Contact />
       <Footer />
+      <SpeedInsights />
     </main>
   )
 }
