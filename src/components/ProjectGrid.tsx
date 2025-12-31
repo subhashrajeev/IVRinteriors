@@ -198,12 +198,14 @@ const ProjectGrid = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-10"
+                        className="fixed inset-0 z-[100] bg-black/98 flex items-center justify-center p-0 md:p-10"
                         onClick={() => setSelectedProject(null)}
                     >
+                        {/* Close Button */}
                         <button
-                            className="absolute top-8 right-8 text-white/50 hover:text-white transition-colors z-[110]"
-                            onClick={() => {
+                            className="absolute top-8 right-8 text-white/50 hover:text-brand-green transition-colors z-[110]"
+                            onClick={(e) => {
+                                e.stopPropagation();
                                 triggerHaptic('light');
                                 setSelectedProject(null);
                             }}
@@ -211,36 +213,72 @@ const ProjectGrid = () => {
                             <X size={40} strokeWidth={1} />
                         </button>
 
+                        {/* Navigation Arrows */}
+                        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-12 z-[105] pointer-events-none">
+                            <button
+                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto group"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
+                                    const prevIndex = (currentIndex - 1 + projects.length) % projects.length;
+                                    triggerHaptic('light');
+                                    setSelectedProject(projects[prevIndex]);
+                                }}
+                            >
+                                <ArrowUpRight size={24} className="-rotate-135 group-active:scale-90 transition-transform" />
+                            </button>
+                            <button
+                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto group"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
+                                    const nextIndex = (currentIndex + 1) % projects.length;
+                                    triggerHaptic('light');
+                                    setSelectedProject(projects[nextIndex]);
+                                }}
+                            >
+                                <ArrowUpRight size={24} className="rotate-45 group-active:scale-90 transition-transform" />
+                            </button>
+                        </div>
+
+                        {/* Image Counter */}
+                        <div className="absolute top-10 left-10 text-[10px] font-bold uppercase tracking-[0.4em] text-white/20">
+                            Project <span className="text-brand-green">{projects.findIndex(p => p.id === selectedProject.id) + 1}</span> / {projects.length}
+                        </div>
+
                         <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                            className="relative max-w-7xl max-h-[90vh] w-full overflow-hidden border border-white/10 shadow-2xl bg-charcoal"
+                            key={selectedProject.id}
+                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.95, opacity: 0, y: -20 }}
+                            transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                            className="relative max-w-7xl max-h-screen w-full flex flex-col items-center justify-center overflow-hidden"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            {selectedProject.video ? (
-                                <video
-                                    autoPlay
-                                    muted
-                                    loop
-                                    playsInline
-                                    controls
-                                    className="w-full h-full object-contain max-h-[85vh]"
-                                >
-                                    <source src={selectedProject.video} type="video/mp4" />
-                                </video>
-                            ) : (
-                                <img
-                                    src={selectedProject.image}
-                                    alt={selectedProject.title}
-                                    className="w-full h-full object-contain max-h-[85vh]"
-                                />
-                            )}
+                            <div className="w-full h-full relative aspect-[16/9] md:aspect-auto flex items-center justify-center">
+                                {selectedProject.video ? (
+                                    <video
+                                        autoPlay
+                                        muted
+                                        loop
+                                        playsInline
+                                        controls
+                                        className="w-full h-full object-contain max-h-[80vh] shadow-2xl"
+                                    >
+                                        <source src={selectedProject.video} type="video/mp4" />
+                                    </video>
+                                ) : (
+                                    <img
+                                        src={selectedProject.image}
+                                        alt={selectedProject.title}
+                                        className="w-full h-full object-contain max-h-[80vh] shadow-2xl"
+                                    />
+                                )}
+                            </div>
 
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-8 md:p-12 text-white">
-                                <span className="text-brand-green font-mono text-xs uppercase tracking-widest block mb-1">{selectedProject.type}</span>
-                                <h3 className="text-4xl md:text-5xl font-[Oswald] font-bold uppercase italic">{selectedProject.title}</h3>
+                            <div className="mt-8 text-center px-6">
+                                <span className="text-brand-green font-mono text-[10px] uppercase tracking-[0.5em] block mb-2">{selectedProject.type}</span>
+                                <h3 className="text-4xl md:text-6xl font-[Oswald] font-bold uppercase italic text-white tracking-tight">{selectedProject.title}</h3>
                             </div>
                         </motion.div>
                     </motion.div>

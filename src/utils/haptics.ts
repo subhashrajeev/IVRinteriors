@@ -20,12 +20,11 @@ const hapticPatterns: Record<HapticType, number | number[]> = {
  * Silently fails on unsupported devices (iOS, desktop).
  */
 export const triggerHaptic = (type: HapticType = 'light'): void => {
-    // Check if Vibration API is supported
     if (typeof navigator !== 'undefined' && 'vibrate' in navigator) {
         try {
             navigator.vibrate(hapticPatterns[type]);
         } catch {
-            // Silently fail - haptics are enhancement, not critical
+            // Silently fail
         }
     }
 };

@@ -6,6 +6,10 @@ import SmoothScroll from './components/SmoothScroll'
 import Services from './components/Services'
 import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
+import CustomCursor from './components/CustomCursor'
+import PageLoader from './components/PageLoader'
+import ScrollProgress from './components/ScrollProgress'
+import CostCalculator from './components/CostCalculator'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
@@ -67,17 +71,28 @@ const AboutSection = () => {
 }
 
 const App = () => {
+  const [isLoading, setIsLoading] = useState(true)
+
   return (
     <main className="bg-charcoal">
-      <SmoothScroll />
-      <Navbar />
-      <Hero />
-      <AboutSection />
-      <ProjectGrid />
-      <Services />
-      <Testimonials />
-      <Contact />
-      <Footer />
+      <CustomCursor />
+      <PageLoader onComplete={() => setIsLoading(false)} />
+
+      {!isLoading && (
+        <>
+          <ScrollProgress />
+          <SmoothScroll />
+          <Navbar />
+          <Hero />
+          <AboutSection />
+          <ProjectGrid />
+          <CostCalculator />
+          <Services />
+          <Testimonials />
+          <Contact />
+          <Footer />
+        </>
+      )}
       <SpeedInsights />
     </main>
   )
