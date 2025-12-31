@@ -15,6 +15,21 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
+    // Prevent scrolling when mobile menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden'
+            window.dispatchEvent(new CustomEvent('lenis-stop'))
+        } else {
+            document.body.style.overflow = ''
+            window.dispatchEvent(new CustomEvent('lenis-start'))
+        }
+        return () => {
+            document.body.style.overflow = ''
+            window.dispatchEvent(new CustomEvent('lenis-start'))
+        }
+    }, [isMobileMenuOpen])
+
     return (
         <>
             <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-charcoal/90 backdrop-blur-md py-4 border-b border-white/10' : 'bg-transparent py-8'}`}>
@@ -80,39 +95,39 @@ const Navbar = () => {
                         {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
                     </button>
                 </div>
+            </nav>
 
-                {/* Mobile Menu Overlay */}
-                <div className={`fixed inset-0 bg-[#050505] z-[60] flex flex-col items-center justify-center gap-10 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                    {/* Back Arrow - Top Left */}
-                    <button
-                        className="absolute top-8 left-6 text-white hover:text-brand-green transition-colors p-2"
+            {/* Mobile Menu Overlay - Outside nav to ensure full viewport coverage */}
+            <div className={`fixed inset-0 w-screen h-[100dvh] bg-[#050505] z-[60] flex flex-col items-center justify-center gap-10 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                {/* Back Arrow - Top Left */}
+                <button
+                    className="absolute top-8 left-6 text-white hover:text-brand-green transition-colors p-2"
+                    onClick={() => {
+                        triggerHaptic('light');
+                        setIsMobileMenuOpen(false);
+                    }}
+                    aria-label="Close menu"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M19 12H5" />
+                        <path d="m12 19-7-7 7-7" />
+                    </svg>
+                </button>
+
+                {['Services', 'Projects', 'About', 'Contact'].map((item) => (
+                    <a
+                        key={item}
+                        href={`#${item.toLowerCase()}`}
+                        className="text-4xl font-[Oswald] font-bold uppercase italic text-white hover:text-brand-green transition-colors"
                         onClick={() => {
                             triggerHaptic('light');
                             setIsMobileMenuOpen(false);
                         }}
-                        aria-label="Close menu"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M19 12H5" />
-                            <path d="m12 19-7-7 7-7" />
-                        </svg>
-                    </button>
-
-                    {['Services', 'Projects', 'About', 'Contact'].map((item) => (
-                        <a
-                            key={item}
-                            href={`#${item.toLowerCase()}`}
-                            className="text-4xl font-[Oswald] font-bold uppercase italic text-white hover:text-brand-green transition-colors"
-                            onClick={() => {
-                                triggerHaptic('light');
-                                setIsMobileMenuOpen(false);
-                            }}
-                        >
-                            {item}
-                        </a>
-                    ))}
-                </div>
-            </nav>
+                        {item}
+                    </a>
+                ))}
+            </div>
 
             {/* Social Sidebar */}
             <div className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-50 flex-col gap-6 items-center">
