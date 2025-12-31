@@ -82,7 +82,6 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                     initial: { opacity: 0, y: 20, scale: 1 },
                     whileInView: isMobile ? {
                         opacity: 1,
-                        y: 0,
                         scale: 1.03,
                         backgroundColor: '#FFFFFF',
                         x: -6,
