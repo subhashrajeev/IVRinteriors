@@ -255,7 +255,7 @@ const ProjectGrid = () => {
                             className="relative max-w-7xl max-h-screen w-full flex flex-col items-center justify-center overflow-hidden"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="w-full h-full relative aspect-[16/9] md:aspect-auto flex items-center justify-center">
+                            <div className="w-full relative h-[70vh] md:h-auto md:aspect-auto flex items-center justify-center">
                                 {selectedProject.video ? (
                                     <video
                                         autoPlay
@@ -263,7 +263,7 @@ const ProjectGrid = () => {
                                         loop
                                         playsInline
                                         controls
-                                        className="w-full h-full object-contain max-h-[80vh] shadow-2xl"
+                                        className="w-full h-full object-contain max-h-[90vh] shadow-2xl"
                                     >
                                         <source src={selectedProject.video} type="video/mp4" />
                                     </video>
@@ -271,7 +271,7 @@ const ProjectGrid = () => {
                                     <img
                                         src={selectedProject.image}
                                         alt={selectedProject.title}
-                                        className="w-full h-full object-contain max-h-[80vh] shadow-2xl"
+                                        className="w-full h-full object-contain max-h-[90vh] shadow-2xl"
                                     />
                                 )}
                             </div>

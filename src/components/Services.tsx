@@ -52,8 +52,8 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
             whileHover={!isMobile ? "hover" : undefined}
             viewport={{
                 once: !isMobile,
-                amount: 0.6,
-                margin: isMobile ? "-10% 0px -10% 0px" : "0px"
+                amount: isMobile ? 0.3 : 0.6,
+                margin: isMobile ? "-20% 0px -20% 0px" : "0px" // Stricter active zone for cleaner scroll
             }}
             className="group relative z-10 cursor-pointer"
             onClick={() => triggerHaptic('light')}
@@ -63,8 +63,8 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                 variants={{
                     initial: { x: 0, y: 0, opacity: 0 },
                     whileInView: isMobile ? {
-                        x: 12,
-                        y: 12,
+                        x: 8, // Reduced offset for cleaner look
+                        y: 8,
                         opacity: 1
                     } : { opacity: 0 },
                     hover: {
@@ -73,7 +73,12 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                         opacity: 1
                     }
                 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                transition={{
+                    type: "spring",
+                    stiffness: 200, // Softer spring
+                    damping: 25,    // Less bounce
+                    mass: 0.8
+                }}
                 className="absolute inset-0 bg-brand-green z-0"
             />
 
@@ -82,10 +87,10 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                     initial: { opacity: 0, y: 20, scale: 1 },
                     whileInView: isMobile ? {
                         opacity: 1,
-                        scale: 1.03,
+                        scale: 1, // Removed scaling on mobile to prevent layout jitter
                         backgroundColor: '#FFFFFF',
-                        x: -6,
-                        y: -6,
+                        x: -4, // Subtle shift
+                        y: -4,
                     } : {
                         opacity: 1,
                         y: 0,
@@ -101,9 +106,9 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                     }
                 }}
                 transition={{
-                    delay: index * 0.05,
-                    duration: 0.5,
-                    scale: { type: "spring", stiffness: 400, damping: 25 },
+                    delay: isMobile ? 0 : index * 0.05, // Remove delay on mobile for instant feedback
+                    duration: 0.4,
+                    scale: { type: "spring", stiffness: 300, damping: 30 },
                     backgroundColor: { duration: 0.3 }
                 }}
                 className="h-full p-10 border border-white/10 bg-charcoal relative z-10 overflow-hidden flex flex-col justify-between"
@@ -135,7 +140,7 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                                 initial: { color: 'rgba(255,255,255,0.05)', y: 0 },
                                 whileInView: isMobile ? {
                                     color: '#8CBF3F',
-                                    y: -8
+                                    y: -4
                                 } : {
                                     color: 'rgba(255,255,255,0.05)',
                                     y: 0
