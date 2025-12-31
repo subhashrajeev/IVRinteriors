@@ -61,7 +61,7 @@ const Hero = () => {
                     <p className="hero-subtitle text-brand-green font-bold tracking-[0.3em] uppercase mb-4 text-sm md:text-base">
                         Hyderabad
                     </p>
-                    <h1 className="text-6xl md:text-8xl lg:text-[9rem] leading-[0.9] font-[Oswald] font-bold italic uppercase text-white mb-8">
+                    <h1 className="text-4xl md:text-7xl lg:text-[8.5rem] leading-[0.9] font-[Oswald] font-bold italic uppercase text-white mb-8">
                         <span className="hero-word block">Transform</span>
                         <span className="hero-word block text-transparent stroke-text" style={{ WebkitTextStroke: '2px white' }}>Your Space</span>
                         <span className="hero-word block">Into Art.</span>

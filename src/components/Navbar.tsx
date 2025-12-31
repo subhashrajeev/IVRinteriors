@@ -37,9 +37,9 @@ const Navbar = () => {
 
                     {/* Logo - Text Only, Bold, Sharp */}
                     {/* Logo - Text Only, Bold, Sharp */}
-                    <a href="/" className="text-2xl md:text-3xl font-bold font-[Oswald] tracking-tighter italic text-white flex gap-2 group items-center">
+                    <a href="/" className="font-bold font-[Oswald] tracking-tighter italic text-white flex gap-2 group items-center">
                         <div
-                            className="relative flex"
+                            className="relative flex text-4xl md:text-5xl"
                         >
                             {['I', 'V', 'R'].map((char, index) => (
                                 <motion.div
@@ -60,7 +60,7 @@ const Navbar = () => {
                                 </motion.div>
                             ))}
                         </div>
-                        <span className="text-brand-green group-hover:text-white transition-colors duration-500">INTERIORS</span>
+                        <span className="text-xl md:text-2xl text-brand-green group-hover:text-white transition-colors duration-500">INTERIORS</span>
                     </a>
 
                     {/* Desktop Nav */}

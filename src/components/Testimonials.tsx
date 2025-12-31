@@ -15,7 +15,7 @@ const testimonials = [
         name: 'Anjali Rao',
         role: 'Villa Owner, Gachibowli',
         text: "I was looking for something unique for my modular kitchen, and IVR Interiors delivered beyond expectations. The quality of materials and the speed of delivery were impressive.",
-        rating: 5
+        rating: 4
     },
     {
         id: 3,
@@ -62,8 +62,12 @@ const Testimonials = () => {
                             className="text-center pt-8"
                         >
                             <div className="flex justify-center gap-1 mb-6">
-                                {[...Array(testimonials[activeIndex].rating)].map((_, i) => (
-                                    <Star key={i} size={16} className="fill-gold text-gold" />
+                                {[...Array(5)].map((_, i) => (
+                                    <Star
+                                        key={i}
+                                        size={16}
+                                        className={i < testimonials[activeIndex].rating ? "fill-gold text-gold" : "text-white/20"}
+                                    />
                                 ))}
                             </div>
                             <p className="text-xl md:text-2xl font-light italic text-white/90 leading-relaxed mb-8">

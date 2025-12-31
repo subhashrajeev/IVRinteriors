@@ -9,7 +9,7 @@ import Contact from './components/Contact'
 import CustomCursor from './components/CustomCursor'
 import PageLoader from './components/PageLoader'
 import ScrollProgress from './components/ScrollProgress'
-import CostCalculator from './components/CostCalculator'
+
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
@@ -32,10 +32,10 @@ const AboutSection = () => {
             Crafting <br /> <span className="text-gold">Legacy.</span>
           </h2>
           <p className="text-white/60 text-lg font-light leading-relaxed mb-12">
-            Founded by I. Venkata Raju, IVR Interiors has been a cornerstone of design excellence in Hyderabad for over 15 years. We merge the raw strength of industrial aesthetics with the warmth of organic luxury, curating spaces that are not just lived in, but felt.
+            Founded by <span className="text-gold text-3xl font-bold mx-2" style={{ fontFamily: "'Great Vibes', cursive" }}>I. Venkataraju</span>, IVR Interiors has been a cornerstone of design excellence in Hyderabad for over 15 years. We merge the raw strength of industrial aesthetics with the warmth of organic luxury, curating spaces that are not just lived in, but felt.
           </p>
 
-          <div className="flex gap-12 border-t border-white/10 pt-8">
+          <div className="flex gap-12 border-t border-white/10 pt-8 items-end">
             <div>
               <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">500+</h4>
               <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold">Clients</p>
@@ -43,6 +43,25 @@ const AboutSection = () => {
             <div>
               <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">15+</h4>
               <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold">Years</p>
+            </div>
+
+            <div className="ml-auto text-right">
+              <div className="w-24 h-32 ml-auto mb-2 overflow-hidden border border-white/10">
+                <img
+                  src="/assets/ceo_latest.jpg"
+                  alt="Founder"
+                  className={`w-full h-full object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale md:hover:grayscale-0`}
+                />
+              </div>
+              <span
+                className="text-gold text-xl block"
+                style={{ fontFamily: "'Great Vibes', cursive" }}
+              >
+                I. Venkataraju
+              </span>
+              <p className="text-white/40 text-[9px] uppercase tracking-[0.2em] font-bold">
+                Founder
+              </p>
             </div>
           </div>
         </motion.div>
@@ -86,7 +105,7 @@ const App = () => {
           <Hero />
           <AboutSection />
           <ProjectGrid />
-          <CostCalculator />
+
           <Services />
           <Testimonials />
           <Contact />
