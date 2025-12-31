@@ -1,4 +1,4 @@
-import { useState, type MouseEvent } from 'react'
+import { useState, useEffect, type MouseEvent } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { triggerHaptic } from '../utils/haptics'
@@ -23,6 +23,14 @@ const projects = [
 const TiltCard = ({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => {
     const x = useMotionValue(0)
     const y = useMotionValue(0)
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
 
     const mouseX = useSpring(x, { stiffness: 150, damping: 15 })
     const mouseY = useSpring(y, { stiffness: 150, damping: 15 })
@@ -35,6 +43,8 @@ const TiltCard = ({ children, className, onClick }: { children: React.ReactNode,
     const glareY = useTransform(mouseY, [-0.5, 0.5], ["0%", "100%"])
 
     const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+        if (isMobile) return // Disable on mobile
+
         const rect = e.currentTarget.getBoundingClientRect()
         const width = rect.width
         const height = rect.height
@@ -59,26 +69,29 @@ const TiltCard = ({ children, className, onClick }: { children: React.ReactNode,
             onClick={onClick}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            whileHover={{ scale: 1.02, zIndex: 10 }}
+            whileHover={!isMobile ? { scale: 1.02, zIndex: 10 } : undefined}
+            whileTap={isMobile ? { scale: 0.98 } : undefined}
         >
             <motion.div
                 style={{
-                    rotateX,
-                    rotateY,
+                    rotateX: isMobile ? 0 : rotateX,
+                    rotateY: isMobile ? 0 : rotateY,
                     transformStyle: "preserve-3d",
                 }}
                 className="w-full h-full relative"
             >
                 {children}
 
-                {/* Glare Effect */}
-                <motion.div
-                    className="absolute inset-0 pointer-events-none z-20 mix-blend-overlay"
-                    style={{
-                        background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.4) 0%, transparent 60%)`,
-                        opacity: useTransform(mouseX, [-0.5, 0, 0.5], [0.6, 0, 0.6]) // Hide glare when centered, show on edges
-                    }}
-                />
+                {/* Glare Effect - Hidden on Mobile */}
+                {!isMobile && (
+                    <motion.div
+                        className="absolute inset-0 pointer-events-none z-20 mix-blend-overlay"
+                        style={{
+                            background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.4) 0%, transparent 60%)`,
+                            opacity: useTransform(mouseX, [-0.5, 0, 0.5], [0.6, 0, 0.6])
+                        }}
+                    />
+                )}
             </motion.div>
         </motion.div>
     )
@@ -133,8 +146,8 @@ const ProjectGrid = () => {
                             }
                         >
                             <motion.div
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
+                                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                                whileInView={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, delay: index * 0.1 }}
