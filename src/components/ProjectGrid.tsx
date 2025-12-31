@@ -1,4 +1,4 @@
-import { useState, useEffect, type MouseEvent } from 'react'
+import { useState, type MouseEvent } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { triggerHaptic } from '../utils/haptics'
@@ -23,14 +23,6 @@ const projects = [
 const TiltCard = ({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => {
     const x = useMotionValue(0)
     const y = useMotionValue(0)
-    const [isMobile, setIsMobile] = useState(false)
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768)
-        checkMobile()
-        window.addEventListener('resize', checkMobile)
-        return () => window.removeEventListener('resize', checkMobile)
-    }, [])
 
     const mouseX = useSpring(x, { stiffness: 150, damping: 15 })
     const mouseY = useSpring(y, { stiffness: 150, damping: 15 })
@@ -43,8 +35,6 @@ const TiltCard = ({ children, className, onClick }: { children: React.ReactNode,
     const glareY = useTransform(mouseY, [-0.5, 0.5], ["0%", "100%"])
 
     const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-        if (isMobile) return // Disable on mobile
-
         const rect = e.currentTarget.getBoundingClientRect()
         const width = rect.width
         const height = rect.height
@@ -69,29 +59,26 @@ const TiltCard = ({ children, className, onClick }: { children: React.ReactNode,
             onClick={onClick}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            whileHover={!isMobile ? { scale: 1.02, zIndex: 10 } : undefined}
-            whileTap={isMobile ? { scale: 0.98 } : undefined}
+            whileHover={{ scale: 1.02, zIndex: 10 }}
         >
             <motion.div
                 style={{
-                    rotateX: isMobile ? 0 : rotateX,
-                    rotateY: isMobile ? 0 : rotateY,
+                    rotateX,
+                    rotateY,
                     transformStyle: "preserve-3d",
                 }}
                 className="w-full h-full relative"
             >
                 {children}
 
-                {/* Glare Effect - Hidden on Mobile */}
-                {!isMobile && (
-                    <motion.div
-                        className="absolute inset-0 pointer-events-none z-20 mix-blend-overlay"
-                        style={{
-                            background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.4) 0%, transparent 60%)`,
-                            opacity: useTransform(mouseX, [-0.5, 0, 0.5], [0.6, 0, 0.6])
-                        }}
-                    />
-                )}
+                {/* Glare Effect */}
+                <motion.div
+                    className="absolute inset-0 pointer-events-none z-20 mix-blend-overlay"
+                    style={{
+                        background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.4) 0%, transparent 60%)`,
+                        opacity: useTransform(mouseX, [-0.5, 0, 0.5], [0.6, 0, 0.6]) // Hide glare when centered, show on edges
+                    }}
+                />
             </motion.div>
         </motion.div>
     )
@@ -146,8 +133,8 @@ const ProjectGrid = () => {
                             }
                         >
                             <motion.div
-                                initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                                initial={{ opacity: 0 }}
+                                whileInView={{ opacity: 1 }}
                                 exit={{ opacity: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ duration: 0.8, delay: index * 0.1 }}
@@ -156,8 +143,7 @@ const ProjectGrid = () => {
                                 {/* Image/Video Container */}
                                 <div className="w-full h-full absolute inset-0">
                                     {project.video ? (
-                                        <motion.video
-                                            layoutId={`project-media-${project.id}`}
+                                        <video
                                             autoPlay
                                             muted
                                             loop
@@ -165,10 +151,9 @@ const ProjectGrid = () => {
                                             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
                                         >
                                             <source src={project.video} type="video/mp4" />
-                                        </motion.video>
+                                        </video>
                                     ) : (
-                                        <motion.img
-                                            layoutId={`project-media-${project.id}`}
+                                        <img
                                             src={project.image}
                                             alt={project.title}
                                             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
@@ -272,8 +257,7 @@ const ProjectGrid = () => {
                         >
                             <div className="w-full h-full relative aspect-[16/9] md:aspect-auto flex items-center justify-center">
                                 {selectedProject.video ? (
-                                    <motion.video
-                                        layoutId={`project-media-${selectedProject.id}`}
+                                    <video
                                         autoPlay
                                         muted
                                         loop
@@ -282,10 +266,9 @@ const ProjectGrid = () => {
                                         className="w-full h-full object-contain max-h-[80vh] shadow-2xl"
                                     >
                                         <source src={selectedProject.video} type="video/mp4" />
-                                    </motion.video>
+                                    </video>
                                 ) : (
-                                    <motion.img
-                                        layoutId={`project-media-${selectedProject.id}`}
+                                    <img
                                         src={selectedProject.image}
                                         alt={selectedProject.title}
                                         className="w-full h-full object-contain max-h-[80vh] shadow-2xl"
