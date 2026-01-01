@@ -65,7 +65,7 @@ const Navbar = () => {
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-12">
-                        {['Services', 'Projects', 'About', 'Contact'].map((item) => (
+                        {['Projects', 'Services', 'About', 'Contact'].map((item) => (
                             <a
                                 key={item}
                                 href={`#${item.toLowerCase()}`}
@@ -114,7 +114,7 @@ const Navbar = () => {
                     </svg>
                 </button>
 
-                {['Services', 'Projects', 'About', 'Contact'].map((item) => (
+                {['Projects', 'Services', 'About', 'Contact'].map((item) => (
                     <a
                         key={item}
                         href={`#${item.toLowerCase()}`}

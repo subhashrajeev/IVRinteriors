@@ -70,7 +70,7 @@ const Hero = () => {
                     </h1>
 
                     <div className="hero-subtitle pl-2 border-l-4 border-brand-green max-w-xl">
-                        <p className="text-white/80 text-lg md:text-xl font-light leading-relaxed">
+                        <p className="font-['Tenor_Sans'] text-xl md:text-2xl text-white/80 leading-relaxed tracking-[0.15em] uppercase">
                             Premium modular kitchens, wardrobes & complete interior solutions. 15+ years of precision craftsmanship.
                         </p>
                     </div>

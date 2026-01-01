@@ -49,9 +49,8 @@ const CustomCursor = () => {
 
     return (
         <div className="fixed inset-0 pointer-events-none z-[99999] hidden md:block mix-blend-difference">
-            {/* Main Follower Circle */}
             <motion.div
-                className="absolute rounded-full border border-white bg-white"
+                className="absolute rounded-full bg-white"
                 style={{
                     x: cursorX,
                     y: cursorY,
@@ -59,28 +58,16 @@ const CustomCursor = () => {
                     translateY: '-50%',
                 }}
                 animate={{
-                    width: isHovered ? 60 : 20,
-                    height: isHovered ? 60 : 20,
-                    opacity: isHovered ? 1 : 0.5, // Solid white on hover (inverts to black), semi-transparent otherwise
+                    width: isHovered ? 80 : 20,
+                    height: isHovered ? 80 : 20,
+                    opacity: 1, // Always fully visible for the inverted effect
                     scale: isClicked ? 0.8 : 1,
                 }}
                 transition={{
                     type: "spring",
-                    stiffness: 300,
-                    damping: 20
-                }}
-            />
-
-            {/* Center Dot (Always Visible) */}
-            <motion.div
-                className="absolute rounded-full bg-white"
-                style={{
-                    x: mouseX, // Follows mouse exactly without lag
-                    y: mouseY,
-                    translateX: '-50%',
-                    translateY: '-50%',
-                    width: 4,
-                    height: 4,
+                    stiffness: 150, // Slightly looser for a "floaty" feel
+                    damping: 15,
+                    mass: 0.1
                 }}
             />
         </div>
