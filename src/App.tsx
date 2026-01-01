@@ -62,6 +62,7 @@ const AboutSection = () => {
                   <img
                     src="/assets/ceo_latest.jpg"
                     alt="Founder"
+                    loading="lazy"
                     className={`w-full h-full object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale md:hover:grayscale-0`}
                   />
                 </div>
@@ -82,6 +83,7 @@ const AboutSection = () => {
             <img
               src="/assets/IMG-20251203-WA0011.jpg"
               alt="Philosophy"
+              loading="lazy"
               className={`w-full h-full object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale md:hover:grayscale-0`}
             />
           </div>
@@ -101,21 +103,24 @@ const App = () => {
       <CustomCursor />
       <PageLoader onComplete={() => setIsLoading(false)} />
 
-      {!isLoading && (
-        <>
-          <ScrollProgress />
-          <SmoothScroll />
-          <Navbar />
-          <Hero />
-          <AboutSection />
-          <ProjectGrid />
+      {/* Content renders immediately but is hidden behind loader - allows LCP elements to start loading */}
+      <div style={{
+        visibility: isLoading ? 'hidden' : 'visible',
+        opacity: isLoading ? 0 : 1,
+        transition: 'opacity 0.3s ease-out'
+      }}>
+        <ScrollProgress />
+        <SmoothScroll />
+        <Navbar />
+        <Hero />
+        <AboutSection />
+        <ProjectGrid />
 
-          <Services />
-          <Testimonials />
-          <Contact />
-          <Footer />
-        </>
-      )}
+        <Services />
+        <Testimonials />
+        <Contact />
+        <Footer />
+      </div>
       <SpeedInsights />
     </main>
   )

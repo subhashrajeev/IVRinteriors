@@ -148,6 +148,7 @@ const ProjectGrid = () => {
                                             muted
                                             loop
                                             playsInline
+                                            preload="none"
                                             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
                                         >
                                             <source src={project.video} type="video/mp4" />
@@ -156,6 +157,7 @@ const ProjectGrid = () => {
                                         <img
                                             src={project.image}
                                             alt={project.title}
+                                            loading="lazy"
                                             className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
                                         />
                                     )}

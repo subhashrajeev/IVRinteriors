@@ -47,6 +47,8 @@ const Hero = () => {
                     muted
                     loop
                     playsInline
+                    poster="/assets/IMG-20251203-WA0011.jpg"
+                    preload="metadata"
                     className="w-full h-full object-cover opacity-40"
                     style={{ filter: 'grayscale(100%) contrast(1.2)' }}
                 >
