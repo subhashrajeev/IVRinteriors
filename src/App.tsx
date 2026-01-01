@@ -9,7 +9,7 @@ import Contact from './components/Contact'
 import CustomCursor from './components/CustomCursor'
 import PageLoader from './components/PageLoader'
 import ScrollProgress from './components/ScrollProgress'
-import AIChat from './components/AIChat'
+
 import About from './components/About'
 
 import { SpeedInsights } from '@vercel/speed-insights/react'
@@ -38,7 +38,7 @@ const App = () => {
         <About />
         <Testimonials />
         <Contact />
-        <AIChat />
+
         <Footer />
       </div>
       <SpeedInsights />
