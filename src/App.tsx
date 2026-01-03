@@ -4,7 +4,6 @@ import ProjectGrid from './components/ProjectGrid'
 import Footer from './components/Footer'
 import SmoothScroll from './components/SmoothScroll'
 import Services from './components/Services'
-import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
 import CustomCursor from './components/CustomCursor'
 import PageLoader from './components/PageLoader'
@@ -37,7 +36,6 @@ const App = () => {
         <ProjectGrid />
         <Services />
         <About />
-        <Testimonials />
         <Contact />
 
         <Footer />

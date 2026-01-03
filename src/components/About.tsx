@@ -1,32 +1,44 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import CounterAnimation from './CounterAnimation'
-import AnimatedGradient from './AnimatedGradient'
 
 const About = () => {
     const [isInView, setIsInView] = useState(false)
+    const [isMobile, setIsMobile] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
     const imageRef = useRef<HTMLDivElement>(null)
 
-    // Parallax effect for the image
+    // Check if mobile on mount
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
+    // Parallax effect for the image - only on desktop
     const { scrollYProgress } = useScroll({
         target: sectionRef,
         offset: ["start end", "end start"]
     })
 
-    const imageY = useTransform(scrollYProgress, [0, 1], [50, -50])
+    // Disable parallax on mobile for performance
+    const imageY = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [50, -50])
 
     return (
         <section ref={sectionRef} id="about" className="py-32 bg-charcoal border-b border-white/5 relative overflow-hidden noise-bg">
-            {/* Animated Gradient Orbs */}
-            <AnimatedGradient colors={['gold', 'green']} className="opacity-50" />
+            {/* Static Gradient Orbs - No JS animation for performance */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
+                <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] bg-gradient-to-r from-gold/30 to-transparent rounded-full blur-[80px] md:animate-float" />
+                <div className="absolute bottom-[20%] right-[5%] w-[400px] h-[400px] bg-gradient-to-r from-brand-green/30 to-transparent rounded-full blur-[80px] md:animate-float" style={{ animationDelay: '2s' }} />
+            </div>
 
             <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-20 items-center relative z-10">
                 <motion.div
-                    initial={{ opacity: 0, x: -50 }}
+                    initial={{ opacity: 0, x: isMobile ? 0 : -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: 1 }}
+                    transition={{ duration: isMobile ? 0.4 : 0.6 }}
                     className="lg:col-span-7"
                 >
                     <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-8 block flex items-center gap-3">
@@ -41,42 +53,24 @@ const About = () => {
                     </p>
 
                     <div className="flex flex-wrap gap-8 md:gap-12 border-t border-white/10 pt-8 items-end">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.2 }}
-                            className="group"
-                        >
+                        <div className="group">
                             <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
                                 <CounterAnimation end={500} suffix="+" duration={2500} />
                             </h4>
                             <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Happy Clients</p>
-                        </motion.div>
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.4 }}
-                            className="group"
-                        >
+                        </div>
+                        <div className="group">
                             <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
                                 <CounterAnimation end={15} suffix="+" duration={2000} />
                             </h4>
                             <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Years Excellence</p>
-                        </motion.div>
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.6 }}
-                            className="group"
-                        >
+                        </div>
+                        <div className="group">
                             <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
                                 <CounterAnimation end={1000} suffix="+" duration={3000} />
                             </h4>
                             <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Projects Done</p>
-                        </motion.div>
+                        </div>
 
                         <div className="ml-auto text-right w-full md:w-auto mt-4 md:mt-0">
                             <div className="flex items-center justify-end gap-4 md:block">
@@ -106,21 +100,30 @@ const About = () => {
 
                 <motion.div
                     ref={imageRef}
-                    initial={{ opacity: 0, scale: 0.9 }}
+                    initial={{ opacity: 0, scale: isMobile ? 1 : 0.95 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     onViewportEnter={() => setIsInView(true)}
-                    transition={{ duration: 0.8 }}
+                    transition={{ duration: isMobile ? 0.4 : 0.6 }}
                     className="relative lg:col-span-5"
                 >
-                    <div className="aspect-[3/4] overflow-hidden parallax-container">
-                        <motion.img
-                            src="/assets/IMG-20251203-WA0011.jpg"
-                            alt="Philosophy"
-                            loading="lazy"
-                            style={{ y: imageY }}
-                            className={`w-full h-[120%] object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale md:hover:grayscale-0 parallax-image`}
-                        />
+                    <div className="aspect-[3/4] overflow-hidden">
+                        {isMobile ? (
+                            <img
+                                src="/assets/IMG-20251203-WA0011.jpg"
+                                alt="Philosophy"
+                                loading="lazy"
+                                className="w-full h-full object-cover"
+                            />
+                        ) : (
+                            <motion.img
+                                src="/assets/IMG-20251203-WA0011.jpg"
+                                alt="Philosophy"
+                                loading="lazy"
+                                style={{ y: imageY }}
+                                className={`w-full h-[120%] object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} grayscale hover:grayscale-0 parallax-image`}
+                            />
+                        )}
                     </div>
                     {/* Accent Box - Integrated */}
                     <div className="absolute top-3 left-3 w-full h-full border border-gold/30 pointer-events-none -z-10" />
