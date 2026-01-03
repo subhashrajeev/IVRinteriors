@@ -1,37 +1,44 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { triggerHaptic } from '../utils/haptics'
+import { ChefHat, Shirt, Tv, Layers, Hammer, Wrench } from 'lucide-react'
 
 const services = [
     {
         title: 'Modular Kitchens',
         description: 'Custom modular kitchens with premium materials and smart storage.',
-        icon: '01'
+        icon: '01',
+        IconComponent: ChefHat
     },
     {
         title: 'Wardrobes',
         description: 'Bespoke wardrobes and walk-in closets designed for maximum functionality.',
-        icon: '02'
+        icon: '02',
+        IconComponent: Shirt
     },
     {
         title: 'TV Units',
         description: 'Contemporary TV unit designs with integrated storage and cable management.',
-        icon: '03'
+        icon: '03',
+        IconComponent: Tv
     },
     {
         title: 'False Ceiling',
         description: 'Elegant false ceiling designs with cove lighting and modern patterns.',
-        icon: '04'
+        icon: '04',
+        IconComponent: Layers
     },
     {
         title: 'Renovation',
         description: 'Complete interior renovation including flooring, painting, and electrical.',
-        icon: '05'
+        icon: '05',
+        IconComponent: Hammer
     },
     {
         title: 'Custom Carpentry',
         description: 'Skilled carpentry for unique furniture and woodwork specifications.',
-        icon: '06'
+        icon: '06',
+        IconComponent: Wrench
     }
 ]
 
@@ -125,16 +132,29 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
 
                 <div className="relative z-10">
                     <div className="flex justify-between items-start mb-8">
-                        <motion.h3
-                            variants={{
-                                initial: { color: '#FFFFFF' },
-                                whileInView: isMobile ? { color: '#050505' } : { color: '#FFFFFF' },
-                                hover: { color: '#050505' }
-                            }}
-                            className="text-3xl font-[Oswald] font-bold uppercase italic text-white transition-colors duration-300"
-                        >
-                            {service.title}
-                        </motion.h3>
+                        <div className="flex items-center gap-4">
+                            {/* Icon */}
+                            <motion.div
+                                variants={{
+                                    initial: { opacity: 0.3 },
+                                    whileInView: isMobile ? { opacity: 1 } : { opacity: 0.3 },
+                                    hover: { opacity: 1, scale: 1.1 }
+                                }}
+                                className="w-12 h-12 border border-white/10 flex items-center justify-center bg-white/5 transition-all duration-300"
+                            >
+                                <service.IconComponent size={24} className="text-brand-green" />
+                            </motion.div>
+                            <motion.h3
+                                variants={{
+                                    initial: { color: '#FFFFFF' },
+                                    whileInView: isMobile ? { color: '#050505' } : { color: '#FFFFFF' },
+                                    hover: { color: '#050505' }
+                                }}
+                                className="text-3xl font-[Oswald] font-bold uppercase italic text-white transition-colors duration-300"
+                            >
+                                {service.title}
+                            </motion.h3>
+                        </div>
                         <motion.span
                             variants={{
                                 initial: { color: 'rgba(255,255,255,0.05)', y: 0 },
@@ -194,11 +214,14 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
 
 const Services = () => {
     return (
-        <section id="services" className="py-32 bg-charcoal relative">
+        <section id="services" className="py-32 bg-charcoal relative noise-bg">
             <div className="container mx-auto px-6">
                 {/* Header - Left Aligned */}
-                <div className="mb-24 border-l-4 border-gold pl-8">
-                    <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-4 block">Expertise</span>
+                <div className="mb-24 border-l-4 border-brand-green pl-8">
+                    <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-4 block flex items-center gap-3">
+                        <span className="w-4 h-[2px] bg-brand-green" />
+                        Expertise
+                    </span>
                     <h2 className="text-6xl md:text-8xl font-[Oswald] font-bold uppercase italic text-white leading-none">
                         Bespoke <br /> <span className="text-transparent stroke-text" style={{ WebkitTextStroke: '1px white' }}>Solutions</span>
                     </h2>

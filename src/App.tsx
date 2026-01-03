@@ -9,6 +9,7 @@ import Contact from './components/Contact'
 import CustomCursor from './components/CustomCursor'
 import PageLoader from './components/PageLoader'
 import ScrollProgress from './components/ScrollProgress'
+import FloatingWhatsApp from './components/FloatingWhatsApp'
 
 import About from './components/About'
 
@@ -40,6 +41,7 @@ const App = () => {
         <Contact />
 
         <Footer />
+        <FloatingWhatsApp />
       </div>
       <SpeedInsights />
     </main>

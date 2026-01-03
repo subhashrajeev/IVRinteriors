@@ -1,12 +1,27 @@
-import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { useState, useRef } from 'react'
+import CounterAnimation from './CounterAnimation'
+import AnimatedGradient from './AnimatedGradient'
 
 const About = () => {
     const [isInView, setIsInView] = useState(false)
+    const sectionRef = useRef<HTMLElement>(null)
+    const imageRef = useRef<HTMLDivElement>(null)
+
+    // Parallax effect for the image
+    const { scrollYProgress } = useScroll({
+        target: sectionRef,
+        offset: ["start end", "end start"]
+    })
+
+    const imageY = useTransform(scrollYProgress, [0, 1], [50, -50])
 
     return (
-        <section id="about" className="py-32 bg-charcoal border-b border-white/5 relative overflow-hidden">
-            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-20 items-center">
+        <section ref={sectionRef} id="about" className="py-32 bg-charcoal border-b border-white/5 relative overflow-hidden noise-bg">
+            {/* Animated Gradient Orbs */}
+            <AnimatedGradient colors={['gold', 'green']} className="opacity-50" />
+
+            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-20 items-center relative z-10">
                 <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -14,7 +29,10 @@ const About = () => {
                     transition={{ duration: 1 }}
                     className="lg:col-span-7"
                 >
-                    <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-8 block">Who We Are</span>
+                    <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-8 block flex items-center gap-3">
+                        <span className="w-8 h-[2px] bg-gold" />
+                        Who We Are
+                    </span>
                     <h2 className="text-5xl md:text-7xl font-[Oswald] font-bold uppercase italic text-white mb-10 leading-[0.9]">
                         Crafting <br /> <span className="text-gold">Legacy.</span>
                     </h2>
@@ -23,14 +41,42 @@ const About = () => {
                     </p>
 
                     <div className="flex flex-wrap gap-8 md:gap-12 border-t border-white/10 pt-8 items-end">
-                        <div>
-                            <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">500+</h4>
-                            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold">Clients</p>
-                        </div>
-                        <div>
-                            <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">15+</h4>
-                            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold">Years</p>
-                        </div>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2 }}
+                            className="group"
+                        >
+                            <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
+                                <CounterAnimation end={500} suffix="+" duration={2500} />
+                            </h4>
+                            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Happy Clients</p>
+                        </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.4 }}
+                            className="group"
+                        >
+                            <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
+                                <CounterAnimation end={15} suffix="+" duration={2000} />
+                            </h4>
+                            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Years Excellence</p>
+                        </motion.div>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.6 }}
+                            className="group"
+                        >
+                            <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
+                                <CounterAnimation end={1000} suffix="+" duration={3000} />
+                            </h4>
+                            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Projects Done</p>
+                        </motion.div>
 
                         <div className="ml-auto text-right w-full md:w-auto mt-4 md:mt-0">
                             <div className="flex items-center justify-end gap-4 md:block">
@@ -45,7 +91,7 @@ const About = () => {
                                         Founder
                                     </p>
                                 </div>
-                                <div className="w-16 h-20 md:w-24 md:h-32 overflow-hidden border border-white/10 flex-shrink-0">
+                                <div className="w-16 h-20 md:w-24 md:h-32 overflow-hidden border border-white/10 flex-shrink-0 glass-light">
                                     <img
                                         src="/assets/ceo_latest.jpg"
                                         alt="Founder"
@@ -59,6 +105,7 @@ const About = () => {
                 </motion.div>
 
                 <motion.div
+                    ref={imageRef}
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
@@ -66,16 +113,19 @@ const About = () => {
                     transition={{ duration: 0.8 }}
                     className="relative lg:col-span-5"
                 >
-                    <div className="aspect-[3/4] overflow-hidden">
-                        <img
+                    <div className="aspect-[3/4] overflow-hidden parallax-container">
+                        <motion.img
                             src="/assets/IMG-20251203-WA0011.jpg"
                             alt="Philosophy"
                             loading="lazy"
-                            className={`w-full h-full object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale md:hover:grayscale-0`}
+                            style={{ y: imageY }}
+                            className={`w-full h-[120%] object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale md:hover:grayscale-0 parallax-image`}
                         />
                     </div>
                     {/* Accent Box - Integrated */}
                     <div className="absolute top-3 left-3 w-full h-full border border-gold/30 pointer-events-none -z-10" />
+                    {/* Corner Accent */}
+                    <div className="absolute -bottom-4 -right-4 w-24 h-24 border-r-2 border-b-2 border-gold/50 pointer-events-none" />
                 </motion.div>
             </div>
         </section>
@@ -83,3 +133,4 @@ const About = () => {
 }
 
 export default About
+

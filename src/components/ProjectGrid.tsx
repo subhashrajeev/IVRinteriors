@@ -1,9 +1,7 @@
-import { useState, type MouseEvent } from 'react'
+import { useState, type MouseEvent, useRef } from 'react'
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { triggerHaptic } from '../utils/haptics'
-
-
 
 const projects = [
     { id: 1, title: 'Luminous Arc', type: 'Signature Console', image: '/assets/IMG-20251203-WA0020.jpg', size: 'large' },
@@ -20,19 +18,17 @@ const projects = [
     { id: 12, title: 'Pastel Harmony', type: 'Complete Look', image: '/assets/IMG-20251203-WA0018.jpg', size: 'large' },
 ]
 
-const TiltCard = ({ children, className, onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => {
+const ParallaxCard = ({ project, index, onClick, className }: { project: typeof projects[0], index: number, onClick: () => void, className?: string }) => {
+    const ref = useRef<HTMLDivElement>(null)
     const x = useMotionValue(0)
     const y = useMotionValue(0)
 
     const mouseX = useSpring(x, { stiffness: 150, damping: 15 })
     const mouseY = useSpring(y, { stiffness: 150, damping: 15 })
 
-    const rotateX = useTransform(mouseY, [-0.5, 0.5], ["15deg", "-15deg"])
-    const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-15deg", "15deg"])
-
-    // Glare effect transforms
-    const glareX = useTransform(mouseX, [-0.5, 0.5], ["0%", "100%"])
-    const glareY = useTransform(mouseY, [-0.5, 0.5], ["0%", "100%"])
+    // Parallax effect: Image moves opposite to mouse
+    const imageX = useTransform(mouseX, [-0.5, 0.5], ["3%", "-3%"])
+    const imageY = useTransform(mouseY, [-0.5, 0.5], ["3%", "-3%"])
 
     const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect()
@@ -52,34 +48,72 @@ const TiltCard = ({ children, className, onClick }: { children: React.ReactNode,
 
     return (
         <motion.div
-            className={`relative preserve-3d cursor-pointer ${className}`}
-            style={{
-                perspective: 1000
-            }}
+            ref={ref}
+            className={`relative overflow-hidden cursor-pointer group ${className}`}
             onClick={onClick}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            whileHover={{ scale: 1.02, zIndex: 10 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6, delay: index * 0.05 }}
         >
+            {/* Image Container with Parallax */}
             <motion.div
+                className="absolute inset-[-5%] w-[110%] h-[110%]"
                 style={{
-                    rotateX,
-                    rotateY,
-                    transformStyle: "preserve-3d",
+                    x: imageX,
+                    y: imageY,
                 }}
-                className="w-full h-full relative"
             >
-                {children}
-
-                {/* Glare Effect */}
-                <motion.div
-                    className="absolute inset-0 pointer-events-none z-20 mix-blend-overlay"
-                    style={{
-                        background: `radial-gradient(circle at ${glareX} ${glareY}, rgba(255,255,255,0.4) 0%, transparent 60%)`,
-                        opacity: useTransform(mouseX, [-0.5, 0, 0.5], [0.6, 0, 0.6]) // Hide glare when centered, show on edges
-                    }}
-                />
+                {project.video ? (
+                    <video
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="none"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    >
+                        <source src={project.video} type="video/mp4" />
+                    </video>
+                ) : (
+                    <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    />
+                )}
             </motion.div>
+
+            {/* Dark Gradient Overlay - Always present for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent opacity-80" />
+
+            {/* Content Overlay - Glassmorphism Reveal */}
+            <div className="absolute inset-0 p-8 flex flex-col justify-between z-10 transition-all duration-500">
+                {/* Top Section: Number & Magnetic Button */}
+                <div className="flex justify-between items-start">
+                    <span className="bg-brand-green/90 backdrop-blur-md text-charcoal text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                        {index + 1 < 10 ? `0${index + 1}` : index + 1}
+                    </span>
+
+                    <div className="w-12 h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center text-white opacity-0 scale-90 -translate-y-4 -rotate-45 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 group-hover:rotate-0 transition-all duration-500 delay-100 origin-center shadow-lg">
+                        <ArrowUpRight size={20} />
+                    </div>
+                </div>
+
+                {/* Bottom Section: Text Reveal */}
+                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                    <span className="text-brand-green font-mono text-xs uppercase tracking-widest block mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                        {project.type}
+                    </span>
+                    <h3 className="text-3xl font-[Oswald] font-bold uppercase italic text-white leading-none drop-shadow-lg">
+                        {project.title}
+                    </h3>
+                    <div className="h-[2px] w-0 group-hover:w-16 bg-brand-green mt-4 transition-all duration-500 ease-out" />
+                </div>
+            </div>
         </motion.div>
     )
 }
@@ -91,13 +125,16 @@ const ProjectGrid = () => {
     const visibleProjects = showAll ? projects : projects.slice(0, 6)
 
     return (
-        <section id="projects" className="py-0 bg-charcoal relative">
+        <section id="projects" className="py-0 bg-charcoal relative noise-bg">
             {/* Header Section - Full Width, Stark */}
             <div className="border-b border-white/10 py-24 md:py-32">
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-end gap-10">
                         <div className="max-w-2xl">
-                            <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-6 block">Selected Works</span>
+                            <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-6 block flex items-center gap-3">
+                                <span className="w-8 h-[2px] bg-brand-green" />
+                                Selected Works
+                            </span>
                             <h2 className="text-5xl md:text-7xl font-[Oswald] font-bold italic uppercase leading-[0.9] text-white">
                                 Crafted <br /> <span className="text-white/30">Precision.</span>
                             </h2>
@@ -120,75 +157,20 @@ const ProjectGrid = () => {
             <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[400px] md:auto-rows-[600px] gap-2 p-2 md:gap-4 md:p-4">
                 <AnimatePresence mode='wait'>
                     {visibleProjects.map((project, index) => (
-                        <TiltCard
+                        <ParallaxCard
                             key={project.id}
+                            project={project}
+                            index={index}
                             onClick={() => {
                                 triggerHaptic('medium');
                                 setSelectedProject(project);
                             }}
-                            className={`group bg-grey-surface overflow-hidden border border-white/5
+                            className={`
                             ${project.size === 'large' ? 'md:col-span-8' :
                                     project.size === 'medium' ? 'md:col-span-6' :
                                         'md:col-span-4'}`
                             }
-                        >
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, delay: index * 0.1 }}
-                                className="w-full h-full relative"
-                            >
-                                {/* Image/Video Container */}
-                                <div className="w-full h-full absolute inset-0">
-                                    {project.video ? (
-                                        <video
-                                            autoPlay
-                                            muted
-                                            loop
-                                            playsInline
-                                            preload="none"
-                                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                                        >
-                                            <source src={project.video} type="video/mp4" />
-                                        </video>
-                                    ) : (
-                                        <img
-                                            src={project.image}
-                                            alt={project.title}
-                                            loading="lazy"
-                                            className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500"
-                                        />
-                                    )}
-                                </div>
-
-                                {/* Overlay Content - Technical Labels */}
-                                <div className="absolute inset-0 p-8 flex flex-col justify-between pointer-events-none transform-style-3d translate-z-10">
-                                    <div className="flex justify-between items-start opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-                                        <span className="bg-brand-green text-charcoal text-[10px] font-bold uppercase tracking-widest px-2 py-1 translate-z-20">
-                                            {index + 1 < 10 ? `0${index + 1}` : index + 1}
-                                        </span>
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                setSelectedProject(project);
-                                            }}
-                                            className="w-12 h-12 bg-charcoal/80 backdrop-blur-sm border border-white/10 flex items-center justify-center text-white hover:bg-brand-green hover:text-charcoal hover:border-brand-green transition-all duration-300 pointer-events-auto transform translate-z-20"
-                                        >
-                                            <ArrowUpRight size={20} />
-                                        </button>
-                                    </div>
-
-                                    <div className="transform translate-y-0 md:translate-y-8 md:group-hover:translate-y-0 transition-transform duration-500 translate-z-20">
-                                        <span className="text-brand-green font-mono text-xs uppercase tracking-widest block mb-2">{project.type}</span>
-                                        <h3 className="text-3xl font-[Oswald] font-bold uppercase italic text-white leading-none">
-                                            {project.title}
-                                        </h3>
-                                    </div>
-                                </div>
-                            </motion.div>
-                        </TiltCard>
+                        />
                     ))}
                 </AnimatePresence>
             </div>
