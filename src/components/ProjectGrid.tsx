@@ -127,7 +127,7 @@ const ProjectGrid = () => {
     return (
         <section id="projects" className="py-0 bg-charcoal relative noise-bg">
             {/* Header Section - Full Width, Stark */}
-            <div className="border-b border-white/10 py-24 md:py-32">
+            <div className="border-b border-white/10 py-14 md:py-20">
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-end gap-10">
                         <div className="max-w-2xl">

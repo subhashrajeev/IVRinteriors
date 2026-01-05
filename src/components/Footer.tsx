@@ -8,9 +8,9 @@ const Footer = () => {
     }
 
     return (
-        <footer className="bg-charcoal pt-24 pb-12 border-t border-white/10">
+        <footer className="bg-charcoal pt-16 pb-8 border-t border-white/10">
             <div className="container mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-24">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 mb-12 md:mb-16">
 
                     {/* Brand Column - Massive */}
                     <div className="col-span-1 md:col-span-2">

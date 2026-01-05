@@ -214,10 +214,10 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
 
 const Services = () => {
     return (
-        <section id="services" className="py-32 bg-charcoal relative noise-bg">
+        <section id="services" className="py-16 md:py-20 bg-charcoal relative noise-bg">
             <div className="container mx-auto px-6">
                 {/* Header - Left Aligned */}
-                <div className="mb-24 border-l-4 border-brand-green pl-8">
+                <div className="mb-10 md:mb-14 border-l-4 border-brand-green pl-6">
                     <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-4 block flex items-center gap-3">
                         <span className="w-4 h-[2px] bg-brand-green" />
                         Expertise

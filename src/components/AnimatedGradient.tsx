@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 
 interface AnimatedGradientProps {
     className?: string
@@ -9,10 +9,19 @@ const AnimatedGradient = ({
     className = '',
     colors = ['green', 'gold']
 }: AnimatedGradientProps) => {
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
     const orbConfigs = [
-        { top: '10%', left: '10%', size: 300, delay: 0, duration: 20 },
-        { top: '60%', right: '5%', size: 400, delay: 2, duration: 25 },
-        { bottom: '20%', left: '30%', size: 250, delay: 4, duration: 18 },
+        { top: '10%', left: '10%', size: isMobile ? 200 : 300, delay: 0 },
+        { top: '60%', right: '5%', size: isMobile ? 250 : 400, delay: 2 },
+        { bottom: '20%', left: '30%', size: isMobile ? 150 : 250, delay: 4 },
     ]
 
     const colorMap = {
@@ -26,9 +35,9 @@ const AnimatedGradient = ({
             {orbConfigs.map((config, index) => {
                 const colorClass = colorMap[colors[index % colors.length]]
                 return (
-                    <motion.div
+                    <div
                         key={index}
-                        className={`gradient-orb ${colorClass}`}
+                        className={`gradient-orb ${colorClass} ${!isMobile ? 'md:animate-float' : ''}`}
                         style={{
                             width: config.size,
                             height: config.size,
@@ -36,17 +45,7 @@ const AnimatedGradient = ({
                             left: config.left,
                             right: config.right,
                             bottom: config.bottom,
-                        }}
-                        animate={{
-                            x: [0, 30, -20, 10, 0],
-                            y: [0, -25, 15, -10, 0],
-                            scale: [1, 1.1, 0.95, 1.05, 1],
-                        }}
-                        transition={{
-                            duration: config.duration,
-                            repeat: Infinity,
-                            delay: config.delay,
-                            ease: "easeInOut",
+                            animationDelay: `${config.delay}s`,
                         }}
                     />
                 )

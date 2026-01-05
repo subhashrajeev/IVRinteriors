@@ -1,5 +1,5 @@
 import { ArrowRight, CheckCircle, XCircle, Loader2, Phone, Mail, MapPin } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
+import { useState, useEffect, type FormEvent } from 'react'
 import { motion } from 'framer-motion'
 import { triggerHaptic } from '../utils/haptics'
 import AnimatedGradient from './AnimatedGradient'
@@ -23,6 +23,14 @@ const Contact = () => {
     })
     const [status, setStatus] = useState<FormStatus>('idle')
     const [errorMessage, setErrorMessage] = useState('')
+    const [isMobile, setIsMobile] = useState(false)
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth < 768)
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
@@ -74,19 +82,19 @@ const Contact = () => {
     }
 
     return (
-        <section id="contact" className="bg-charcoal border-t border-white/5 overflow-hidden relative noise-bg">
-            {/* Animated Gradient Background */}
-            <AnimatedGradient colors={['green', 'gold']} className="opacity-40" />
+        <section id="contact" className={`bg-charcoal border-t border-white/5 overflow-hidden relative ${!isMobile ? 'noise-bg' : ''}`}>
+            {/* Animated Gradient Background - Reduced opacity on mobile */}
+            <AnimatedGradient colors={['green', 'gold']} className={isMobile ? 'opacity-20' : 'opacity-40'} />
 
             <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen relative z-10">
 
                 {/* Left Side: Info */}
                 <motion.div
-                    className="p-12 md:p-24 flex flex-col justify-between relative"
-                    initial={{ opacity: 0, x: -50 }}
+                    className="p-8 md:p-16 flex flex-col justify-between relative"
+                    initial={{ opacity: 0, x: isMobile ? 0 : -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
+                    viewport={{ once: true, margin: isMobile ? '0px' : '-100px' }}
+                    transition={{ duration: isMobile ? 0.3 : 0.8 }}
                 >
                     <div className="space-y-8">
                         <div>
@@ -104,13 +112,13 @@ const Contact = () => {
                         </p>
                     </div>
 
-                    <div className="grid gap-12 mt-20">
+                    <div className="grid gap-8 mt-10">
                         <motion.div
                             className="group"
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.2 }}
+                            transition={{ delay: isMobile ? 0.1 : 0.2, duration: isMobile ? 0.3 : 0.5 }}
                         >
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 glass flex items-center justify-center group-hover:bg-brand-green/20 transition-colors">
@@ -127,10 +135,10 @@ const Contact = () => {
 
                         <motion.div
                             className="group"
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.3 }}
+                            transition={{ delay: isMobile ? 0.15 : 0.3, duration: isMobile ? 0.3 : 0.5 }}
                         >
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 glass flex items-center justify-center group-hover:bg-brand-green/20 transition-colors">
@@ -147,10 +155,10 @@ const Contact = () => {
 
                         <motion.div
                             className="group"
-                            initial={{ opacity: 0, y: 20 }}
+                            initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
-                            transition={{ delay: 0.4 }}
+                            transition={{ delay: isMobile ? 0.2 : 0.4, duration: isMobile ? 0.3 : 0.5 }}
                         >
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 glass flex items-center justify-center group-hover:bg-brand-green/20 transition-colors">
@@ -170,17 +178,17 @@ const Contact = () => {
 
                 {/* Right Side: Glassmorphism Form */}
                 <motion.div
-                    className="p-12 md:p-24 flex items-center relative"
-                    initial={{ opacity: 0, x: 50 }}
+                    className="p-8 md:p-16 flex items-center relative"
+                    initial={{ opacity: 0, x: isMobile ? 0 : 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.2 }}
+                    viewport={{ once: true, margin: isMobile ? '0px' : '-100px' }}
+                    transition={{ duration: isMobile ? 0.3 : 0.8, delay: isMobile ? 0.1 : 0.2 }}
                 >
                     {/* Background gradient for this side */}
                     <div className="absolute inset-0 bg-gradient-to-br from-brand-green/5 via-transparent to-transparent pointer-events-none" />
 
-                    <div className="w-full max-w-lg mx-auto glass p-8 md:p-12 relative">
-                        <h3 className="text-white text-4xl font-[Oswald] font-bold uppercase italic mb-10 flex items-center gap-3">
+                    <div className={`w-full max-w-lg mx-auto p-8 md:p-12 relative ${isMobile ? 'bg-grey-surface/90 border border-white/10' : 'glass'}`}>
+                        <h3 className="text-white text-3xl font-[Oswald] font-bold uppercase italic mb-6 flex items-center gap-3">
                             <span className="w-3 h-3 bg-brand-green" />
                             Send A Request
                         </h3>

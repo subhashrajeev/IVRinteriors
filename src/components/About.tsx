@@ -26,14 +26,14 @@ const About = () => {
     const imageY = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [50, -50])
 
     return (
-        <section ref={sectionRef} id="about" className="py-32 bg-charcoal border-b border-white/5 relative overflow-hidden noise-bg">
+        <section ref={sectionRef} id="about" className="py-16 md:py-20 bg-charcoal border-b border-white/5 relative overflow-hidden noise-bg">
             {/* Static Gradient Orbs - No JS animation for performance */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
                 <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] bg-gradient-to-r from-gold/30 to-transparent rounded-full blur-[80px] md:animate-float" />
                 <div className="absolute bottom-[20%] right-[5%] w-[400px] h-[400px] bg-gradient-to-r from-brand-green/30 to-transparent rounded-full blur-[80px] md:animate-float" style={{ animationDelay: '2s' }} />
             </div>
 
-            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-20 items-center relative z-10">
+            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-center relative z-10">
                 <motion.div
                     initial={{ opacity: 0, x: isMobile ? 0 : -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
@@ -121,7 +121,7 @@ const About = () => {
                                 alt="Philosophy"
                                 loading="lazy"
                                 style={{ y: imageY }}
-                                className={`w-full h-[120%] object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} grayscale hover:grayscale-0 parallax-image`}
+                                className={`w-full h-[120%] object-cover transition-all duration-700 grayscale hover:grayscale-0 parallax-image`}
                             />
                         )}
                     </div>
