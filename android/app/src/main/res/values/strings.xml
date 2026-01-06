@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Cave Interiors</string>
+    <string name="title_activity_main">Cave Interiors</string>
+    <string name="package_name">com.ivrinteriors.app</string>
+    <string name="custom_url_scheme">com.ivrinteriors.app</string>
+</resources>
