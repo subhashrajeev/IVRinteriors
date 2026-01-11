@@ -179,7 +179,7 @@ const Hero = () => {
             )}
 
             {/* Content - Left Aligned, Massive */}
-            <div ref={contentRef} className="container mx-auto px-6 relative z-10 pt-20">
+            <div ref={contentRef} className="container mx-auto px-6 relative z-10 pt-36 md:pt-44">
                 <div className="max-w-5xl">
                     <p className="hero-subtitle text-brand-green font-bold tracking-[0.3em] uppercase mb-4 text-sm md:text-base flex items-center gap-3">
                         <span className="w-8 h-[2px] bg-brand-green" />
@@ -211,7 +211,7 @@ const Hero = () => {
                     </div>
 
                     <div className="hero-cta mt-6 md:mt-8 flex flex-col md:flex-row gap-4">
-                        <button onClick={() => scrollToSection('projects')} className="btn-primary magnetic-btn group">
+                        <button onClick={() => scrollToSection('projects')} className="btn-primary group">
                             <span className="relative z-10 flex items-center gap-2">
                                 View Portfolio
                                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -219,7 +219,7 @@ const Hero = () => {
                                 </svg>
                             </span>
                         </button>
-                        <button onClick={() => scrollToSection('contact')} className="btn-outline magnetic-btn">
+                        <button onClick={() => scrollToSection('contact')} className="btn-outline">
                             <span className="relative z-10">Get In Touch</span>
                         </button>
                     </div>

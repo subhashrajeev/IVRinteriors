@@ -1,5 +1,5 @@
-import { useState, type MouseEvent, useRef } from 'react'
-import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { triggerHaptic } from '../utils/haptics'
 
@@ -18,54 +18,18 @@ const projects = [
     { id: 12, title: 'Pastel Harmony', type: 'Complete Look', image: '/assets/IMG-20251203-WA0018.jpg', size: 'large' },
 ]
 
-const ParallaxCard = ({ project, index, onClick, className }: { project: typeof projects[0], index: number, onClick: () => void, className?: string }) => {
-    const ref = useRef<HTMLDivElement>(null)
-    const x = useMotionValue(0)
-    const y = useMotionValue(0)
-
-    const mouseX = useSpring(x, { stiffness: 150, damping: 15 })
-    const mouseY = useSpring(y, { stiffness: 150, damping: 15 })
-
-    // Parallax effect: Image moves opposite to mouse
-    const imageX = useTransform(mouseX, [-0.5, 0.5], ["3%", "-3%"])
-    const imageY = useTransform(mouseY, [-0.5, 0.5], ["3%", "-3%"])
-
-    const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect()
-        const width = rect.width
-        const height = rect.height
-        const mouseXFromCenter = e.clientX - rect.left - width / 2
-        const mouseYFromCenter = e.clientY - rect.top - height / 2
-
-        x.set(mouseXFromCenter / width)
-        y.set(mouseYFromCenter / height)
-    }
-
-    const handleMouseLeave = () => {
-        x.set(0)
-        y.set(0)
-    }
-
+const ProjectCard = ({ project, index, onClick, className }: { project: typeof projects[0], index: number, onClick: () => void, className?: string }) => {
     return (
         <motion.div
-            ref={ref}
-            className={`relative overflow-hidden cursor-pointer group ${className}`}
+            className={`relative overflow-hidden cursor-pointer ${className}`}
             onClick={onClick}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6, delay: index * 0.05 }}
         >
-            {/* Image Container with Parallax */}
-            <motion.div
-                className="absolute inset-[-5%] w-[110%] h-[110%]"
-                style={{
-                    x: imageX,
-                    y: imageY,
-                }}
-            >
+            {/* Image Container - Static */}
+            <div className="absolute inset-0 w-full h-full">
                 {project.video ? (
                     <video
                         autoPlay
@@ -73,7 +37,7 @@ const ParallaxCard = ({ project, index, onClick, className }: { project: typeof 
                         loop
                         playsInline
                         preload="none"
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        className="w-full h-full object-cover"
                     >
                         <source src={project.video} type="video/mp4" />
                     </video>
@@ -82,36 +46,36 @@ const ParallaxCard = ({ project, index, onClick, className }: { project: typeof 
                         src={project.image}
                         alt={project.title}
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                        className="w-full h-full object-cover"
                     />
                 )}
-            </motion.div>
+            </div>
 
             {/* Dark Gradient Overlay - Always present for text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-transparent to-transparent opacity-80" />
 
-            {/* Content Overlay - Glassmorphism Reveal */}
-            <div className="absolute inset-0 p-8 flex flex-col justify-between z-10 transition-all duration-500">
-                {/* Top Section: Number & Magnetic Button */}
+            {/* Content Overlay - Always Visible */}
+            <div className="absolute inset-0 p-8 flex flex-col justify-between z-10">
+                {/* Top Section: Number & Button */}
                 <div className="flex justify-between items-start">
-                    <span className="bg-brand-green/90 backdrop-blur-md text-charcoal text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                    <span className="bg-brand-green/90 backdrop-blur-md text-charcoal text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm">
                         {index + 1 < 10 ? `0${index + 1}` : index + 1}
                     </span>
 
-                    <div className="w-12 h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center text-white opacity-0 scale-90 -translate-y-4 -rotate-45 group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0 group-hover:rotate-0 transition-all duration-500 delay-100 origin-center shadow-lg">
+                    <div className="w-12 h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center text-white shadow-lg">
                         <ArrowUpRight size={20} />
                     </div>
                 </div>
 
-                {/* Bottom Section: Text Reveal */}
-                <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                    <span className="text-brand-green font-mono text-xs uppercase tracking-widest block mb-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                {/* Bottom Section: Text - Always Visible */}
+                <div>
+                    <span className="text-brand-green font-mono text-xs uppercase tracking-widest block mb-1">
                         {project.type}
                     </span>
                     <h3 className="text-3xl font-[Oswald] font-bold uppercase italic text-white leading-none drop-shadow-lg">
                         {project.title}
                     </h3>
-                    <div className="h-[2px] w-0 group-hover:w-16 bg-brand-green mt-4 transition-all duration-500 ease-out" />
+                    <div className="h-[2px] w-16 bg-brand-green mt-4" />
                 </div>
             </div>
         </motion.div>
@@ -144,10 +108,10 @@ const ProjectGrid = () => {
                                 triggerHaptic('medium');
                                 setShowAll(!showAll);
                             }}
-                            className="btn-outline flex items-center gap-3 group"
+                            className="btn-outline flex items-center gap-3"
                         >
                             {showAll ? 'View Less' : 'View All Projects'}
-                            <ArrowUpRight size={20} className={`transform transition-transform duration-300 ${showAll ? 'rotate-90' : 'group-hover:translate-x-1 group-hover:-translate-y-1'}`} />
+                            <ArrowUpRight size={20} className={`transform transition-transform duration-300 ${showAll ? 'rotate-90' : ''}`} />
                         </button>
                     </div>
                 </div>
@@ -157,7 +121,7 @@ const ProjectGrid = () => {
             <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[400px] md:auto-rows-[600px] gap-2 p-2 md:gap-4 md:p-4">
                 <AnimatePresence mode='wait'>
                     {visibleProjects.map((project, index) => (
-                        <ParallaxCard
+                        <ProjectCard
                             key={project.id}
                             project={project}
                             index={index}
@@ -200,7 +164,7 @@ const ProjectGrid = () => {
                         {/* Navigation Arrows */}
                         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-12 z-[105] pointer-events-none">
                             <button
-                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto group"
+                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
@@ -209,10 +173,10 @@ const ProjectGrid = () => {
                                     setSelectedProject(projects[prevIndex]);
                                 }}
                             >
-                                <ArrowUpRight size={24} className="-rotate-135 group-active:scale-90 transition-transform" />
+                                <ArrowUpRight size={24} className="-rotate-135" />
                             </button>
                             <button
-                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto group"
+                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
@@ -221,7 +185,7 @@ const ProjectGrid = () => {
                                     setSelectedProject(projects[nextIndex]);
                                 }}
                             >
-                                <ArrowUpRight size={24} className="rotate-45 group-active:scale-90 transition-transform" />
+                                <ArrowUpRight size={24} className="rotate-45" />
                             </button>
                         </div>
 

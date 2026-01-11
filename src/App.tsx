@@ -1,26 +1,32 @@
+import { lazy, Suspense, useState } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import ProjectGrid from './components/ProjectGrid'
-import Footer from './components/Footer'
 import SmoothScroll from './components/SmoothScroll'
-import Services from './components/Services'
-import Contact from './components/Contact'
-import CustomCursor from './components/CustomCursor'
 import PageLoader from './components/PageLoader'
 import ScrollProgress from './components/ScrollProgress'
 import FloatingWhatsApp from './components/FloatingWhatsApp'
 
-import About from './components/About'
-
 import { SpeedInsights } from '@vercel/speed-insights/react'
-import { useState } from 'react'
+
+// Lazy load heavy components for better initial load performance
+const ProjectGrid = lazy(() => import('./components/ProjectGrid'))
+const Services = lazy(() => import('./components/Services'))
+const About = lazy(() => import('./components/About'))
+const Contact = lazy(() => import('./components/Contact'))
+const Footer = lazy(() => import('./components/Footer'))
+
+// Minimal loading fallback
+const SectionLoader = () => (
+  <div className="min-h-[50vh] flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-brand-green border-t-transparent rounded-full animate-spin" />
+  </div>
+)
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   return (
     <main className="bg-charcoal">
-      <CustomCursor />
       <PageLoader onComplete={() => setIsLoading(false)} />
 
       {/* Content renders immediately but is hidden behind loader - allows LCP elements to start loading */}
@@ -33,12 +39,13 @@ const App = () => {
         <SmoothScroll />
         <Navbar />
         <Hero />
-        <ProjectGrid />
-        <Services />
-        <About />
-        <Contact />
-
-        <Footer />
+        <Suspense fallback={<SectionLoader />}>
+          <ProjectGrid />
+          <Services />
+          <About />
+          <Contact />
+          <Footer />
+        </Suspense>
         <FloatingWhatsApp />
       </div>
       <SpeedInsights />
@@ -47,3 +54,4 @@ const App = () => {
 }
 
 export default App
+
