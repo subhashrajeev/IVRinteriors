@@ -36,7 +36,7 @@ const ProjectCard = ({ project, index, onClick, className }: { project: typeof p
                         muted
                         loop
                         playsInline
-                        preload="none"
+                        preload="auto"
                         className="w-full h-full object-cover"
                     >
                         <source src={project.video} type="video/mp4" />
