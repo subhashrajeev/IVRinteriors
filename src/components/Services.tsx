@@ -56,6 +56,10 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{
+                y: -4,
+                transition: { duration: 0.2, ease: "easeOut" }
+            }}
             viewport={{
                 once: !isMobile,
                 amount: isMobile ? 0.3 : 0.6,
@@ -65,21 +69,21 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                 delay: isMobile ? 0 : index * 0.05,
                 duration: 0.4,
             }}
-            className="group relative z-10"
+            className="group relative z-10 cursor-pointer"
             onClick={() => triggerHaptic('light')}
         >
-            {/* Offset Shadow Box - always visible */}
+            {/* Offset Shadow Box - shifts on hover */}
             <div
-                className="absolute inset-0 bg-brand-green z-0"
+                className="absolute inset-0 bg-brand-green z-0 transition-transform duration-300 ease-out group-hover:translate-x-3 group-hover:translate-y-3"
                 style={{ transform: 'translate(8px, 8px)' }}
             />
 
             <div
-                className="h-full p-10 border border-white/10 bg-white relative z-10 overflow-hidden flex flex-col justify-between"
+                className="h-full p-10 border border-white/10 bg-white relative z-10 overflow-hidden flex flex-col justify-between transition-all duration-300"
             >
                 {/* Floating Glow Effect - GREEN */}
                 <div
-                    className="absolute -top-10 -right-10 w-40 h-40 bg-brand-green/20 blur-[60px] rounded-full pointer-events-none"
+                    className="absolute -top-10 -right-10 w-40 h-40 bg-brand-green/20 blur-[60px] rounded-full pointer-events-none transition-opacity duration-300 group-hover:opacity-60"
                 />
 
                 <div className="relative z-10">
@@ -87,9 +91,9 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                         <div className="flex items-center gap-4">
                             {/* Icon */}
                             <div
-                                className="w-12 h-12 border border-charcoal/10 flex items-center justify-center bg-charcoal/5"
+                                className="w-12 h-12 border border-charcoal/10 flex items-center justify-center bg-charcoal/5 transition-all duration-300 group-hover:bg-brand-green/10 group-hover:border-brand-green/30"
                             >
-                                <service.IconComponent size={24} className="text-brand-green" />
+                                <service.IconComponent size={24} className="text-brand-green transition-transform duration-300 group-hover:scale-110" />
                             </div>
                             <h3
                                 className="text-3xl font-[Oswald] font-bold uppercase italic text-charcoal"
@@ -98,7 +102,7 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                             </h3>
                         </div>
                         <span
-                            className="text-5xl font-[Oswald] font-bold text-brand-green"
+                            className="text-5xl font-[Oswald] font-bold text-brand-green transition-transform duration-300 group-hover:scale-110"
                         >
                             {service.icon}
                         </span>
@@ -111,9 +115,9 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
                     </p>
                 </div>
 
-                {/* Arrow Icon - always visible */}
+                {/* Arrow Icon - slides on hover */}
                 <div
-                    className="mt-8"
+                    className="mt-8 transition-transform duration-300 group-hover:translate-x-2"
                 >
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-brand-green">
                         <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

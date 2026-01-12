@@ -45,11 +45,56 @@ const About = () => {
                         <span className="w-8 h-[2px] bg-gold" />
                         Who We Are
                     </span>
-                    <h2 className="text-5xl md:text-7xl font-[Oswald] font-bold uppercase italic text-white mb-10 leading-[0.9]">
-                        Crafting <br /> <span className="text-gold">Legacy.</span>
-                    </h2>
+
+                    {/* Heading with CEO beside it */}
+                    <div className="flex flex-col md:flex-row md:items-end md:gap-8 mb-10">
+                        <h2 className="text-5xl md:text-7xl font-[Oswald] font-bold uppercase italic text-white leading-[0.9]">
+                            Crafting <br /> <span className="text-gold">Legacy.</span>
+                        </h2>
+
+                        {/* CEO Card - Subtle & Premium */}
+                        <div className="flex items-center gap-6 mt-8 md:mt-0 md:mb-2 group">
+                            {/* Refined Photo Frame */}
+                            <div className="relative">
+                                {/* Subtle Ambient Glow */}
+                                <div className="absolute -inset-3 bg-gold/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+                                <div className="relative w-20 h-28 md:w-24 md:h-32 border border-gold/20 p-1.5 transition-transform duration-500 group-hover:scale-105">
+                                    {/* Corner Accents */}
+                                    <div className="absolute -top-1 -left-1 w-3 h-3 border-t border-l border-gold/60" />
+                                    <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b border-r border-gold/60" />
+
+                                    <div className="w-full h-full overflow-hidden bg-charcoal">
+                                        <img
+                                            src="/assets/ceo_latest.jpg"
+                                            alt="Founder"
+                                            loading="lazy"
+                                            className={`w-full h-full object-cover transition-all duration-1000 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale group-hover:grayscale-0 contrast-[1.1] brightness-[1.05]`}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Sophisticated Text */}
+                            <div className="space-y-1">
+                                <span
+                                    className="text-gold text-2xl md:text-3xl block transition-all duration-500 group-hover:tracking-wider"
+                                    style={{ fontFamily: "'Great Vibes', cursive" }}
+                                >
+                                    I. Venkataraju
+                                </span>
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-[1px] bg-gradient-to-r from-gold/50 to-transparent" />
+                                    <p className="text-white/40 text-[10px] uppercase tracking-[0.3em] font-bold">
+                                        Founder
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <p className="text-white/60 text-lg font-light leading-relaxed mb-12">
-                        Founded by <span className="text-gold text-3xl font-bold mx-2" style={{ fontFamily: "'Great Vibes', cursive" }}>I. Venkataraju</span>, IVR Interiors has been a cornerstone of design excellence in Hyderabad for over 15 years. We merge the raw strength of industrial aesthetics with the warmth of organic luxury, curating spaces that are not just lived in, but felt.
+                        With over 15 years of design excellence in Hyderabad, IVR Interiors merges the raw strength of industrial aesthetics with the warmth of organic luxury, curating spaces that are not just lived in, but felt.
                     </p>
 
                     <div className="flex flex-wrap gap-8 md:gap-12 border-t border-white/10 pt-8 items-end">
@@ -70,30 +115,6 @@ const About = () => {
                                 <CounterAnimation end={1000} suffix="+" duration={3000} />
                             </h4>
                             <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Projects Done</p>
-                        </div>
-
-                        <div className="ml-auto text-right w-full md:w-auto mt-4 md:mt-0">
-                            <div className="flex items-center justify-end gap-4 md:block">
-                                <div className="text-right md:mb-2">
-                                    <span
-                                        className="text-gold text-xl block"
-                                        style={{ fontFamily: "'Great Vibes', cursive" }}
-                                    >
-                                        I. Venkataraju
-                                    </span>
-                                    <p className="text-white/40 text-[9px] uppercase tracking-[0.2em] font-bold">
-                                        Founder
-                                    </p>
-                                </div>
-                                <div className="w-16 h-20 md:w-24 md:h-32 overflow-hidden border border-white/10 flex-shrink-0 glass-light">
-                                    <img
-                                        src="/assets/ceo_latest.jpg"
-                                        alt="Founder"
-                                        loading="lazy"
-                                        className={`w-full h-full object-cover transition-all duration-700 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale md:hover:grayscale-0`}
-                                    />
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </motion.div>
