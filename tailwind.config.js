@@ -11,6 +11,7 @@ export default {
                 'brand-red': '#C1272D',   // Card Red
                 charcoal: '#050505',
                 'grey-surface': '#121212',
+                'gold': '#D4AF37',
             },
             fontFamily: {
                 sans: ['Inter', 'sans-serif'],

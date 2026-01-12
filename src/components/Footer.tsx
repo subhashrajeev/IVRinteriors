@@ -37,13 +37,13 @@ const Footer = () => {
                     <div>
                         <h4 className="text-brand-green font-bold tracking-[0.2em] uppercase text-xs mb-8">Connect</h4>
                         <div className="flex gap-4">
-                            <a href="https://www.instagram.com/ivr_interiors/?hl=en" target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-12 h-12 bg-white/5 flex items-center justify-center text-white hover:bg-brand-green hover:text-charcoal transition-colors duration-300">
+                            <a href="https://www.instagram.com/ivr_interiors/?hl=en" target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-12 h-12 bg-white/5 flex items-center justify-center text-white hover:bg-brand-green hover:text-charcoal transition-colors duration-300" aria-label="Visit our Instagram">
                                 <Instagram size={20} />
                             </a>
-                            <a href="https://www.youtube.com/channel/UCX8qLuZl06_D15-ntVFfhBA" target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-12 h-12 bg-white/5 flex items-center justify-center text-white hover:bg-brand-green hover:text-charcoal transition-colors duration-300">
+                            <a href="https://www.youtube.com/channel/UCX8qLuZl06_D15-ntVFfhBA" target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-12 h-12 bg-white/5 flex items-center justify-center text-white hover:bg-brand-green hover:text-charcoal transition-colors duration-300" aria-label="Visit our YouTube channel">
                                 <Youtube size={20} />
                             </a>
-                            <a href="https://wa.me/918885575733" target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-12 h-12 bg-white/5 flex items-center justify-center text-white hover:bg-brand-green hover:text-charcoal transition-colors duration-300">
+                            <a href="https://wa.me/918885575733" target="_blank" rel="noopener noreferrer" onClick={() => triggerHaptic('light')} className="w-12 h-12 bg-white/5 flex items-center justify-center text-white hover:bg-brand-green hover:text-charcoal transition-colors duration-300" aria-label="Contact us on WhatsApp">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="20"
@@ -64,7 +64,7 @@ const Footer = () => {
                     <p className="text-white/30 text-[10px] uppercase tracking-[0.2em] font-mono">
                         © 2025 IVR Interiors. All Rights Reserved.
                     </p>
-                    <button onClick={scrollToTop} className="group flex items-center gap-2 text-white/50 hover:text-brand-green transition-colors uppercase tracking-widest text-xs font-bold mt-4 md:mt-0">
+                    <button onClick={scrollToTop} className="group flex items-center gap-2 text-white/50 hover:text-brand-green transition-colors uppercase tracking-widest text-xs font-bold mt-4 md:mt-0" aria-label="Scroll back to top">
                         Back to Top
                         <ArrowUp size={14} className="group-hover:-translate-y-1 transition-transform duration-300" />
                     </button>

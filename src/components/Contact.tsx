@@ -98,12 +98,12 @@ const Contact = () => {
                 >
                     <div className="space-y-8">
                         <div>
-                            <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-4 block flex items-center gap-3">
+                            <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-4 block flex items-center gap-3 font-playfair">
                                 <span className="w-8 h-[2px] bg-brand-green" />
                                 Contact
                             </span>
-                            <h2 className="text-6xl md:text-7xl font-[Oswald] font-bold italic uppercase text-white leading-[0.9]">
-                                Let's Talk <br /> <span className="text-white/30">Future.</span>
+                            <h2 className="text-6xl md:text-7xl font-oswald font-bold italic uppercase text-white leading-[0.9]">
+                                Let's Talk <br /> <span className="text-white/30 font-playfair lowercase italic font-normal tracking-tight">Future.</span>
                             </h2>
                         </div>
 
@@ -199,6 +199,8 @@ const Contact = () => {
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
                                 transition={{ duration: 0.5 }}
+                                role="status"
+                                aria-live="polite"
                             >
                                 <CheckCircle className="w-16 h-16 text-brand-green mx-auto" />
                                 <h4 className="text-2xl font-[Oswald] font-bold text-white uppercase">Message Sent!</h4>
@@ -247,6 +249,7 @@ const Contact = () => {
                                         className="flex items-center gap-3 p-4 glass border-red-500/30 border"
                                         initial={{ opacity: 0, y: -10 }}
                                         animate={{ opacity: 1, y: 0 }}
+                                        role="alert"
                                     >
                                         <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
                                         <p className="text-red-400 text-sm font-medium">{errorMessage}</p>

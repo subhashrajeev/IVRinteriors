@@ -7,9 +7,11 @@
   --color-brand-red: #C1272D;
   --color-charcoal: #050505;
   --color-grey-surface: #121212;
+  --color-gold: #D4AF37;
 
   --font-sans: 'Inter', 'sans-serif';
   --font-oswald: 'Oswald', 'sans-serif';
+  --font-playfair: 'Playfair Display', 'serif';
 }
 
 @layer base {
@@ -22,8 +24,16 @@
     /* Deepest Black */
     --white: #FFFFFF;
     --grey-surface: #121212;
+    --gold: #D4AF37;
     --radius: 0px;
     /* The MKBHD Rule: Zero Radius */
+  }
+
+  /* Focus States for Accessibility */
+  :focus-visible {
+    outline: 2px solid var(--brand-green);
+    outline-offset: 4px;
+    border-radius: 2px;
   }
 
   html {
@@ -319,7 +329,7 @@
 }
 
 .gradient-orb-gold {
-  background: radial-gradient(circle, #D4AF37 0%, transparent 70%);
+  background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
 }
 
 .gradient-orb-blue {
@@ -402,8 +412,33 @@
     animation: none;
   }
 
+  .animate-slide-up {
+    animation: none;
+  }
+
   /* Reduce ken-burns animation complexity */
   .animate-ken-burns {
     animation: none;
+  }
+}
+
+/* Reduced Motion Support - HIGH PRIORITY */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-ken-burns,
+  .animate-float,
+  .animate-pulse-glow,
+  .animate-shimmer,
+  .animate-slide-up {
+    animation: none !important;
   }
 }

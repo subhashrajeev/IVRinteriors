@@ -31,7 +31,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-charcoal/90 backdrop-blur-md py-4 border-b border-white/10' : 'bg-transparent py-8'}`}>
+            <nav className={`fixed top-4 left-4 right-4 z-50 transition-all duration-300 ${isScrolled ? 'bg-charcoal/90 backdrop-blur-md py-4 border border-white/10' : 'bg-transparent py-6'}`}>
                 <div className="container mx-auto px-6 flex justify-between items-center">
 
                     {/* Logo - Text Only, Bold, Sharp - Static */}
@@ -46,13 +46,12 @@ const Navbar = () => {
                         <span className="text-xl md:text-2xl text-brand-green">INTERIORS</span>
                     </a>
 
-                    {/* Desktop Nav */}
                     <div className="hidden md:flex items-center gap-12">
                         {['Projects', 'Services', 'About', 'Contact'].map((item) => (
                             <a
                                 key={item}
                                 href={`#${item.toLowerCase()}`}
-                                className="text-sm uppercase tracking-[0.2em] font-medium text-white/70 hover:text-brand-green transition-colors duration-200"
+                                className="text-sm uppercase tracking-[0.2em] font-medium text-white/70 hover:text-brand-green focus:text-brand-green transition-colors duration-200 outline-none"
                             >
                                 {item}
                             </a>
@@ -81,7 +80,7 @@ const Navbar = () => {
             </nav>
 
             {/* Mobile Menu Overlay - Outside nav to ensure full viewport coverage */}
-            <div className={`fixed inset-0 w-screen h-[100dvh] bg-[#050505] z-[60] flex flex-col items-center justify-center gap-10 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+            <div className={`fixed inset-0 w-screen h-[100dvh] bg-charcoal z-[60] flex flex-col items-center justify-center gap-10 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 {/* Back Arrow - Top Left */}
                 <button
                     className="absolute top-8 left-6 text-white hover:text-brand-green transition-colors p-2"

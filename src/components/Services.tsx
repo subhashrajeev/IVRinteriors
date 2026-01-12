@@ -71,6 +71,7 @@ const ServiceCard = ({ service, index }: { service: typeof services[0], index: n
             }}
             className="group relative z-10 cursor-pointer"
             onClick={() => triggerHaptic('light')}
+            aria-label={`Learn more about ${service.title} service`}
         >
             {/* Offset Shadow Box - shifts on hover */}
             <div

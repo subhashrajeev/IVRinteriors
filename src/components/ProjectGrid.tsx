@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowUpRight, X } from 'lucide-react'
 import { triggerHaptic } from '../utils/haptics'
@@ -86,6 +86,30 @@ const ProjectGrid = () => {
     const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null)
     const [showAll, setShowAll] = useState(false)
 
+    // Keyboard navigation for lightbox
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (!selectedProject) return;
+
+            if (e.key === 'Escape') {
+                setSelectedProject(null);
+            } else if (e.key === 'ArrowRight') {
+                const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
+                const nextIndex = (currentIndex + 1) % projects.length;
+                setSelectedProject(projects[nextIndex]);
+                triggerHaptic('light');
+            } else if (e.key === 'ArrowLeft') {
+                const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
+                const prevIndex = (currentIndex - 1 + projects.length) % projects.length;
+                setSelectedProject(projects[prevIndex]);
+                triggerHaptic('light');
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [selectedProject]);
+
     const visibleProjects = showAll ? projects : projects.slice(0, 6)
 
     return (
@@ -95,12 +119,12 @@ const ProjectGrid = () => {
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-end gap-10">
                         <div className="max-w-2xl">
-                            <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-6 block flex items-center gap-3">
+                            <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-6 block flex items-center gap-3 font-playfair">
                                 <span className="w-8 h-[2px] bg-brand-green" />
                                 Selected Works
                             </span>
-                            <h2 className="text-5xl md:text-7xl font-[Oswald] font-bold italic uppercase leading-[0.9] text-white">
-                                Crafted <br /> <span className="text-white/30">Precision.</span>
+                            <h2 className="text-5xl md:text-7xl font-oswald font-bold italic uppercase leading-[0.9] text-white">
+                                Crafted <br /> <span className="text-white/30 font-playfair lowercase italic font-normal tracking-tight">Precision.</span>
                             </h2>
                         </div>
                         <button
@@ -134,6 +158,7 @@ const ProjectGrid = () => {
                                     project.size === 'medium' ? 'md:col-span-6' :
                                         'md:col-span-4'}`
                             }
+                            aria-label={`View details of ${project.title} - ${project.type}`}
                         />
                     ))}
                 </AnimatePresence>
@@ -151,12 +176,13 @@ const ProjectGrid = () => {
                     >
                         {/* Close Button */}
                         <button
-                            className="absolute top-8 right-8 text-white/50 hover:text-brand-green transition-colors z-[110]"
+                            className="absolute top-8 right-8 text-white/50 hover:text-brand-green transition-colors z-[110] focus:text-brand-green outline-none"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 triggerHaptic('light');
                                 setSelectedProject(null);
                             }}
+                            aria-label="Close project details"
                         >
                             <X size={40} strokeWidth={1} />
                         </button>
@@ -164,7 +190,7 @@ const ProjectGrid = () => {
                         {/* Navigation Arrows */}
                         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-12 z-[105] pointer-events-none">
                             <button
-                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto"
+                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto focus:border-brand-green outline-none"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
@@ -172,11 +198,12 @@ const ProjectGrid = () => {
                                     triggerHaptic('light');
                                     setSelectedProject(projects[prevIndex]);
                                 }}
+                                aria-label="Previous project"
                             >
                                 <ArrowUpRight size={24} className="-rotate-135" />
                             </button>
                             <button
-                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto"
+                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto focus:border-brand-green outline-none"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
@@ -184,6 +211,7 @@ const ProjectGrid = () => {
                                     triggerHaptic('light');
                                     setSelectedProject(projects[nextIndex]);
                                 }}
+                                aria-label="Next project"
                             >
                                 <ArrowUpRight size={24} className="rotate-45" />
                             </button>

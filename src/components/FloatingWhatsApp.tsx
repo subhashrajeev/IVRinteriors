@@ -17,7 +17,7 @@ const FloatingWhatsApp = () => {
             <span className="absolute inset-0 rounded-full bg-green-500 animate-pulse-ring" style={{ animationDelay: '0.5s' }} />
 
             {/* Main button */}
-            <div className="relative w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg transition-transform duration-300 group-hover:scale-110">
+            <div className="relative w-14 h-14 bg-green-500 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110 group-focus-visible:ring-4 group-focus-visible:ring-green-500/50">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="28"

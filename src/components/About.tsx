@@ -41,15 +41,15 @@ const About = () => {
                     transition={{ duration: isMobile ? 0.4 : 0.6 }}
                     className="lg:col-span-7"
                 >
-                    <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-8 block flex items-center gap-3">
+                    <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-8 block flex items-center gap-3 font-playfair">
                         <span className="w-8 h-[2px] bg-gold" />
                         Who We Are
                     </span>
 
                     {/* Heading with CEO beside it */}
                     <div className="flex flex-col md:flex-row md:items-end md:gap-8 mb-10">
-                        <h2 className="text-5xl md:text-7xl font-[Oswald] font-bold uppercase italic text-white leading-[0.9]">
-                            Crafting <br /> <span className="text-gold">Legacy.</span>
+                        <h2 className="text-5xl md:text-7xl font-oswald font-bold uppercase italic text-white leading-[0.9]">
+                            Crafting <br /> <span className="text-gold font-playfair lowercase italic font-normal tracking-tight">Legacy.</span>
                         </h2>
 
                         {/* CEO Card - Subtle & Premium */}
@@ -143,6 +143,7 @@ const About = () => {
                                 loading="lazy"
                                 style={{ y: imageY }}
                                 className={`w-full h-[120%] object-cover transition-all duration-700 grayscale hover:grayscale-0 parallax-image`}
+                                aria-label="Our philosophy illustration"
                             />
                         )}
                     </div>

@@ -16,12 +16,12 @@ const GeometricBackground = () => (
         <svg className="absolute inset-0 w-full h-full opacity-20" preserveAspectRatio="xMidYMid slice">
             <defs>
                 <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#8CBF3F" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="#8CBF3F" stopOpacity="0" />
+                    <stop offset="0%" stopColor="var(--brand-green)" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="var(--brand-green)" stopOpacity="0" />
                 </linearGradient>
                 <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#D4AF37" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#D4AF37" stopOpacity="0" />
+                    <stop offset="0%" stopColor="var(--gold)" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="var(--gold)" stopOpacity="0" />
                 </linearGradient>
             </defs>
 
@@ -35,9 +35,9 @@ const GeometricBackground = () => (
             <polygon points="100%,0 100%,30% 70%,0" fill="url(#greenGrad)" opacity="0.4" />
 
             {/* Accent lines */}
-            <line x1="0" y1="40%" x2="60%" y2="100%" stroke="#8CBF3F" strokeWidth="1" opacity="0.15" />
-            <line x1="40%" y1="0" x2="100%" y2="60%" stroke="#D4AF37" strokeWidth="1" opacity="0.1" />
-            <line x1="20%" y1="0" x2="80%" y2="100%" stroke="#8CBF3F" strokeWidth="0.5" opacity="0.2" />
+            <line x1="0" y1="40%" x2="60%" y2="100%" stroke="var(--brand-green)" strokeWidth="1" opacity="0.15" />
+            <line x1="40%" y1="0" x2="100%" y2="60%" stroke="var(--gold)" strokeWidth="1" opacity="0.1" />
+            <line x1="20%" y1="0" x2="80%" y2="100%" stroke="var(--brand-green)" strokeWidth="0.5" opacity="0.2" />
         </svg>
 
         {/* Floating geometric accents */}
@@ -51,12 +51,13 @@ const GeometricBackground = () => (
     </div>
 )
 
+const originalText = ['Transform', 'Your Space', 'Into Art.']
+
 const Hero = () => {
     const heroRef = useRef<HTMLDivElement>(null)
     const contentRef = useRef<HTMLDivElement>(null)
     const [scrambledText, setScrambledText] = useState(['Transform', 'Your Space', 'Into Art.'])
     const [isMobile, setIsMobile] = useState(false)
-    const originalText = ['Transform', 'Your Space', 'Into Art.']
 
     // Check if mobile on mount
     useEffect(() => {
@@ -211,7 +212,11 @@ const Hero = () => {
                     </div>
 
                     <div className="hero-cta mt-6 md:mt-8 flex flex-col md:flex-row gap-4">
-                        <button onClick={() => scrollToSection('projects')} className="btn-primary group">
+                        <button
+                            onClick={() => scrollToSection('projects')}
+                            className="btn-primary group"
+                            aria-label="View our portfolio"
+                        >
                             <span className="relative z-10 flex items-center gap-2">
                                 View Portfolio
                                 <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -219,7 +224,11 @@ const Hero = () => {
                                 </svg>
                             </span>
                         </button>
-                        <button onClick={() => scrollToSection('contact')} className="btn-outline">
+                        <button
+                            onClick={() => scrollToSection('contact')}
+                            className="btn-outline"
+                            aria-label="Get in touch with us"
+                        >
                             <span className="relative z-10">Get In Touch</span>
                         </button>
                     </div>
@@ -230,9 +239,10 @@ const Hero = () => {
             <button
                 onClick={() => scrollToSection('projects')}
                 className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 text-white/50 hover:text-brand-green transition-colors hidden md:flex flex-col items-center gap-2 group"
+                aria-label="Scroll down to projects"
             >
                 <span className="text-[10px] uppercase tracking-[0.3em] font-bold">Scroll</span>
-                <ChevronDown size={24} className="animate-bounce group-hover:text-brand-green" />
+                <ChevronDown size={24} className="animate-pulse-glow group-hover:text-brand-green" />
             </button>
 
             {/* Bottom Gradient Fade */}
