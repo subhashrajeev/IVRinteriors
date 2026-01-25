@@ -6,33 +6,12 @@ const Hero = () => {
     };
 
     return (
-        <section style={{
-            minHeight: '80vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-            padding: '2rem'
-        }}>
-            <div className="container" style={{
-                display: 'grid',
-                gridTemplateColumns: '1.2fr 1fr',
-                gap: '5rem',
-                alignItems: 'center',
-                width: '100%'
-            }}>
+        <section className="min-h-[80vh] flex items-center justify-center relative overflow-hidden px-6 pt-32 pb-12 md:px-8">
+            <div className="container mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
 
                 {/* Text Content */}
-                <div style={{ maxWidth: '650px' }}>
-                    <h1 style={{
-                        marginBottom: '1.5rem',
-                        fontSize: 'clamp(3rem, 5vw, 4.5rem)',
-                        fontWeight: 400,
-                        letterSpacing: '-0.03em',
-                        color: 'var(--text-main)',
-                        lineHeight: 1.1
-                    }}>
+                <div className="bg-transparent z-10">
+                    <h1 className="mb-6 text-[3rem] md:text-[4.5rem] font-medium tracking-tight text-[var(--text-main)] leading-none">
                         Surfaces for the <br />
                         <span style={{
                             fontFamily: 'Source Serif 4',
@@ -40,24 +19,14 @@ const Hero = () => {
                             color: 'var(--accent-primary)'
                         }}>tactile world</span>.
                     </h1>
-                    <p style={{
-                        fontSize: '1.2rem',
-                        color: 'var(--text-muted)',
-                        marginBottom: '2.5rem',
-                        lineHeight: '1.6',
-                        maxWidth: '90%'
-                    }}>
+                    <p className="text-xl text-[var(--text-muted)] mb-10 leading-relaxed max-w-[90%]">
                         Curated architectural laminates that define space through texture.
                         A collection designed for the modern interior.
                     </p>
-                    <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div className="flex gap-4">
                         <button
                             onClick={scrollToCatalog}
-                            className="btn-primary"
-                            style={{
-                                padding: '1rem 2.5rem',
-                                fontSize: '1rem'
-                            }}
+                            className="btn-primary px-10 py-4 text-base"
                         >
                             View Collection
                         </button>
@@ -65,31 +34,14 @@ const Hero = () => {
                 </div>
 
                 {/* Hero Image - Refined Integration */}
-                <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+                <div className="relative flex justify-center w-full mt-8 md:mt-0">
                     {/* Subtle background shape behind image */}
-                    <div style={{
-                        position: 'absolute',
-                        top: '5%',
-                        right: '5%',
-                        width: '90%',
-                        height: '95%',
-                        background: '#EAE8E2',
-                        borderRadius: '24px',
-                        transform: 'rotate(2deg)',
-                        zIndex: -1
-                    }}></div>
+                    <div className="absolute top-[5%] right-[5%] w-[90%] h-[95%] bg-[#EAE8E2] rounded-3xl -rotate-2 -z-10"></div>
 
                     <img
                         src="/lumina/Designer_hand_pointing_2k_202601251623.jpeg"
                         alt="Designer Hand Pointing"
-                        style={{
-                            maxWidth: '100%',
-                            height: 'auto',
-                            borderRadius: '20px',
-                            boxShadow: 'var(--shadow-md)',
-                            transform: 'rotate(-1deg)',
-                            border: '1px solid rgba(0,0,0,0.04)'
-                        }}
+                        className="w-full h-auto rounded-2xl shadow-md -rotate-1 border border-black/5"
                     />
                 </div>
 
