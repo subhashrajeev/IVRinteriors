@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from 'react'
 import CounterAnimation from './CounterAnimation'
 
 const About = () => {
-    const [isInView, setIsInView] = useState(false)
     const [isMobile, setIsMobile] = useState(false)
     const sectionRef = useRef<HTMLElement>(null)
     const imageRef = useRef<HTMLDivElement>(null)
@@ -128,7 +127,6 @@ const About = () => {
                     initial={{ opacity: 0, scale: isMobile ? 1 : 0.98 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
-                    onViewportEnter={() => setIsInView(true)}
                     transition={{ duration: 0.6 }}
                     className="relative lg:col-span-5"
                 >
