@@ -1,131 +1,142 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ChevronDown } from 'lucide-react'
+import { motion, useSpring, useTransform, useMotionValue } from 'framer-motion'
 import { triggerHaptic } from '../utils/haptics'
 
-// Text scramble characters
-const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*'
+// Hanging Image Component with Physics
+const HangingImage = ({ src, alt, className, delay = 0, angle = 5 }: { src: string, alt: string, className?: string, delay?: number, angle?: number }) => {
+    const x = useMotionValue(0)
+    const y = useMotionValue(0)
+    const rotateX = useTransform(y, [-100, 100], [30, -30])
+    const rotateY = useTransform(x, [-100, 100], [-30, 30])
 
-// Geometric Triangle Pattern Component for Mobile
-const GeometricBackground = () => (
-    <div className="absolute inset-0 z-0 overflow-hidden">
-        {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-charcoal via-grey-surface to-charcoal" />
+    // Physics-based spring for natural Sway
+    const springConfig = { damping: 15, stiffness: 150, mass: 1 }
+    const rotationSpring = useSpring(useMotionValue(angle), springConfig)
 
-        {/* Triangular geometric shapes */}
-        <svg className="absolute inset-0 w-full h-full opacity-20" preserveAspectRatio="xMidYMid slice">
-            <defs>
-                <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="var(--brand-green)" stopOpacity="0.3" />
-                    <stop offset="100%" stopColor="var(--brand-green)" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="var(--gold)" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="var(--gold)" stopOpacity="0" />
-                </linearGradient>
-            </defs>
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        const width = rect.width
+        const height = rect.height
+        const mouseX = e.clientX - rect.left
+        const mouseY = e.clientY - rect.top
 
-            {/* Large triangles */}
-            <polygon points="0,0 400,0 0,600" fill="url(#greenGrad)" />
-            <polygon points="100%,100% 60%,100% 100%,40%" fill="url(#goldGrad)" />
-            <polygon points="50%,0 80%,50% 20%,50%" fill="url(#greenGrad)" opacity="0.5" />
+        const xPct = mouseX / width - 0.5
+        const yPct = mouseY / height - 0.5
 
-            {/* Medium triangles */}
-            <polygon points="0,70% 30%,100% 0,100%" fill="url(#goldGrad)" opacity="0.6" />
-            <polygon points="100%,0 100%,30% 70%,0" fill="url(#greenGrad)" opacity="0.4" />
+        x.set(xPct * 100)
+        y.set(yPct * 100)
+    }
 
-            {/* Accent lines */}
-            <line x1="0" y1="40%" x2="60%" y2="100%" stroke="var(--brand-green)" strokeWidth="1" opacity="0.15" />
-            <line x1="40%" y1="0" x2="100%" y2="60%" stroke="var(--gold)" strokeWidth="1" opacity="0.1" />
-            <line x1="20%" y1="0" x2="80%" y2="100%" stroke="var(--brand-green)" strokeWidth="0.5" opacity="0.2" />
-        </svg>
+    const handleMouseLeave = () => {
+        x.set(0)
+        y.set(0)
+        rotationSpring.set(angle) // Return to resting angle
+    }
 
-        {/* Floating geometric accents */}
-        <div className="absolute top-[15%] right-[10%] w-32 h-32 border border-brand-green/20 rotate-45" />
-        <div className="absolute bottom-[25%] left-[5%] w-24 h-24 border border-gold/15 rotate-12" />
-        <div className="absolute top-[60%] right-[20%] w-16 h-16 bg-brand-green/5 rotate-45" />
+    const handleMouseEnter = () => {
+        triggerHaptic('light')
+        rotationSpring.set(0) // Swing to center on hover
+    }
 
-        {/* Gradient overlays for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/60 to-charcoal/30" />
-        <div className="absolute inset-0 bg-gradient-to-r from-charcoal/70 via-transparent to-transparent" />
-    </div>
-)
+    return (
+        <motion.div
+            className={`absolute z-20 hidden lg:block ${className}`}
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.5, delay: delay, type: "spring", bounce: 0.4 }}
+            style={{
+                perspective: 1000,
+                transformOrigin: "top center"
+            }}
+        >
+            {/* The String/Wire */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full w-[1px] h-32 bg-anthropic-stone/50" />
 
-const originalText = ['Transform', 'Your Space', 'Into Art.']
+            {/* The Hanging Container */}
+            <motion.div
+                style={{
+                    rotate: rotationSpring,
+                    transformOrigin: "top center",
+                }}
+                onMouseMove={handleMouseMove}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                className="relative group cursor-pointer"
+                animate={{
+                    rotate: [angle, -angle, angle],
+                }}
+                transition={{
+                    rotate: {
+                        duration: 6 + Math.random() * 2,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        ease: "easeInOut"
+                    }
+                }}
+            >
+                {/* Clipboard Clip */}
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-gradient-to-b from-anthropic-stone to-white rounded-sm shadow-sm z-30" />
+                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-4 h-6 border-2 border-anthropic-stone rounded-t-full z-20" />
+
+                {/* Photo Frame (Clipboard Style) */}
+                <motion.div
+                    className="relative bg-white p-3 pb-8 shadow-xl shadow-black/5 w-64 h-80 rotate-1 border border-anthropic-stone/20"
+                    style={{
+                        rotateX: rotateX,
+                        rotateY: rotateY,
+                    }}
+                    whileHover={{ scale: 1.05 }}
+                >
+                    <div className="w-full h-full overflow-hidden bg-anthropic-beige relative">
+                        <img
+                            src={src}
+                            alt={alt}
+                            className="w-full h-full object-cover filter sepia-[0.1] contrast-[0.95] group-hover:sepia-0 group-hover:contrast-100 transition-all duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                </motion.div>
+            </motion.div>
+        </motion.div>
+    )
+}
 
 const Hero = () => {
     const heroRef = useRef<HTMLDivElement>(null)
     const contentRef = useRef<HTMLDivElement>(null)
-    const [scrambledText, setScrambledText] = useState(['Transform', 'Your Space', 'Into Art.'])
-    const [isMobile, setIsMobile] = useState(false)
-
-    // Check if mobile on mount
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768)
-        checkMobile()
-        window.addEventListener('resize', checkMobile)
-        return () => window.removeEventListener('resize', checkMobile)
-    }, [])
-
-    // Text scramble effect
-    useEffect(() => {
-        const scrambleWord = (wordIndex: number, targetWord: string) => {
-            let iteration = 0
-            const interval = setInterval(() => {
-                setScrambledText(prev => {
-                    const newText = [...prev]
-                    newText[wordIndex] = targetWord
-                        .split('')
-                        .map((_, index) => {
-                            if (index < iteration) {
-                                return targetWord[index]
-                            }
-                            return chars[Math.floor(Math.random() * chars.length)]
-                        })
-                        .join('')
-                    return newText
-                })
-
-                if (iteration >= targetWord.length) {
-                    clearInterval(interval)
-                }
-                iteration += 1 / 2
-            }, 30)
-        }
-
-        // Stagger the scramble effect for each word
-        setTimeout(() => scrambleWord(0, originalText[0]), 500)
-        setTimeout(() => scrambleWord(1, originalText[1]), 800)
-        setTimeout(() => scrambleWord(2, originalText[2]), 1100)
-    }, [])
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            const tl = gsap.timeline()
+            const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
 
-            gsap.set('.hero-word', { y: 100, opacity: 0 })
-            gsap.set('.hero-subtitle', { opacity: 0, x: -20 })
-            gsap.set('.hero-cta', { opacity: 0, y: 20 })
+            gsap.set('.hero-logo', { opacity: 0, y: 20 })
+            gsap.set('.hero-line', { y: 30, opacity: 0 })
+            gsap.set('.hero-subtitle', { opacity: 0, y: 10 })
+            gsap.set('.hero-cta', { opacity: 0, y: 10 })
 
-            tl.to('.hero-word', {
-                y: 0,
+            tl.to('.hero-logo', {
                 opacity: 1,
+                y: 0,
                 duration: 1,
-                stagger: 0.1,
-                ease: "power4.out"
             })
+                .to('.hero-line', {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.2,
+                    stagger: 0.15,
+                }, "-=0.5")
                 .to('.hero-subtitle', {
                     opacity: 1,
-                    x: 0,
-                    duration: 0.8,
-                    ease: "power2.out"
-                }, "-=0.5")
+                    y: 0,
+                    duration: 1,
+                }, "-=0.8")
                 .to('.hero-cta', {
                     opacity: 1,
                     y: 0,
-                    duration: 0.6,
-                    ease: "power2.out"
-                }, "-=0.3")
+                    duration: 0.8,
+                }, "-=0.6")
 
         }, heroRef)
 
@@ -138,115 +149,78 @@ const Hero = () => {
     }
 
     return (
-        <section ref={heroRef} className="relative h-screen w-full overflow-hidden bg-charcoal flex items-center noise-bg">
-            {/* Light Rays Effect - Only on Desktop */}
-            {!isMobile && (
-                <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
-                    <div
-                        className="absolute top-0 left-1/4 w-[2px] h-[150%] bg-gradient-to-b from-brand-green/20 via-transparent to-transparent rotate-[15deg] origin-top animate-pulse-glow"
-                        style={{ animationDelay: '0s' }}
-                    />
-                    <div
-                        className="absolute top-0 left-1/2 w-[1px] h-[120%] bg-gradient-to-b from-white/10 via-transparent to-transparent rotate-[-10deg] origin-top animate-pulse-glow"
-                        style={{ animationDelay: '1s' }}
-                    />
-                    <div
-                        className="absolute top-0 right-1/4 w-[2px] h-[140%] bg-gradient-to-b from-brand-green/15 via-transparent to-transparent rotate-[8deg] origin-top animate-pulse-glow"
-                        style={{ animationDelay: '2s' }}
-                    />
-                </div>
-            )}
+        <section ref={heroRef} className="relative min-h-screen w-full overflow-hidden bg-anthropic-beige flex items-center justify-center pt-20">
+            {/* Subtle Background Grain/Texture is handled by global noise-bg if applied, or we can add a specific one here */}
 
-            {/* Background: Video for Desktop, Geometric Pattern for Mobile */}
-            {isMobile ? (
-                <GeometricBackground />
-            ) : (
-                <div className="absolute inset-0 z-0 overflow-hidden">
-                    <video
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        poster="/assets/IMG-20251203-WA0011.jpg"
-                        preload="metadata"
-                        className="w-full h-full object-cover opacity-40 scale-110 animate-ken-burns"
-                        style={{ filter: 'grayscale(100%) contrast(1.2)' }}
-                    >
-                        <source src="/assets/WhatsApp Video 2025-12-02 at 10.28.21 PM.mp4" type="video/mp4" />
-                    </video>
-                    <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/60 to-charcoal/30" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-charcoal/50 via-transparent to-transparent" />
-                </div>
-            )}
+            {/* Soft Ambient Gradients */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-gradient-to-br from-anthropic-accent/5 to-transparent blur-3xl opacity-60" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-anthropic-secondary/5 to-transparent blur-3xl opacity-40" />
+            </div>
 
-            {/* Content - Left Aligned, Massive */}
-            <div ref={contentRef} className="container mx-auto px-6 relative z-10 pt-36 md:pt-44">
-                <div className="max-w-5xl">
-                    <p className="hero-subtitle text-brand-green font-bold tracking-[0.3em] uppercase mb-4 text-sm md:text-base flex items-center gap-3">
-                        <span className="w-8 h-[2px] bg-brand-green" />
-                        Hyderabad
+            {/* Hanging Images */}
+            <HangingImage
+                src="/assets/IMG-20251203-WA0020.jpg"
+                alt="Signature Console"
+                className="left-[5%] top-[15%]"
+                delay={0.5}
+                angle={2}
+            />
+            <HangingImage
+                src="/assets/IMG-20251203-WA0012.jpg"
+                alt="Botanical Arches"
+                className="right-[5%] top-[20%]"
+                delay={0.8}
+                angle={-3}
+            />
+
+            <div ref={contentRef} className="container mx-auto px-6 relative z-10 text-center flex flex-col items-center">
+
+                <img
+                    src="/ivr-logo.png"
+                    alt="IVR Interiors Logo"
+                    className="hero-logo w-48 md:w-64 mb-10 opacity-0"
+                />
+
+                <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[1.1] font-serif font-medium text-anthropic-text mb-8 tracking-tight">
+                    <span className="hero-line block">Transform your space</span>
+                    <span className="hero-line block italic text-anthropic-accent">into a work of art.</span>
+                </h1>
+
+                <div className="hero-subtitle max-w-2xl mx-auto mb-12">
+                    <p className="text-lg md:text-xl text-anthropic-secondary font-sans leading-relaxed text-balance">
+                        Premium modular kitchens, wardrobes & complete interior solutions.
+                        Bringing 15+ years of precision craftsmanship to your home.
                     </p>
-                    <h1 className="text-4xl md:text-7xl lg:text-[8.5rem] leading-none font-[Oswald] font-bold italic uppercase text-white mb-4 md:mb-6 flex flex-col">
-                        <span className="hero-word text-scramble mb-2 md:mb-3">{scrambledText[0]}</span>
-                        <span className="hero-word text-transparent stroke-text text-scramble mb-2 md:mb-3" style={{ WebkitTextStroke: '2px white' }}>{scrambledText[1]}</span>
-                        <span className="hero-word text-scramble">{scrambledText[2]}</span>
-                    </h1>
+                </div>
 
-                    <div className="hero-subtitle pl-4 border-l-4 border-brand-green max-w-2xl">
-                        <p
-                            className="text-xl md:text-2xl lg:text-3xl leading-relaxed tracking-wide"
-                            style={{
-                                fontFamily: "'Cormorant Garamond', serif",
-                                fontWeight: 500,
-                                fontStyle: 'italic',
-                                background: 'linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.75) 50%, rgba(140,191,63,0.9) 100%)',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                backgroundClip: 'text',
-                                letterSpacing: '0.03em',
-                                lineHeight: 1.6,
-                            }}
-                        >
-                            Premium Modular Kitchens, Wardrobes & Complete Interior Solutions. 15+ Years of Precision Craftsmanship.
-                        </p>
-                    </div>
-
-                    <div className="hero-cta mt-6 md:mt-8 flex flex-col md:flex-row gap-4">
-                        <button
-                            onClick={() => scrollToSection('projects')}
-                            className="btn-primary group"
-                            aria-label="View our portfolio"
-                        >
-                            <span className="relative z-10 flex items-center gap-2">
-                                View Portfolio
-                                <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                </svg>
-                            </span>
-                        </button>
-                        <button
-                            onClick={() => scrollToSection('contact')}
-                            className="btn-outline"
-                            aria-label="Get in touch with us"
-                        >
-                            <span className="relative z-10">Get In Touch</span>
-                        </button>
-                    </div>
+                <div className="hero-cta flex flex-col md:flex-row gap-5 items-center justify-center">
+                    <button
+                        onClick={() => scrollToSection('projects')}
+                        className="btn-primary rounded-full px-8 py-4 text-sm tracking-wide"
+                        aria-label="View our portfolio"
+                    >
+                        View Portfolio
+                    </button>
+                    <button
+                        onClick={() => scrollToSection('contact')}
+                        className="btn-outline rounded-full px-8 py-4 text-sm tracking-wide border-anthropic-stone"
+                        aria-label="Get in touch with us"
+                    >
+                        Get In Touch
+                    </button>
                 </div>
             </div>
 
             {/* Scroll Indicator */}
             <button
                 onClick={() => scrollToSection('projects')}
-                className="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 text-white/50 hover:text-brand-green transition-colors hidden md:flex flex-col items-center gap-2 group"
-                aria-label="Scroll down to projects"
+                className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 text-anthropic-secondary/70 hover:text-anthropic-accent transition-all duration-300 flex flex-col items-center gap-2 group cursor-pointer"
+                aria-label="Scroll down"
             >
-                <span className="text-[10px] uppercase tracking-[0.3em] font-bold">Scroll</span>
-                <ChevronDown size={24} className="animate-pulse-glow group-hover:text-brand-green" />
+                <span className="text-[10px] uppercase tracking-[0.4em] font-bold opacity-40 group-hover:opacity-100 transition-opacity">Scroll</span>
+                <ChevronDown size={40} className="animate-pulse-glow group-hover:translate-y-2 transition-transform opacity-60 group-hover:opacity-100" />
             </button>
-
-            {/* Bottom Gradient Fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-charcoal to-transparent z-[5] pointer-events-none" />
         </section>
     )
 }

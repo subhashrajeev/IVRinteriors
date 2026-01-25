@@ -2,9 +2,8 @@ import { ArrowRight, CheckCircle, XCircle, Loader2, Phone, Mail, MapPin } from '
 import { useState, useEffect, type FormEvent } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { triggerHaptic } from '../utils/haptics'
-import AnimatedGradient from './AnimatedGradient'
 
-// Web3Forms access key - this is safe to expose in frontend
+// Web3Forms access key
 const WEB3FORMS_ACCESS_KEY = '92a287e4-5cef-4a4d-9ea4-96d2091c9dbc'
 
 interface FormData {
@@ -53,11 +52,11 @@ const Contact = () => {
     }
 
     const triggerConfetti = () => {
-        const colors = ['#D4AF37', '#ffffff', '#22C55E'] // Gold, White, Brand Green
+        const colors = ['#D97757', '#C1B6A6', '#1A1A1A'] // Accent, Secondary, Text
         const newParticles = Array.from({ length: 50 }).map((_, i) => ({
             id: i,
-            x: Math.random() * 100 - 50, // -50% to 50%
-            y: Math.random() * 50 - 25, // -25% to 25%
+            x: Math.random() * 100 - 50,
+            y: Math.random() * 50 - 25,
             color: colors[Math.floor(Math.random() * colors.length)]
         }))
         setParticles(newParticles)
@@ -74,7 +73,6 @@ const Contact = () => {
         e.preventDefault()
         triggerHaptic('heavy')
 
-        // Mark all fields as touched on submit
         setTouched({ name: true, email: true, message: true })
 
         const hasErrors = Object.values(errors).some(err => err !== '')
@@ -113,7 +111,6 @@ const Contact = () => {
                 triggerConfetti()
                 triggerHaptic('medium')
                 setFormData({ name: '', email: '', message: '' })
-                // Reset to idle after 8 seconds (gave more time to enjoy animation)
                 setTimeout(() => setStatus('idle'), 8000)
             } else {
                 throw new Error(result.message || 'Something went wrong')
@@ -126,278 +123,155 @@ const Contact = () => {
     }
 
     return (
-        <section id="contact" className={`bg-charcoal border-t border-white/5 overflow-hidden relative ${!isMobile ? 'noise-bg' : ''}`}>
-            {/* Animated Gradient Background - Reduced opacity on mobile */}
-            <AnimatedGradient colors={['green', 'gold']} className={isMobile ? 'opacity-20' : 'opacity-40'} />
+        <section id="contact" className="bg-anthropic-beige border-t border-anthropic-stone overflow-hidden relative py-20">
+            <div className="container mx-auto px-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 min-h-screen relative z-10">
+                    {/* Left Side: Info */}
+                    <motion.div
+                        className="flex flex-col justify-between"
+                        initial={{ opacity: 0, x: isMobile ? 0 : -30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6 }}
+                    >
+                        <div className="space-y-8">
+                            <div>
+                                <span className="text-anthropic-accent font-bold tracking-[0.2em] uppercase text-xs mb-4 block flex items-center gap-3">
+                                    <span className="w-6 h-[1px] bg-anthropic-accent" />
+                                    Contact
+                                </span>
+                                <h2 className="text-5xl md:text-6xl font-serif text-anthropic-text leading-tight">
+                                    Let's Talk <span className="italic text-anthropic-secondary">Future.</span>
+                                </h2>
+                            </div>
 
-                {/* Left Side: Info */}
-                <motion.div
-                    className="p-8 md:p-16 flex flex-col justify-between relative"
-                    initial={{ opacity: 0, x: isMobile ? 0 : -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: isMobile ? '0px' : '-100px' }}
-                    transition={{ duration: isMobile ? 0.3 : 0.8 }}
-                >
-                    <div className="space-y-8">
-                        <div>
-                            <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-4 block flex items-center gap-3 font-playfair">
-                                <span className="w-8 h-[2px] bg-brand-green" />
-                                Contact
-                            </span>
-                            <h2 className="text-6xl md:text-7xl font-oswald font-bold italic uppercase text-white leading-[0.9]">
-                                Let's Talk <br /> <span className="text-white/30 font-playfair lowercase italic font-normal tracking-tight">Future.</span>
-                            </h2>
+                            <p className="text-anthropic-secondary max-w-md text-lg leading-relaxed">
+                                Ready to upgrade your space? We bring 15+ years of precision and modern aesthetics to your project.
+                            </p>
                         </div>
 
-                        <p className="text-white/60 max-w-md font-light text-lg leading-relaxed">
-                            Ready to upgrade your space? We bring 15+ years of precision and modern aesthetics to your project.
-                        </p>
-                    </div>
-
-                    <div className="grid gap-8 mt-10">
-                        {/* Contact Info Items - Same as before but cleaner code if needed, keeping them as is for now */}
-                        <motion.div
-                            className="group"
-                            initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: isMobile ? 0.1 : 0.2, duration: isMobile ? 0.3 : 0.5 }}
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 glass flex items-center justify-center group-hover:bg-brand-green/20 transition-colors">
-                                    <Phone size={20} className="text-brand-green" />
-                                </div>
-                                <div>
-                                    <h4 className="text-sm font-bold uppercase tracking-widest text-white/40 mb-1 group-hover:text-brand-green transition-colors">Call Us</h4>
-                                    <a href="tel:+918885575733" onClick={() => triggerHaptic('medium')} className="text-2xl md:text-3xl text-white font-[Oswald] font-bold hover:text-brand-green transition-colors">
-                                        +91 88855 75733
-                                    </a>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        <motion.div
-                            className="group"
-                            initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: isMobile ? 0.15 : 0.3, duration: isMobile ? 0.3 : 0.5 }}
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 glass flex items-center justify-center group-hover:bg-brand-green/20 transition-colors">
-                                    <Mail size={20} className="text-brand-green" />
-                                </div>
-                                <div>
-                                    <h4 className="text-sm font-bold uppercase tracking-widest text-white/40 mb-1 group-hover:text-brand-green transition-colors">Email Us</h4>
-                                    <a href="mailto:venkatarajuandco@gmail.com" onClick={() => triggerHaptic('light')} className="text-lg md:text-xl text-white font-[Oswald] font-bold hover:text-brand-green transition-colors">
-                                        venkatarajuandco@gmail.com
-                                    </a>
-                                </div>
-                            </div>
-                        </motion.div>
-
-                        <motion.div
-                            className="group"
-                            initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: isMobile ? 0.2 : 0.4, duration: isMobile ? 0.3 : 0.5 }}
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 glass flex items-center justify-center group-hover:bg-brand-green/20 transition-colors">
-                                    <MapPin size={20} className="text-brand-green" />
-                                </div>
-                                <div>
-                                    <h4 className="text-sm font-bold uppercase tracking-widest text-white/40 mb-1">Visit Us</h4>
-                                    <p className="text-lg text-white/80">Nizampet, Hyderabad.</p>
-                                    <a href="https://maps.google.com/?q=IVR+Interiors" target="_blank" onClick={() => triggerHaptic('light')} className="inline-flex items-center gap-2 text-brand-green mt-2 text-sm font-bold uppercase tracking-widest hover:text-white transition-colors">
-                                        View Map <ArrowRight size={14} />
-                                    </a>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
-                </motion.div>
-
-                {/* Right Side: Glassmorphism Form */}
-                <motion.div
-                    className="p-8 md:p-16 flex items-center relative"
-                    initial={{ opacity: 0, x: isMobile ? 0 : 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true, margin: isMobile ? '0px' : '-100px' }}
-                    transition={{ duration: isMobile ? 0.3 : 0.8, delay: isMobile ? 0.1 : 0.2 }}
-                >
-                    {/* Background gradient for this side */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-brand-green/5 via-transparent to-transparent pointer-events-none" />
-
-                    <div className={`w-full max-w-lg mx-auto p-8 md:p-12 relative ${isMobile ? 'bg-grey-surface/90 border border-white/10' : 'glass'}`}>
-                        <h3 className="text-white text-3xl font-[Oswald] font-bold uppercase italic mb-6 flex items-center gap-3">
-                            <span className="w-3 h-3 bg-brand-green" />
-                            Send A Request
-                        </h3>
-
-                        {status === 'success' ? (
+                        <div className="grid gap-8 mt-12">
                             <motion.div
-                                className="text-center py-12 space-y-6 relative overflow-hidden"
-                                initial={{ opacity: 0, y: 30 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{
-                                    type: "spring",
-                                    damping: 20,
-                                    stiffness: 100,
-                                    duration: 0.8
-                                }}
-                                role="status"
-                                aria-live="polite"
+                                className="group"
+                                whileHover={{ x: 5 }}
+                                transition={{ duration: 0.2 }}
                             >
-                                {/* Particle Confetti */}
-                                {particles.map((particle) => (
-                                    <motion.div
-                                        key={particle.id}
-                                        initial={{
-                                            opacity: 1,
-                                            x: 0,
-                                            y: 0,
-                                            scale: Math.random() * 0.5 + 0.5
-                                        }}
-                                        animate={{
-                                            opacity: 0,
-                                            x: particle.x * 20, // Spread out widely
-                                            y: particle.y * 20 - 100, // Move up and spread
-                                            rotate: Math.random() * 360
-                                        }}
-                                        transition={{
-                                            duration: 1.5 + Math.random(),
-                                            ease: "easeOut"
-                                        }}
-                                        style={{
-                                            backgroundColor: particle.color
-                                        }}
-                                        className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full"
-                                    />
-                                ))}
-
-                                <div className="relative inline-block">
-                                    {/* Success Ring Animation */}
-                                    <svg className="w-32 h-32 absolute -inset-4 -rotate-90 pointer-events-none" viewBox="0 0 100 100">
-                                        <motion.circle
-                                            cx="50"
-                                            cy="50"
-                                            r="48"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            fill="transparent"
-                                            className="text-brand-green/20"
-                                        />
-                                        <motion.circle
-                                            cx="50"
-                                            cy="50"
-                                            r="48"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                            fill="transparent"
-                                            className="text-brand-green"
-                                            initial={{ pathLength: 0 }}
-                                            animate={{ pathLength: 1 }}
-                                            transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
-                                        />
-                                    </svg>
-
-                                    <div className="relative">
-                                        <motion.div
-                                            initial={{ scale: 0, opacity: 0 }}
-                                            animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
-                                            transition={{ duration: 1.5, repeat: Infinity }}
-                                            className="absolute inset-0 bg-brand-green/30 rounded-full"
-                                        />
-                                        <motion.div
-                                            initial={{ scale: 0, rotate: -45 }}
-                                            animate={{ scale: 1, rotate: 0 }}
-                                            transition={{
-                                                type: "spring",
-                                                damping: 12,
-                                                stiffness: 200,
-                                                delay: 0.2
-                                            }}
-                                        >
-                                            <CheckCircle className="w-24 h-24 text-brand-green relative z-10" />
-                                        </motion.div>
+                                <div className="flex items-center gap-5">
+                                    <div className="w-10 h-10 rounded-full bg-white border border-anthropic-stone flex items-center justify-center text-anthropic-secondary group-hover:text-anthropic-accent transition-colors">
+                                        <Phone size={18} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-anthropic-secondary/60 mb-1">Call Us</h4>
+                                        <a href="tel:+918885575733" onClick={() => triggerHaptic('medium')} className="text-xl md:text-2xl text-anthropic-text font-serif hover:text-anthropic-accent transition-colors">
+                                            +91 88855 75733
+                                        </a>
                                     </div>
                                 </div>
-
-                                <motion.div
-                                    className="space-y-4"
-                                    initial="hidden"
-                                    animate="visible"
-                                    variants={{
-                                        visible: {
-                                            transition: {
-                                                staggerChildren: 0.15,
-                                                delayChildren: 0.4
-                                            }
-                                        }
-                                    }}
-                                >
-                                    <motion.h4
-                                        variants={{
-                                            hidden: { opacity: 0, y: 20 },
-                                            visible: { opacity: 1, y: 0 }
-                                        }}
-                                        className="text-4xl md:text-5xl font-oswald font-bold text-white uppercase tracking-tight"
-                                    >
-                                        Message <span className="text-brand-green italic">Received</span>
-                                    </motion.h4>
-                                    <motion.p
-                                        variants={{
-                                            hidden: { opacity: 0, y: 10 },
-                                            visible: { opacity: 1, y: 0 }
-                                        }}
-                                        className="text-white font-bold text-sm uppercase tracking-[0.3em]"
-                                    >
-                                        We'll be in touch with you shortly.
-                                    </motion.p>
-                                    <motion.div
-                                        variants={{
-                                            hidden: { opacity: 0, scale: 0.9 },
-                                            visible: { opacity: 1, scale: 1 }
-                                        }}
-                                        className="inline-block px-6 py-2 border border-white/10 glass rounded-full"
-                                    >
-                                        <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">
-                                            Thank you for choosing IVR Interiors
-                                        </p>
-                                    </motion.div>
-                                </motion.div>
-
-                                <motion.button
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: 2 }}
-                                    onClick={() => {
-                                        setStatus('idle')
-                                        setTouched({ name: false, email: false, message: false })
-                                        setParticles([])
-                                    }}
-                                    className="text-white/40 hover:text-white transition-colors text-[10px] font-bold uppercase tracking-[0.3em] mt-12 group flex items-center gap-2 mx-auto"
-                                >
-                                    <span className="w-4 h-[1px] bg-white/20 group-hover:w-8 transition-all" />
-                                    Send Another Request?
-                                </motion.button>
                             </motion.div>
-                        ) : (
-                            <motion.form
-                                animate={shake ? { x: [-10, 10, -10, 10, 0] } : {}}
-                                transition={{ duration: 0.4 }}
-                                onSubmit={handleSubmit}
-                                className="space-y-8"
+
+                            <motion.div
+                                className="group"
+                                whileHover={{ x: 5 }}
+                                transition={{ duration: 0.2 }}
                             >
-                                <div className="space-y-6">
-                                    {/* Name Input */}
-                                    <div className="group relative">
-                                        <label htmlFor="name" className={`block text-xs font-bold uppercase tracking-widest mb-2 transition-colors duration-300 ${touched.name && errors.name ? 'text-red-500' : 'text-white/50 group-focus-within:text-brand-green group-focus-within:text-shadow-glow'}`}>Full Name</label>
-                                        <div className="relative">
+                                <div className="flex items-center gap-5">
+                                    <div className="w-10 h-10 rounded-full bg-white border border-anthropic-stone flex items-center justify-center text-anthropic-secondary group-hover:text-anthropic-accent transition-colors">
+                                        <Mail size={18} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-anthropic-secondary/60 mb-1">Email Us</h4>
+                                        <a href="mailto:venkatarajuandco@gmail.com" onClick={() => triggerHaptic('light')} className="text-lg md:text-xl text-anthropic-text font-serif hover:text-anthropic-accent transition-colors">
+                                            venkatarajuandco@gmail.com
+                                        </a>
+                                    </div>
+                                </div>
+                            </motion.div>
+
+                            <motion.div
+                                className="group"
+                                whileHover={{ x: 5 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                <div className="flex items-center gap-5">
+                                    <div className="w-10 h-10 rounded-full bg-white border border-anthropic-stone flex items-center justify-center text-anthropic-secondary group-hover:text-anthropic-accent transition-colors">
+                                        <MapPin size={18} />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-xs font-bold uppercase tracking-widest text-anthropic-secondary/60 mb-1">Visit Us</h4>
+                                        <p className="text-lg text-anthropic-text font-serif">Nizampet, Hyderabad.</p>
+                                        <a href="https://maps.google.com/?q=IVR+Interiors" target="_blank" onClick={() => triggerHaptic('light')} className="inline-flex items-center gap-2 text-anthropic-accent mt-2 text-xs font-bold uppercase tracking-widest hover:text-anthropic-text transition-colors">
+                                            View Map <ArrowRight size={12} />
+                                        </a>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+                    </motion.div>
+
+                    {/* Right Side: Clean Form */}
+                    <motion.div
+                        initial={{ opacity: 0, x: isMobile ? 0 : 30 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                        <div className="w-full max-w-lg mx-auto bg-white border border-anthropic-stone rounded-lg p-8 md:p-12 shadow-sm">
+                            <h3 className="text-anthropic-text text-2xl font-serif mb-8 flex items-center gap-3">
+                                Send A Request
+                            </h3>
+
+                            {status === 'success' ? (
+                                <motion.div
+                                    className="text-center py-12 space-y-6 relative overflow-hidden"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                >
+                                    {/* Particle Confetti */}
+                                    {particles.map((particle) => (
+                                        <motion.div
+                                            key={particle.id}
+                                            initial={{ opacity: 1, x: 0, y: 0, scale: Math.random() * 0.5 + 0.5 }}
+                                            animate={{ opacity: 0, x: particle.x * 20, y: particle.y * 20 - 100, rotate: Math.random() * 360 }}
+                                            transition={{ duration: 1.5 + Math.random(), ease: "easeOut" }}
+                                            style={{ backgroundColor: particle.color }}
+                                            className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full"
+                                        />
+                                    ))}
+
+                                    <div className="flex justify-center mb-6">
+                                        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                                            <CheckCircle className="w-8 h-8 text-green-600" />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <h4 className="text-2xl font-serif text-anthropic-text mb-2">Message Received</h4>
+                                        <p className="text-anthropic-secondary text-sm">We'll be in touch shortly.</p>
+                                    </div>
+
+                                    <button
+                                        onClick={() => {
+                                            setStatus('idle')
+                                            setTouched({ name: false, email: false, message: false })
+                                            setParticles([])
+                                        }}
+                                        className="text-anthropic-accent hover:text-anthropic-text transition-colors text-xs font-bold uppercase tracking-widest mt-8 border-b border-transparent hover:border-anthropic-text"
+                                    >
+                                        Send Another Request
+                                    </button>
+                                </motion.div>
+                            ) : (
+                                <motion.form
+                                    animate={shake ? { x: [-5, 5, -5, 5, 0] } : {}}
+                                    transition={{ duration: 0.4 }}
+                                    onSubmit={handleSubmit}
+                                    className="space-y-6"
+                                >
+                                    <div className="space-y-5">
+                                        {/* Name Input */}
+                                        <div className="relative group">
+                                            <label htmlFor="name" className="block text-xs font-bold uppercase tracking-widest mb-2 text-anthropic-text/60 group-focus-within:text-anthropic-accent transition-colors">Full Name</label>
                                             <input
                                                 id="name"
                                                 type="text"
@@ -407,49 +281,30 @@ const Contact = () => {
                                                     if (touched.name) triggerHaptic('light')
                                                 }}
                                                 onBlur={() => handleBlur('name')}
-                                                aria-invalid={touched.name && !!errors.name}
-                                                aria-describedby={touched.name && errors.name ? "name-error" : undefined}
-                                                className={`w-full bg-transparent border-b-2 py-4 text-xl font-bold text-white outline-none transition-all duration-300 rounded-none placeholder:text-white/10 
+                                                className={`w-full bg-anthropic-beige/30 border py-3 px-4 text-anthropic-text outline-none transition-all duration-300 rounded focus:bg-white
                                                     ${touched.name && errors.name
-                                                        ? 'border-red-500/50'
-                                                        : 'border-white/20 focus:border-brand-green focus:shadow-glow'}`}
+                                                        ? 'border-red-300 focus:border-red-500'
+                                                        : 'border-anthropic-stone focus:border-anthropic-accent'}`}
                                                 placeholder="Enter your name"
                                                 disabled={status === 'submitting'}
                                             />
                                             <AnimatePresence>
-                                                {touched.name && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0, scale: 0.5 }}
-                                                        animate={{ opacity: 1, scale: 1 }}
-                                                        exit={{ opacity: 0, scale: 0.5 }}
-                                                        className="absolute right-0 top-1/2 -translate-y-1/2"
+                                                {touched.name && errors.name && (
+                                                    <motion.p
+                                                        initial={{ opacity: 0, height: 0 }}
+                                                        animate={{ opacity: 1, height: 'auto' }}
+                                                        exit={{ opacity: 0, height: 0 }}
+                                                        className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider"
                                                     >
-                                                        {errors.name ? <XCircle size={18} className="text-red-500" /> : <CheckCircle size={18} className="text-brand-green" />}
-                                                    </motion.div>
+                                                        {errors.name}
+                                                    </motion.p>
                                                 )}
                                             </AnimatePresence>
                                         </div>
-                                        <AnimatePresence mode="wait">
-                                            {touched.name && errors.name && (
-                                                <motion.p
-                                                    key="name-error"
-                                                    id="name-error"
-                                                    initial={{ opacity: 0, height: 0 }}
-                                                    animate={{ opacity: 1, height: 'auto' }}
-                                                    exit={{ opacity: 0, height: 0 }}
-                                                    className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider overflow-hidden"
-                                                    role="alert"
-                                                >
-                                                    {errors.name}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
-                                    </div>
 
-                                    {/* Email Input */}
-                                    <div className="group relative">
-                                        <label htmlFor="email" className={`block text-xs font-bold uppercase tracking-widest mb-2 transition-colors duration-300 ${touched.email && errors.email ? 'text-red-500' : 'text-white/50 group-focus-within:text-brand-green group-focus-within:text-shadow-glow'}`}>Email Address</label>
-                                        <div className="relative">
+                                        {/* Email Input */}
+                                        <div className="relative group">
+                                            <label htmlFor="email" className="block text-xs font-bold uppercase tracking-widest mb-2 text-anthropic-text/60 group-focus-within:text-anthropic-accent transition-colors">Email Address</label>
                                             <input
                                                 id="email"
                                                 type="email"
@@ -459,136 +314,97 @@ const Contact = () => {
                                                     if (touched.email) triggerHaptic('light')
                                                 }}
                                                 onBlur={() => handleBlur('email')}
-                                                aria-invalid={touched.email && !!errors.email}
-                                                aria-describedby={touched.email && errors.email ? "email-error" : undefined}
-                                                className={`w-full bg-transparent border-b-2 py-4 text-xl font-bold text-white outline-none transition-all duration-300 rounded-none placeholder:text-white/10 
+                                                className={`w-full bg-anthropic-beige/30 border py-3 px-4 text-anthropic-text outline-none transition-all duration-300 rounded focus:bg-white
                                                     ${touched.email && errors.email
-                                                        ? 'border-red-500/50'
-                                                        : 'border-white/20 focus:border-brand-green focus:shadow-glow'}`}
+                                                        ? 'border-red-300 focus:border-red-500'
+                                                        : 'border-anthropic-stone focus:border-anthropic-accent'}`}
                                                 placeholder="name@example.com"
                                                 disabled={status === 'submitting'}
                                             />
                                             <AnimatePresence>
-                                                {touched.email && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0, scale: 0.5 }}
-                                                        animate={{ opacity: 1, scale: 1 }}
-                                                        exit={{ opacity: 0, scale: 0.5 }}
-                                                        className="absolute right-0 top-1/2 -translate-y-1/2"
+                                                {touched.email && errors.email && (
+                                                    <motion.p
+                                                        initial={{ opacity: 0, height: 0 }}
+                                                        animate={{ opacity: 1, height: 'auto' }}
+                                                        exit={{ opacity: 0, height: 0 }}
+                                                        className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider"
                                                     >
-                                                        {errors.email ? <XCircle size={18} className="text-red-500" /> : <CheckCircle size={18} className="text-brand-green" />}
-                                                    </motion.div>
+                                                        {errors.email}
+                                                    </motion.p>
                                                 )}
                                             </AnimatePresence>
                                         </div>
-                                        <AnimatePresence mode="wait">
-                                            {touched.email && errors.email && (
-                                                <motion.p
-                                                    key="email-error"
-                                                    id="email-error"
-                                                    initial={{ opacity: 0, height: 0 }}
-                                                    animate={{ opacity: 1, height: 'auto' }}
-                                                    exit={{ opacity: 0, height: 0 }}
-                                                    className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider overflow-hidden"
-                                                    role="alert"
-                                                >
-                                                    {errors.email}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
-                                    </div>
 
-                                    {/* Message Input */}
-                                    <div className="group relative">
-                                        <label htmlFor="message" className={`block text-xs font-bold uppercase tracking-widest mb-2 transition-colors duration-300 ${touched.message && errors.message ? 'text-red-500' : 'text-white/50 group-focus-within:text-brand-green group-focus-within:text-shadow-glow'}`}>Message</label>
-                                        <div className="relative">
+                                        {/* Message Input */}
+                                        <div className="relative group">
+                                            <label htmlFor="message" className="block text-xs font-bold uppercase tracking-widest mb-2 text-anthropic-text/60 group-focus-within:text-anthropic-accent transition-colors">Message</label>
                                             <textarea
                                                 id="message"
-                                                rows={3}
+                                                rows={4}
                                                 value={formData.message}
                                                 onChange={(e) => {
                                                     setFormData(prev => ({ ...prev, message: e.target.value }))
                                                     if (touched.message) triggerHaptic('light')
                                                 }}
                                                 onBlur={() => handleBlur('message')}
-                                                aria-invalid={touched.message && !!errors.message}
-                                                aria-describedby={touched.message && errors.message ? "message-error" : undefined}
-                                                className={`w-full bg-transparent border-b-2 py-4 text-xl font-bold text-white outline-none transition-all duration-300 rounded-none resize-none placeholder:text-white/10 
+                                                className={`w-full bg-anthropic-beige/30 border py-3 px-4 text-anthropic-text outline-none transition-all duration-300 rounded resize-none focus:bg-white
                                                     ${touched.message && errors.message
-                                                        ? 'border-red-500/50'
-                                                        : 'border-white/20 focus:border-brand-green focus:shadow-glow'}`}
+                                                        ? 'border-red-300 focus:border-red-500'
+                                                        : 'border-anthropic-stone focus:border-anthropic-accent'}`}
                                                 placeholder="Tell us about your project"
                                                 disabled={status === 'submitting'}
                                             />
                                             <AnimatePresence>
-                                                {touched.message && (
-                                                    <motion.div
-                                                        initial={{ opacity: 0, scale: 0.5 }}
-                                                        animate={{ opacity: 1, scale: 1 }}
-                                                        exit={{ opacity: 0, scale: 0.5 }}
-                                                        className="absolute right-0 top-4"
+                                                {touched.message && errors.message && (
+                                                    <motion.p
+                                                        initial={{ opacity: 0, height: 0 }}
+                                                        animate={{ opacity: 1, height: 'auto' }}
+                                                        exit={{ opacity: 0, height: 0 }}
+                                                        className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider"
                                                     >
-                                                        {errors.message ? <XCircle size={18} className="text-red-500" /> : <CheckCircle size={18} className="text-brand-green" />}
-                                                    </motion.div>
+                                                        {errors.message}
+                                                    </motion.p>
                                                 )}
                                             </AnimatePresence>
                                         </div>
-                                        <AnimatePresence mode="wait">
-                                            {touched.message && errors.message && (
-                                                <motion.p
-                                                    key="message-error"
-                                                    id="message-error"
-                                                    initial={{ opacity: 0, height: 0 }}
-                                                    animate={{ opacity: 1, height: 'auto' }}
-                                                    exit={{ opacity: 0, height: 0 }}
-                                                    className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider overflow-hidden"
-                                                    role="alert"
-                                                >
-                                                    {errors.message}
-                                                </motion.p>
-                                            )}
-                                        </AnimatePresence>
                                     </div>
-                                </div>
 
-                                {status === 'error' && (
-                                    <motion.div
-                                        className="flex items-center gap-3 p-4 glass border-red-500/30 border"
-                                        initial={{ opacity: 0, y: -10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        role="alert"
-                                    >
-                                        <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
-                                        <p className="text-red-400 text-sm font-medium">{errorMessage}</p>
-                                    </motion.div>
-                                )}
-
-                                <button
-                                    type="submit"
-                                    disabled={status === 'submitting'}
-                                    className="w-full bg-brand-green text-charcoal font-bold h-16 uppercase tracking-[0.2em] hover:bg-white transition-colors duration-300 mt-8 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 group"
-                                >
-                                    {status === 'submitting' ? (
-                                        <>
-                                            <Loader2 className="w-5 h-5 animate-spin" />
-                                            Sending...
-                                        </>
-                                    ) : (
-                                        <>
-                                            Send Message
-                                            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                                        </>
+                                    {status === 'error' && (
+                                        <motion.div
+                                            className="flex items-center gap-3 p-3 bg-red-50 border border-red-200 rounded text-red-600"
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                        >
+                                            <XCircle className="w-4 h-4 flex-shrink-0" />
+                                            <p className="text-xs font-bold">{errorMessage}</p>
+                                        </motion.div>
                                     )}
-                                </button>
-                            </motion.form>
-                        )}
-                    </div>
-                </motion.div>
+
+                                    <button
+                                        type="submit"
+                                        disabled={status === 'submitting'}
+                                        className="w-full btn-primary h-14 rounded flex items-center justify-center gap-2 mt-4"
+                                    >
+                                        {status === 'submitting' ? (
+                                            <>
+                                                <Loader2 className="w-5 h-5 animate-spin" />
+                                                Sending...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Send Message
+                                                <ArrowRight className="w-4 h-4" />
+                                            </>
+                                        )}
+                                    </button>
+                                </motion.form>
+                            )}
+                        </div>
+                    </motion.div>
+                </div>
             </div>
         </section>
     )
 }
 
 export default Contact
-
-

@@ -31,66 +31,75 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed top-4 left-4 right-4 z-50 transition-all duration-300 ${isScrolled ? 'bg-charcoal/90 backdrop-blur-md py-4 border border-white/10' : 'bg-transparent py-6'}`}>
+            <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-anthropic-beige/90 backdrop-blur-md py-4 border-b border-anthropic-stone/50' : 'bg-transparent py-6'}`}>
                 <div className="container mx-auto px-6 flex justify-between items-center">
 
-                    {/* Logo - Text Only, Bold, Sharp - Static */}
-                    <a href="/" className="font-bold font-[Oswald] tracking-tighter italic text-white flex gap-2 items-center">
-                        <div className="relative flex text-4xl md:text-5xl">
+                    {/* Logo - Text Only, Serif, Elegant */}
+                    <a href="/" className="font-serif font-bold tracking-tight text-anthropic-text flex gap-2 items-center">
+                        <div className="relative flex text-3xl md:text-4xl">
                             {['I', 'V', 'R'].map((char, index) => (
-                                <span key={index} className="text-brand-green pr-2">
+                                <span key={index} className="text-anthropic-text pr-1">
                                     {char}
                                 </span>
                             ))}
                         </div>
-                        <span className="text-xl md:text-2xl text-brand-green">INTERIORS</span>
+                        <span className="text-sm md:text-base font-sans tracking-widest text-anthropic-secondary uppercase mt-1">Interiors</span>
                     </a>
 
-                    <div className="hidden md:flex items-center gap-12">
+                    <div className="hidden md:flex items-center gap-10">
+                        {/* Home Page Links */}
                         {['Projects', 'Services', 'About', 'Contact'].map((item) => (
                             <a
                                 key={item}
-                                href={`#${item.toLowerCase()}`}
-                                className="text-sm uppercase tracking-[0.2em] font-medium text-white/70 hover:text-brand-green focus:text-brand-green transition-colors duration-200 outline-none"
+                                href={window.location.pathname === '/surfaces' ? `/#${item.toLowerCase()}` : `#${item.toLowerCase()}`}
+                                className="text-sm font-sans font-medium text-anthropic-text/70 hover:text-anthropic-accent focus:text-anthropic-accent transition-colors duration-200 outline-none"
                             >
                                 {item}
                             </a>
                         ))}
 
-                        {/* CTA Button - Sharp, Solid */}
+                        {/* Collections Link - Highlight if active */}
+                        <a
+                            href="/surfaces"
+                            className={`text-sm font-sans font-medium transition-colors duration-200 outline-none ${window.location.pathname === '/surfaces' ? 'text-anthropic-accent font-semibold' : 'text-anthropic-text/70 hover:text-anthropic-accent'}`}
+                        >
+                            Collections
+                        </a>
+
+                        {/* CTA Button - Soft, Pill */}
                         <button
                             onClick={() => {
                                 triggerHaptic('medium');
                                 document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
                             }}
-                            className="btn-primary text-xs py-3 px-6"
+                            className="btn-primary text-xs py-2.5 px-6 rounded-full"
                         >
                             Book a Call
                         </button>
                     </div>
 
                     {/* Mobile Menu Toggle */}
-                    <button className="md:hidden text-white" onClick={() => {
+                    <button className="md:hidden text-anthropic-text" onClick={() => {
                         triggerHaptic('medium');
                         setIsMobileMenuOpen(!isMobileMenuOpen);
                     }}>
-                        {isMobileMenuOpen ? <X size={32} /> : <Menu size={32} />}
+                        {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
                     </button>
                 </div>
             </nav>
 
-            {/* Mobile Menu Overlay - Outside nav to ensure full viewport coverage */}
-            <div className={`fixed inset-0 w-screen h-[100dvh] bg-charcoal z-[60] flex flex-col items-center justify-center gap-10 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+            {/* Mobile Menu Overlay */}
+            <div className={`fixed inset-0 w-screen h-[100dvh] bg-anthropic-beige z-[60] flex flex-col items-center justify-center gap-8 transition-transform duration-500 md:hidden ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
                 {/* Back Arrow - Top Left */}
                 <button
-                    className="absolute top-8 left-6 text-white hover:text-brand-green transition-colors p-2"
+                    className="absolute top-6 left-6 text-anthropic-text hover:text-anthropic-accent transition-colors p-2"
                     onClick={() => {
                         triggerHaptic('light');
                         setIsMobileMenuOpen(false);
                     }}
                     aria-label="Close menu"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M19 12H5" />
                         <path d="m12 19-7-7 7-7" />
                     </svg>
@@ -100,7 +109,7 @@ const Navbar = () => {
                     <a
                         key={item}
                         href={`#${item.toLowerCase()}`}
-                        className="text-4xl font-[Oswald] font-bold uppercase italic text-white hover:text-brand-green transition-colors"
+                        className="text-3xl font-serif font-medium text-anthropic-text hover:text-anthropic-accent transition-colors"
                         onClick={() => {
                             triggerHaptic('light');
                             setIsMobileMenuOpen(false);
@@ -111,17 +120,17 @@ const Navbar = () => {
                 ))}
             </div>
 
-            {/* Social Sidebar */}
-            <div className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-50 flex-col gap-6 items-center">
-                <div className="w-[1px] h-24 bg-white/20"></div>
+            {/* Social Sidebar - Simplified */}
+            <div className="hidden md:flex fixed right-8 top-1/2 -translate-y-1/2 z-50 flex-col gap-6 items-center mix-blend-multiply">
+                <div className="w-[1px] h-24 bg-anthropic-stone"></div>
 
-                <a href="https://www.instagram.com/ivr_interiors/?hl=en" target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-green transition-colors duration-200" aria-label="Instagram">
+                <a href="https://www.instagram.com/ivr_interiors/?hl=en" target="_blank" rel="noopener noreferrer" className="text-anthropic-secondary hover:text-anthropic-accent transition-colors duration-200" aria-label="Instagram">
                     <Instagram size={20} strokeWidth={1.5} />
                 </a>
-                <a href="https://www.youtube.com/channel/UCX8qLuZl06_D15-ntVFfhBA" target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-green transition-colors duration-200" aria-label="YouTube">
+                <a href="https://www.youtube.com/channel/UCX8qLuZl06_D15-ntVFfhBA" target="_blank" rel="noopener noreferrer" className="text-anthropic-secondary hover:text-anthropic-accent transition-colors duration-200" aria-label="YouTube">
                     <Youtube size={20} strokeWidth={1.5} />
                 </a>
-                <a href="https://wa.me/918885575733" target="_blank" rel="noopener noreferrer" className="text-white hover:text-brand-green transition-colors duration-200" aria-label="WhatsApp">
+                <a href="https://wa.me/918885575733" target="_blank" rel="noopener noreferrer" className="text-anthropic-secondary hover:text-anthropic-accent transition-colors duration-200" aria-label="WhatsApp">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="20"
@@ -134,7 +143,7 @@ const Navbar = () => {
                     </svg>
                 </a>
 
-                <div className="w-[1px] h-24 bg-white/20"></div>
+                <div className="w-[1px] h-24 bg-anthropic-stone"></div>
             </div>
         </>
     )

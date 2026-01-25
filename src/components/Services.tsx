@@ -116,55 +116,39 @@ const ServiceCard = ({ service, index, onClick }: { service: typeof services[0],
             onClick={onClick}
             aria-label={`View details for ${service.title}`}
         >
-            {/* Offset Shadow Box - shifts on hover */}
+            {/* Soft Shadow Box */}
             <div
-                className="absolute inset-0 bg-brand-green z-0 transition-transform duration-300 ease-out group-hover:translate-x-3 group-hover:translate-y-3"
-                style={{ transform: 'translate(8px, 8px)' }}
+                className="absolute inset-0 bg-anthropic-accent/10 rounded-lg z-0 transition-transform duration-300 ease-out group-hover:translate-x-2 group-hover:translate-y-2"
+                style={{ transform: 'translate(4px, 4px)' }}
             />
 
             <div
-                className="h-full p-10 border border-white/10 bg-white relative z-10 overflow-hidden flex flex-col justify-between transition-all duration-300"
+                className="h-full p-8 border border-anthropic-stone bg-white rounded-lg relative z-10 overflow-hidden flex flex-col justify-between transition-all duration-300 group-hover:border-anthropic-accent/50 group-hover:shadow-lg hover:shadow-anthropic-accent/5"
             >
-                {/* Floating Glow Effect - GREEN */}
-                <div
-                    className="absolute -top-10 -right-10 w-40 h-40 bg-brand-green/20 blur-[60px] rounded-full pointer-events-none transition-opacity duration-300 group-hover:opacity-60"
-                />
-
-                <div className="relative z-10">
-                    <div className="flex justify-between items-start mb-8">
-                        <div className="flex items-center gap-4">
-                            {/* Icon */}
-                            <div
-                                className="w-12 h-12 border border-charcoal/10 flex items-center justify-center bg-charcoal/5 transition-all duration-300 group-hover:bg-brand-green/10 group-hover:border-brand-green/30"
-                            >
-                                <service.IconComponent size={24} className="text-brand-green transition-transform duration-300 group-hover:scale-110" />
-                            </div>
-                            <h3
-                                className="text-3xl font-[Oswald] font-bold uppercase italic text-charcoal"
-                            >
-                                {service.title}
-                            </h3>
+                <div>
+                    <div className="flex justify-between items-start mb-6">
+                        <div className="w-12 h-12 rounded-full bg-anthropic-beige flex items-center justify-center transition-colors duration-300 group-hover:bg-anthropic-accent/10">
+                            <service.IconComponent size={24} className="text-anthropic-secondary group-hover:text-anthropic-accent transition-colors" />
                         </div>
-                        <span
-                            className="text-5xl font-[Oswald] font-bold text-brand-green transition-transform duration-300 group-hover:scale-110"
-                        >
+                        <span className="text-4xl font-serif font-bold text-anthropic-stone/30 group-hover:text-anthropic-accent/20 transition-colors">
                             {service.icon}
                         </span>
                     </div>
 
-                    <p
-                        className="text-charcoal/70 font-light leading-relaxed"
-                    >
+                    <h3 className="text-2xl font-serif text-anthropic-text mb-3 group-hover:text-anthropic-accent transition-colors">
+                        {service.title}
+                    </h3>
+
+                    <p className="text-anthropic-secondary text-sm leading-relaxed">
                         {service.description}
                     </p>
                 </div>
 
                 {/* Arrow Icon - slides on hover */}
                 <div
-                    className="mt-8 transition-transform duration-300 group-hover:translate-x-2 flex items-center gap-2 text-brand-green font-bold uppercase tracking-wider text-xs"
+                    className="mt-6 transition-transform duration-300 group-hover:translate-x-1 flex items-center gap-2 text-anthropic-accent font-medium text-xs uppercase tracking-wide opacity-0 group-hover:opacity-100"
                 >
-                    View Details
-                    <ArrowRight size={16} />
+                    Details <ArrowRight size={14} />
                 </div>
             </div>
         </motion.div>
@@ -174,36 +158,30 @@ const ServiceCard = ({ service, index, onClick }: { service: typeof services[0],
 const Services = () => {
     const [selectedService, setSelectedService] = useState<typeof services[0] | null>(null)
 
-    // We don't have isMobileMenuOpen here, simplified handler
     const handleRequestQuote = () => {
         triggerHaptic('medium');
         setSelectedService(null);
         const contactSection = document.getElementById('contact');
         if (contactSection) {
             contactSection.scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => {
-                const nameInput = document.getElementById('name');
-                if (nameInput) nameInput.focus();
-            }, 800);
         }
     }
 
     return (
-        <section id="services" className="py-16 md:py-20 bg-charcoal relative noise-bg">
+        <section id="services" className="py-20 bg-anthropic-beige relative">
             <div className="container mx-auto px-6">
                 {/* Header - Left Aligned */}
-                <div className="mb-10 md:mb-14 border-l-4 border-brand-green pl-6">
-                    <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-4 block flex items-center gap-3">
-                        <span className="w-4 h-[2px] bg-brand-green" />
+                <div className="mb-14 border-l-2 border-anthropic-accent pl-6">
+                    <span className="text-anthropic-accent font-bold tracking-[0.2em] uppercase text-xs mb-2 block">
                         Expertise
                     </span>
-                    <h2 className="text-6xl md:text-8xl font-[Oswald] font-bold uppercase italic text-white leading-none">
-                        Bespoke <br /> <span className="text-transparent stroke-text" style={{ WebkitTextStroke: '1px white' }}>Solutions</span>
+                    <h2 className="text-4xl md:text-5xl font-serif text-anthropic-text leading-tight">
+                        Bespoke <span className="italic text-anthropic-secondary">Solutions.</span>
                     </h2>
                 </div>
 
-                {/* Services Grid - Neo-brutalist Interactive */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {/* Services Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
                     {services.map((service, i) => (
                         <ServiceCard
                             key={i}
@@ -225,53 +203,53 @@ const Services = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
+                        className="fixed inset-0 z-[100] bg-anthropic-beige/90 backdrop-blur-sm flex items-center justify-center p-4 md:p-8"
                         onClick={() => setSelectedService(null)}
                     >
                         <motion.div
-                            initial={{ scale: 0.9, y: 20 }}
+                            initial={{ scale: 0.95, y: 10 }}
                             animate={{ scale: 1, y: 0 }}
-                            exit={{ scale: 0.9, y: 20 }}
-                            className="bg-white w-full max-w-2xl relative overflow-hidden shadow-2xl"
+                            exit={{ scale: 0.95, y: 10 }}
+                            className="bg-white w-full max-w-2xl relative overflow-hidden shadow-2xl rounded-lg border border-anthropic-stone"
                             onClick={(e) => e.stopPropagation()}
                         >
                             {/* Decorative Top Bar */}
-                            <div className="h-2 bg-brand-green w-full" />
+                            <div className="h-1 bg-anthropic-accent w-full" />
 
                             {/* Close Button */}
                             <button
                                 onClick={() => setSelectedService(null)}
-                                className="absolute top-4 right-4 p-2 hover:bg-black/5 transition-colors rounded-full z-20"
+                                className="absolute top-4 right-4 p-2 hover:bg-anthropic-stone/20 transition-colors rounded-full z-20"
                             >
-                                <X size={24} className="text-charcoal" />
+                                <X size={20} className="text-anthropic-text" />
                             </button>
 
-                            <div className="p-8 md:p-12">
-                                <div className="flex items-center gap-4 mb-6">
-                                    <div className="w-16 h-16 bg-brand-green/10 flex items-center justify-center">
-                                        <selectedService.IconComponent size={32} className="text-brand-green" />
+                            <div className="p-8 md:p-10">
+                                <div className="flex items-center gap-5 mb-8">
+                                    <div className="w-16 h-16 bg-anthropic-beige rounded-full flex items-center justify-center">
+                                        <selectedService.IconComponent size={32} className="text-anthropic-accent" />
                                     </div>
                                     <div>
-                                        <span className="text-brand-green font-mono text-sm uppercase tracking-widest block mb-1">0{services.indexOf(selectedService) + 1}</span>
-                                        <h3 className="text-4xl md:text-5xl font-[Oswald] font-bold uppercase italic text-charcoal leading-none">
+                                        <span className="text-anthropic-secondary/60 font-mono text-xs uppercase tracking-widest block mb-1">0{services.indexOf(selectedService) + 1}</span>
+                                        <h3 className="text-3xl md:text-4xl font-serif text-anthropic-text leading-none">
                                             {selectedService.title}
                                         </h3>
                                     </div>
                                 </div>
 
-                                <p className="text-lg text-charcoal/70 mb-8 border-l-2 border-brand-green pl-4">
+                                <p className="text-lg text-anthropic-secondary leading-relaxed mb-8 border-l-2 border-anthropic-stone pl-4">
                                     {selectedService.description}
                                 </p>
 
-                                <div className="bg-charcoal/5 p-6 mb-8 group">
-                                    <h4 className="text-sm font-bold uppercase tracking-widest text-charcoal/40 mb-4 flex items-center gap-2">
-                                        <Layers size={14} /> What's Included
+                                <div className="bg-anthropic-beige/50 p-6 mb-8 rounded-lg border border-anthropic-stone/30">
+                                    <h4 className="text-xs font-bold uppercase tracking-widest text-anthropic-text/60 mb-4 flex items-center gap-2">
+                                        <Layers size={12} /> Included Features
                                     </h4>
-                                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         {selectedService.details.map((detail, index) => (
-                                            <li key={index} className="flex items-start gap-3 text-charcoal/80">
-                                                <span className="mt-1 w-4 h-4 rounded-full bg-brand-green/20 flex items-center justify-center flex-shrink-0">
-                                                    <Check size={10} className="text-brand-green" />
+                                            <li key={index} className="flex items-start gap-3 text-anthropic-text text-sm">
+                                                <span className="mt-1 w-4 h-4 rounded-full bg-anthropic-accent/10 flex items-center justify-center flex-shrink-0">
+                                                    <Check size={10} className="text-anthropic-accent" />
                                                 </span>
                                                 {detail}
                                             </li>
@@ -279,19 +257,12 @@ const Services = () => {
                                     </ul>
                                 </div>
 
-                                <div className="flex flex-col md:flex-row gap-4">
+                                <div className="flex gap-4">
                                     <button
                                         onClick={handleRequestQuote}
-                                        className="flex-1 bg-brand-green text-charcoal font-bold py-4 px-8 uppercase tracking-widest hover:bg-charcoal hover:text-white transition-colors flex items-center justify-center gap-2 group"
+                                        className="flex-1 btn-primary rounded-md"
                                     >
                                         Request Quote
-                                        <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
-                                    </button>
-                                    <button
-                                        onClick={() => setSelectedService(null)}
-                                        className="px-8 py-4 font-bold uppercase tracking-widest text-charcoal/40 hover:text-charcoal transition-colors border border-charcoal/10 hover:border-charcoal/30 text-sm"
-                                    >
-                                        Close
                                     </button>
                                 </div>
                             </div>

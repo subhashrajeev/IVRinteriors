@@ -23,112 +23,116 @@ const About = () => {
     })
 
     // Disable parallax on mobile for performance
-    const imageY = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [50, -50])
+    const imageY = useTransform(scrollYProgress, [0, 1], isMobile ? [0, 0] : [30, -30])
 
     return (
-        <section ref={sectionRef} id="about" className="py-16 md:py-20 bg-charcoal border-b border-white/5 relative overflow-hidden noise-bg">
-            {/* Static Gradient Orbs - No JS animation for performance */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-30">
-                <div className="absolute top-[10%] left-[10%] w-[300px] h-[300px] bg-gradient-to-r from-gold/30 to-transparent rounded-full blur-[80px] md:animate-float" />
-                <div className="absolute bottom-[20%] right-[5%] w-[400px] h-[400px] bg-gradient-to-r from-brand-green/30 to-transparent rounded-full blur-[80px] md:animate-float" style={{ animationDelay: '2s' }} />
-            </div>
-
-            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 md:gap-14 items-center relative z-10">
+        <section ref={sectionRef} id="about" className="py-20 bg-anthropic-beige border-b border-anthropic-stone relative overflow-hidden">
+            <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
                 <motion.div
-                    initial={{ opacity: 0, x: isMobile ? 0 : -50 }}
+                    initial={{ opacity: 0, x: isMobile ? 0 : -30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ duration: isMobile ? 0.4 : 0.6 }}
+                    transition={{ duration: 0.6 }}
                     className="lg:col-span-7"
                 >
-                    <span className="text-gold font-bold tracking-[0.3em] uppercase text-xs mb-8 block flex items-center gap-3 font-playfair">
-                        <span className="w-8 h-[2px] bg-gold" />
+                    <span className="text-anthropic-accent font-bold tracking-[0.2em] uppercase text-xs mb-6 block flex items-center gap-3">
+                        <span className="w-6 h-[1px] bg-anthropic-accent" />
                         Who We Are
                     </span>
 
                     {/* Heading with CEO beside it */}
                     <div className="flex flex-col md:flex-row md:items-end md:gap-8 mb-10">
-                        <h2 className="text-5xl md:text-7xl font-oswald font-bold uppercase italic text-white leading-[0.9]">
-                            Crafting <br /> <span className="text-gold font-playfair lowercase italic font-normal tracking-tight">Legacy.</span>
+                        <h2 className="text-5xl md:text-6xl font-serif text-anthropic-text leading-tight">
+                            Crafting <span className="italic text-anthropic-secondary">Legacy.</span>
                         </h2>
-
-                        {/* CEO Card - Subtle & Premium */}
-                        <div className="flex items-center gap-6 mt-8 md:mt-0 md:mb-2 group">
-                            {/* Refined Photo Frame */}
-                            <div className="relative">
-                                {/* Subtle Ambient Glow */}
-                                <div className="absolute -inset-3 bg-gold/10 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-
-                                <div className="relative w-20 h-28 md:w-24 md:h-32 border border-gold/20 p-1.5 transition-transform duration-500 group-hover:scale-105">
-                                    {/* Corner Accents */}
-                                    <div className="absolute -top-1 -left-1 w-3 h-3 border-t border-l border-gold/60" />
-                                    <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b border-r border-gold/60" />
-
-                                    <div className="w-full h-full overflow-hidden bg-charcoal">
-                                        <img
-                                            src="/assets/ceo_latest.jpg"
-                                            alt="Founder"
-                                            loading="lazy"
-                                            className={`w-full h-full object-cover transition-all duration-1000 ${isInView ? 'grayscale-0' : 'grayscale'} md:grayscale group-hover:grayscale-0 contrast-[1.1] brightness-[1.05]`}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Sophisticated Text */}
-                            <div className="space-y-1">
-                                <span
-                                    className="text-gold text-2xl md:text-3xl block transition-all duration-500 group-hover:tracking-wider"
-                                    style={{ fontFamily: "'Great Vibes', cursive" }}
-                                >
-                                    I. Venkataraju
-                                </span>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-8 h-[1px] bg-gradient-to-r from-gold/50 to-transparent" />
-                                    <p className="text-white/40 text-[10px] uppercase tracking-[0.3em] font-bold">
-                                        Founder
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
                     </div>
 
-                    <p className="text-white/60 text-lg font-light leading-relaxed mb-12">
-                        With over 15 years of design excellence in Hyderabad, IVR Interiors merges the raw strength of industrial aesthetics with the warmth of organic luxury, curating spaces that are not just lived in, but felt.
-                    </p>
+                    <div className="flex flex-col-reverse md:flex-row gap-8 md:gap-12 mb-10">
+                        <div className="flex-1">
+                            <p className="text-anthropic-secondary text-lg leading-relaxed mb-8">
+                                With over 15 years of design excellence in Hyderabad, IVR Interiors merges the raw strength of industrial aesthetics with the warmth of organic luxury, curating spaces that are not just lived in, but felt.
+                            </p>
 
-                    <div className="flex flex-wrap gap-8 md:gap-12 border-t border-white/10 pt-8 items-end">
-                        <div className="group">
-                            <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
-                                <CounterAnimation end={500} suffix="+" duration={2500} />
-                            </h4>
-                            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Happy Clients</p>
+                            <div className="flex flex-wrap gap-8 md:gap-12 border-t border-anthropic-stone pt-8">
+                                <div className="group">
+                                    <h4 className="text-anthropic-accent text-4xl font-serif mb-0">
+                                        <CounterAnimation end={500} suffix="+" duration={2500} />
+                                    </h4>
+                                    <p className="text-xs uppercase tracking-wider text-anthropic-text/60 mt-1">Happy Clients</p>
+                                </div>
+                                <div className="group">
+                                    <h4 className="text-anthropic-accent text-4xl font-serif mb-0">
+                                        <CounterAnimation end={15} suffix="+" duration={2000} />
+                                    </h4>
+                                    <p className="text-xs uppercase tracking-wider text-anthropic-text/60 mt-1">Years Excellence</p>
+                                </div>
+                                <div className="group">
+                                    <h4 className="text-anthropic-accent text-4xl font-serif mb-0">
+                                        <CounterAnimation end={1000} suffix="+" duration={3000} />
+                                    </h4>
+                                    <p className="text-xs uppercase tracking-wider text-anthropic-text/60 mt-1">Projects Done</p>
+                                </div>
+                            </div>
                         </div>
-                        <div className="group">
-                            <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
-                                <CounterAnimation end={15} suffix="+" duration={2000} />
-                            </h4>
-                            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Years Excellence</p>
-                        </div>
-                        <div className="group">
-                            <h4 className="text-gold text-5xl font-[Oswald] font-bold italic mb-0">
-                                <CounterAnimation end={1000} suffix="+" duration={3000} />
-                            </h4>
-                            <p className="text-[10px] uppercase tracking-widest text-white/40 mt-2 font-bold group-hover:text-gold transition-colors">Projects Done</p>
+
+                        {/* Team Grid - Clean & Minimal */}
+                        <div className="flex-shrink-0 flex gap-6 overflow-x-auto pb-4 md:pb-0 scrollbar-hide snap-x">
+                            {[
+                                {
+                                    name: "I. Venkataraju",
+                                    role: "Founder",
+                                    image: "/assets/ceo_latest.jpg"
+                                },
+                                {
+                                    name: "Haneesha",
+                                    role: "Digital Strategy",
+                                    image: "/assets/social_media_manager.jpg"
+                                },
+                                {
+                                    name: "Rajeev",
+                                    role: "Creative Copy",
+                                    image: "/assets/content_writer.jpg"
+                                }
+                            ].map((member, index) => (
+                                <div key={index} className="relative group snap-center">
+                                    <div className="w-32 h-40 md:w-40 md:h-48 bg-white border border-anthropic-stone p-2 shadow-sm transform transition-transform duration-500 group-hover:-translate-y-1">
+                                        <div className="w-full h-full overflow-hidden bg-anthropic-stone/10 relative">
+                                            <div className="absolute inset-0 bg-anthropic-stone/20 z-10 group-hover:bg-transparent transition-colors duration-500" />
+                                            <img
+                                                src={member.image}
+                                                alt={member.name}
+                                                loading="lazy"
+                                                className={`w-full h-full object-cover transition-all duration-700 grayscale group-hover:grayscale-0 scale-100 group-hover:scale-110`}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-3 text-center md:text-left">
+                                        <span
+                                            className="text-anthropic-text text-lg md:text-xl font-serif block leading-tight mb-1"
+                                        >
+                                            {member.name}
+                                        </span>
+                                        <p className="text-anthropic-secondary text-[10px] uppercase tracking-widest font-bold">
+                                            {member.role}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     </div>
                 </motion.div>
 
                 <motion.div
                     ref={imageRef}
-                    initial={{ opacity: 0, scale: isMobile ? 1 : 0.95 }}
+                    initial={{ opacity: 0, scale: isMobile ? 1 : 0.98 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true, margin: "-50px" }}
                     onViewportEnter={() => setIsInView(true)}
-                    transition={{ duration: isMobile ? 0.4 : 0.6 }}
+                    transition={{ duration: 0.6 }}
                     className="relative lg:col-span-5"
                 >
-                    <div className="aspect-[3/4] overflow-hidden">
+                    <div className="aspect-[3/4] overflow-hidden rounded-lg shadow-xl">
                         {isMobile ? (
                             <img
                                 src="/assets/IMG-20251203-WA0011.jpg"
@@ -142,15 +146,13 @@ const About = () => {
                                 alt="Philosophy"
                                 loading="lazy"
                                 style={{ y: imageY }}
-                                className={`w-full h-[120%] object-cover transition-all duration-700 grayscale hover:grayscale-0 parallax-image`}
+                                className={`w-full h-[115%] object-cover transition-all duration-700 grayscale hover:grayscale-0 parallax-image`}
                                 aria-label="Our philosophy illustration"
                             />
                         )}
                     </div>
                     {/* Accent Box - Integrated */}
-                    <div className="absolute top-3 left-3 w-full h-full border border-gold/30 pointer-events-none -z-10" />
-                    {/* Corner Accent */}
-                    <div className="absolute -bottom-4 -right-4 w-24 h-24 border-r-2 border-b-2 border-gold/50 pointer-events-none" />
+                    <div className="absolute top-4 -right-4 w-full h-full border border-anthropic-stone/50 rounded-lg pointer-events-none -z-10" />
                 </motion.div>
             </div>
         </section>

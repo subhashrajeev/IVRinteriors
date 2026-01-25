@@ -33,19 +33,8 @@ const projects: Project[] = [
 const categories: Category[] = ['All', 'Signature', 'Living', 'Bedroom', 'Kitchen']
 
 const SkeletonCard = ({ className }: { className?: string }) => (
-    <div className={`relative overflow-hidden bg-white/5 animate-pulse ${className}`}>
-        <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-brand-green/10 to-transparent opacity-50" />
-        <div className="absolute inset-0 p-8 flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-                <div className="w-8 h-4 bg-white/10 rounded" />
-                <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5" />
-            </div>
-            <div className="space-y-4">
-                <div className="h-2 w-16 bg-brand-green/20" />
-                <div className="h-10 w-3/4 bg-white/10" />
-                <div className="h-[2px] w-16 bg-brand-green/30" />
-            </div>
-        </div>
+    <div className={`relative overflow-hidden bg-anthropic-stone/20 animate-pulse ${className}`}>
+        <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-anthropic-stone/10 to-transparent opacity-50" />
     </div>
 )
 
@@ -62,14 +51,14 @@ const ProjectCard = ({ project, index, onClick, className }: ProjectCardProps) =
     return (
         <motion.div
             layout
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            exit={{ opacity: 0, scale: 0.98 }}
             transition={{
                 opacity: { duration: 0.4 },
                 layout: { duration: 0.5, type: "spring", bounce: 0.2, damping: 25, stiffness: 200 }
             }}
-            className={`relative overflow-hidden cursor-pointer group ${className}`}
+            className={`relative overflow-hidden cursor-pointer group rounded-lg ${className}`}
             onClick={onClick}
         >
             <AnimatePresence>
@@ -94,7 +83,7 @@ const ProjectCard = ({ project, index, onClick, className }: ProjectCardProps) =
                         playsInline
                         preload="auto"
                         onLoadedData={() => setIsLoading(false)}
-                        className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                        className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                     >
                         <source src={project.video} type="video/mp4" />
                     </video>
@@ -104,36 +93,35 @@ const ProjectCard = ({ project, index, onClick, className }: ProjectCardProps) =
                         alt={project.title}
                         loading="lazy"
                         onLoad={() => setIsLoading(false)}
-                        className={`w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+                        className={`w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
                     />
                 ) : null}
             </div>
 
-            {/* Dark Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent opacity-80" />
+            {/* Subtle Gradient Overlay for Text Readability - Lighter feel */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-70" />
 
             {/* Content Overlay */}
-            <div className="absolute inset-0 p-8 flex flex-col justify-between z-10 text-reveal-container">
+            <div className="absolute inset-0 p-6 flex flex-col justify-between z-10">
                 {/* Top Section */}
-                <div className="flex justify-between items-start">
-                    <span className="bg-brand-green/90 backdrop-blur-md text-charcoal text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-sm">
+                <div className="flex justify-between items-start opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="bg-white/90 backdrop-blur text-anthropic-text text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded">
                         {index + 1 < 10 ? `0${index + 1}` : index + 1}
                     </span>
 
-                    <div className="w-12 h-12 rounded-full border border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center text-white shadow-lg transition-transform hover:scale-110">
-                        <ArrowUpRight size={20} />
+                    <div className="w-10 h-10 rounded-full bg-white text-anthropic-text flex items-center justify-center shadow-lg transform translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-all">
+                        <ArrowUpRight size={18} />
                     </div>
                 </div>
 
                 {/* Bottom Section */}
                 <div>
-                    <span className="text-brand-green font-mono text-xs uppercase tracking-widest block mb-1">
+                    <span className="text-white/80 font-sans text-xs uppercase tracking-wider block mb-1 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
                         {project.type}
                     </span>
-                    <h3 className="text-3xl font-[Oswald] font-bold uppercase italic text-white leading-none drop-shadow-lg">
+                    <h3 className="text-2xl font-serif text-white leading-none drop-shadow-sm transform translate-y-1 group-hover:translate-y-0 transition-transform duration-300">
                         {project.title}
                     </h3>
-                    <div className="h-[2px] w-16 bg-brand-green mt-4 transition-all group-hover:w-full" />
                 </div>
             </div>
         </motion.div>
@@ -171,39 +159,38 @@ const ProjectGrid = () => {
 
 
     return (
-        <section id="projects" className="py-0 bg-charcoal relative noise-bg">
-            {/* Header Section - Full Width, Stark */}
-            <div className="border-b border-white/10 py-14 md:py-20">
+        <section id="projects" className="py-20 bg-anthropic-beige relative">
+            {/* Header Section */}
+            <div className="border-b border-anthropic-stone py-10 md:py-16 mb-8">
                 <div className="container mx-auto px-6">
                     <div className="flex flex-col md:flex-row justify-between items-end gap-10">
                         <div className="max-w-2xl">
-                            <span className="text-brand-green font-bold tracking-[0.3em] uppercase text-xs mb-6 block flex items-center gap-3 font-playfair">
-                                <span className="w-8 h-[2px] bg-brand-green" />
+                            <span className="text-anthropic-accent font-bold tracking-[0.2em] uppercase text-xs mb-4 block">
                                 Selected Works
                             </span>
-                            <h2 className="text-5xl md:text-7xl font-oswald font-bold italic uppercase leading-[0.9] text-white">
-                                Crafted <br /> <span className="text-white/30 font-playfair lowercase italic font-normal tracking-tight">Precision.</span>
+                            <h2 className="text-5xl md:text-6xl font-serif text-anthropic-text leading-tight">
+                                Crafted <span className="italic text-anthropic-secondary">Precision.</span>
                             </h2>
                         </div>
 
                         {/* Category Filter */}
-                        <div className="flex flex-wrap gap-4 md:gap-8 pb-2">
+                        <div className="flex flex-wrap gap-4 md:gap-8 pb-1">
                             {categories.map((cat) => (
                                 <button
                                     key={cat}
                                     onClick={() => {
                                         triggerHaptic('light')
                                         setActiveCategory(cat)
-                                        setShowAll(true) // Expand if filtered
+                                        setShowAll(true)
                                     }}
-                                    className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-all relative py-2 outline-none focus-visible:text-brand-green focus-visible:after:w-full ${activeCategory === cat ? 'text-brand-green' : 'text-white/40 hover:text-white'
+                                    className={`text-xs font-medium uppercase tracking-wider transition-all relative py-2 outline-none ${activeCategory === cat ? 'text-anthropic-accent' : 'text-anthropic-secondary/60 hover:text-anthropic-text'
                                         }`}
                                 >
                                     {cat}
                                     {activeCategory === cat && (
                                         <motion.div
                                             layoutId="activeCategory"
-                                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-brand-green"
+                                            className="absolute bottom-0 left-0 right-0 h-[1px] bg-anthropic-accent"
                                             transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                                         />
                                     )}
@@ -217,39 +204,41 @@ const ProjectGrid = () => {
                                 setShowAll(!showAll);
                                 if (showAll) setActiveCategory('All');
                             }}
-                            className="btn-outline flex items-center gap-3 hidden md:flex focus-visible:ring-2 focus-visible:ring-brand-green focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal"
+                            className="btn-outline hidden md:flex items-center gap-2 border-anthropic-stone text-anthropic-text hover:bg-anthropic-text hover:text-white"
                         >
                             {showAll ? 'View Less' : 'View All Projects'}
-                            <ArrowUpRight size={20} className={`transform transition-transform duration-300 ${showAll ? 'rotate-90' : ''}`} />
+                            <ArrowUpRight size={18} className={`transform transition-transform duration-300 ${showAll ? 'rotate-90' : ''}`} />
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Grid - No Gaps on Mobile, Small Gap on Desktop for 'Technical' feel */}
-            <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[400px] md:auto-rows-[600px] gap-2 p-2 md:gap-4 md:p-4">
-                <AnimatePresence mode='popLayout'>
-                    {projects
-                        .filter(p => activeCategory === 'All' ? true : p.category === activeCategory)
-                        .slice(0, showAll ? projects.length : 6)
-                        .map((project, index) => (
-                            <ProjectCard
-                                key={project.id}
-                                project={project}
-                                index={index}
-                                onClick={() => {
-                                    triggerHaptic('medium');
-                                    setSelectedProject(project);
-                                }}
-                                className={`
+            {/* Grid */}
+            <div className="container mx-auto px-6">
+                <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-[300px] md:auto-rows-[450px] gap-4">
+                    <AnimatePresence mode='popLayout'>
+                        {projects
+                            .filter(p => activeCategory === 'All' ? true : p.category === activeCategory)
+                            .slice(0, showAll ? projects.length : 6)
+                            .map((project, index) => (
+                                <ProjectCard
+                                    key={project.id}
+                                    project={project}
+                                    index={index}
+                                    onClick={() => {
+                                        triggerHaptic('medium');
+                                        setSelectedProject(project);
+                                    }}
+                                    className={`
                             ${project.size === 'large' ? 'md:col-span-8' :
-                                        project.size === 'medium' ? 'md:col-span-6' :
-                                            'md:col-span-4'}`
-                                }
-                                aria-label={`View details of ${project.title} - ${project.type}`}
-                            />
-                        ))}
-                </AnimatePresence>
+                                            project.size === 'medium' ? 'md:col-span-6' :
+                                                'md:col-span-4'}`
+                                    }
+                                    aria-label={`View details of ${project.title} - ${project.type}`}
+                                />
+                            ))}
+                    </AnimatePresence>
+                </div>
             </div>
 
             {/* Lightbox Modal */}
@@ -259,12 +248,12 @@ const ProjectGrid = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] bg-black/98 flex items-center justify-center p-0 md:p-10"
+                        className="fixed inset-0 z-[100] bg-anthropic-beige/95 backdrop-blur-sm flex items-center justify-center p-0 md:p-10"
                         onClick={() => setSelectedProject(null)}
                     >
                         {/* Close Button */}
                         <button
-                            className="absolute top-8 right-8 text-white/50 hover:text-brand-green transition-colors z-[110] focus:text-brand-green outline-none"
+                            className="absolute top-8 right-8 text-anthropic-text hover:text-anthropic-accent transition-colors z-[110] outline-none"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 triggerHaptic('light');
@@ -272,13 +261,13 @@ const ProjectGrid = () => {
                             }}
                             aria-label="Close project details"
                         >
-                            <X size={40} strokeWidth={1} />
+                            <X size={32} strokeWidth={1.5} />
                         </button>
 
                         {/* Navigation Arrows */}
                         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 md:px-12 z-[105] pointer-events-none">
                             <button
-                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto focus:border-brand-green outline-none"
+                                className="w-12 h-12 rounded-full border border-anthropic-stone bg-white/50 hover:bg-white text-anthropic-text transition-all pointer-events-auto flex items-center justify-center shadow-sm"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
@@ -286,12 +275,11 @@ const ProjectGrid = () => {
                                     triggerHaptic('light');
                                     setSelectedProject(projects[prevIndex]);
                                 }}
-                                aria-label="Previous project"
                             >
-                                <ArrowUpRight size={24} className="-rotate-135" />
+                                <ArrowUpRight size={20} className="-rotate-135" />
                             </button>
                             <button
-                                className="w-16 h-16 bg-white/5 hover:bg-brand-green/20 border border-white/10 flex items-center justify-center text-white/50 hover:text-brand-green transition-all pointer-events-auto focus:border-brand-green outline-none"
+                                className="w-12 h-12 rounded-full border border-anthropic-stone bg-white/50 hover:bg-white text-anthropic-text transition-all pointer-events-auto flex items-center justify-center shadow-sm"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     const currentIndex = projects.findIndex(p => p.id === selectedProject.id);
@@ -299,27 +287,21 @@ const ProjectGrid = () => {
                                     triggerHaptic('light');
                                     setSelectedProject(projects[nextIndex]);
                                 }}
-                                aria-label="Next project"
                             >
-                                <ArrowUpRight size={24} className="rotate-45" />
+                                <ArrowUpRight size={20} className="rotate-45" />
                             </button>
-                        </div>
-
-                        {/* Image Counter */}
-                        <div className="absolute top-10 left-10 text-[10px] font-bold uppercase tracking-[0.4em] text-white/20">
-                            Project <span className="text-brand-green">{projects.findIndex(p => p.id === selectedProject.id) + 1}</span> / {projects.length}
                         </div>
 
                         <motion.div
                             key={selectedProject.id}
-                            initial={{ scale: 0.95, opacity: 0, y: 20 }}
-                            animate={{ scale: 1, opacity: 1, y: 0 }}
-                            exit={{ scale: 0.95, opacity: 0, y: -20 }}
-                            transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                            className="relative max-w-7xl max-h-screen w-full flex flex-col items-center justify-center overflow-hidden"
+                            initial={{ scale: 0.98, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.98, opacity: 0 }}
+                            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                            className="relative max-w-6xl w-full flex flex-col items-center justify-center outline-none"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="w-full relative h-[70vh] md:h-auto md:aspect-auto flex items-center justify-center">
+                            <div className="w-full relative shadow-2xl rounded-lg overflow-hidden bg-white max-h-[80vh]">
                                 {selectedProject.video ? (
                                     <video
                                         autoPlay
@@ -327,7 +309,7 @@ const ProjectGrid = () => {
                                         loop
                                         playsInline
                                         controls
-                                        className="w-full h-full object-contain max-h-[90vh] shadow-2xl"
+                                        className="w-full h-full object-contain max-h-[80vh]"
                                     >
                                         <source src={selectedProject.video} type="video/mp4" />
                                     </video>
@@ -335,14 +317,14 @@ const ProjectGrid = () => {
                                     <img
                                         src={selectedProject.image}
                                         alt={selectedProject.title}
-                                        className="w-full h-full object-contain max-h-[90vh] shadow-2xl"
+                                        className="w-full h-full object-contain max-h-[80vh]"
                                     />
                                 )}
                             </div>
 
-                            <div className="mt-8 text-center px-6">
-                                <span className="text-brand-green font-mono text-[10px] uppercase tracking-[0.5em] block mb-2">{selectedProject.type}</span>
-                                <h3 className="text-4xl md:text-6xl font-[Oswald] font-bold uppercase italic text-white tracking-tight">{selectedProject.title}</h3>
+                            <div className="mt-6 text-center">
+                                <span className="text-anthropic-accent font-sans text-xs uppercase tracking-widest block mb-2">{selectedProject.type}</span>
+                                <h3 className="text-3xl md:text-4xl font-serif text-anthropic-text">{selectedProject.title}</h3>
                             </div>
                         </motion.div>
                     </motion.div>
