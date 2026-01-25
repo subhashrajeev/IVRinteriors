@@ -118,6 +118,18 @@ const Navbar = () => {
                         {item}
                     </a>
                 ))}
+
+                {/* Mobile Collections Link */}
+                <a
+                    href="/surfaces"
+                    className={`text-3xl font-serif font-medium transition-colors ${window.location.pathname === '/surfaces' ? 'text-anthropic-accent' : 'text-anthropic-text hover:text-anthropic-accent'}`}
+                    onClick={() => {
+                        triggerHaptic('light');
+                        setIsMobileMenuOpen(false);
+                    }}
+                >
+                    Collections
+                </a>
             </div>
 
             {/* Social Sidebar - Simplified */}
