@@ -90,25 +90,14 @@ const LaminateCatalog = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     zIndex: 1000,
-                    padding: '2rem'
+                    padding: '1rem'
                 }} onClick={() => setSelectedLaminate(null)}>
                     <div
                         onClick={e => e.stopPropagation()}
-                        style={{
-                            background: 'var(--bg-card)',
-                            width: '100%',
-                            maxWidth: '900px',
-                            borderRadius: '16px',
-                            overflow: 'hidden',
-                            display: 'flex',
-                            boxShadow: 'var(--shadow-md)',
-                            flexDirection: 'row',
-                            maxHeight: '80vh',
-                            border: '1px solid var(--border-subtle)'
-                        }}
+                        className="bg-[#FAF8F5] w-full max-w-[900px] rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-lg max-h-[90vh] md:max-h-[80vh] border border-[#E6E1DC]"
                     >
                         {/* Image Side */}
-                        <div style={{ flex: '1 1 50%', background: selectedLaminate.color, position: 'relative' }}>
+                        <div className="w-full md:w-1/2 h-48 md:h-auto relative" style={{ background: selectedLaminate.color }}>
                             {/* Texture overlay simulation */}
                             <div style={{
                                 position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
@@ -117,9 +106,9 @@ const LaminateCatalog = () => {
                         </div>
 
                         {/* Content Side */}
-                        <div style={{ flex: '1 1 50%', padding: '3rem', overflowY: 'auto' }}>
+                        <div className="w-full md:w-1/2 p-6 md:p-12 overflow-y-auto">
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                                <h2 style={{ fontSize: '2rem', marginBottom: '0.25rem' }}>{selectedLaminate.name}</h2>
+                                <h2 style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}>{selectedLaminate.name}</h2>
                                 <button
                                     onClick={() => setSelectedLaminate(null)}
                                     style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-muted)' }}
@@ -128,19 +117,19 @@ const LaminateCatalog = () => {
                                 </button>
                             </div>
 
-                            <p style={{ fontFamily: 'Source Serif 4', fontStyle: 'italic', fontSize: '1.1rem', color: 'var(--text-muted)', marginBottom: '2rem' }}>
+                            <p style={{ fontFamily: 'Source Serif 4', fontStyle: 'italic', fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
                                 {selectedLaminate.category} Collection — {selectedLaminate.texture}
                             </p>
 
-                            <div style={{ marginBottom: '2.5rem' }}>
+                            <div style={{ marginBottom: '2rem' }}>
                                 <h4 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>Description</h4>
-                                <p style={{ fontSize: '1rem', lineHeight: '1.6', color: 'var(--text-main)' }}>
+                                <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--text-main)' }}>
                                     Experience the tactile depth of {selectedLaminate.name}. Designed for resilience and aesthetic versatility,
                                     this finish brings a touch of {selectedLaminate.category.toLowerCase()} elegance to any interior surface.
                                 </p>
                             </div>
 
-                            <button className="btn-primary" onClick={() => alert('Sample requested.')}>
+                            <button className="btn-primary w-full md:w-auto" onClick={() => alert('Sample requested.')}>
                                 Request Sample
                             </button>
                         </div>
