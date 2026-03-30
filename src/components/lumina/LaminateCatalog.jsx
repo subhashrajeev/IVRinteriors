@@ -1,144 +1,140 @@
-import React, { useState, useMemo } from 'react';
-import { laminates, categories } from '../../data/laminates';
-import LaminateCard from './LaminateCard';
+import React, { useMemo, useState } from 'react'
+import { categories, laminates } from '../../data/laminates'
+import LaminateCard from './LaminateCard'
 
 const LaminateCatalog = () => {
-    const [searchTerm, setSearchTerm] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState('All');
-    const [selectedLaminate, setSelectedLaminate] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('')
+    const [selectedCategory, setSelectedCategory] = useState('All')
+    const [selectedLaminate, setSelectedLaminate] = useState(null)
 
     const filteredLaminates = useMemo(() => {
-        return laminates.filter(item => {
-            const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                item.texture.toLowerCase().includes(searchTerm.toLowerCase());
-            const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
-            return matchesSearch && matchesCategory;
-        });
-    }, [searchTerm, selectedCategory]);
+        return laminates.filter((item) => {
+            const matchesSearch =
+                item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                item.texture.toLowerCase().includes(searchTerm.toLowerCase())
+            const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory
+            return matchesSearch && matchesCategory
+        })
+    }, [searchTerm, selectedCategory])
 
     return (
-        <section id="catalog" className="container" style={{ padding: '4rem 2rem', minHeight: '80vh' }}>
+        <section id="catalog" className="shell section-padding pt-8">
+            <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                    <span className="section-rule">The collection</span>
+                    <h2 className="text-headline text-ink">Find a laminate that suits your home.</h2>
+                    <p className="mt-4 max-w-2xl text-base leading-7 text-ink-soft">
+                        These laminate options can be used for kitchens, wardrobes, wall panels, and custom units.
+                        Use the search and filters to make a shortlist.
+                    </p>
+                </div>
 
-            <div style={{ marginBottom: '4rem', textAlign: 'center' }}>
-                <h2 style={{ fontSize: '2rem', marginBottom: '1rem', fontWeight: 500 }}>The Collection</h2>
-                <div style={{ width: '40px', height: '3px', background: 'var(--accent-secondary)', margin: '0 auto 2rem' }}></div>
+                <div className="panel flex min-w-[17rem] items-center justify-between px-5 py-4 text-sm text-ink-soft">
+                    <span>Results</span>
+                    <span className="font-display text-3xl leading-none text-ink">{filteredLaminates.length}</span>
+                </div>
+            </div>
 
-                {/* Search */}
-                <input
-                    type="text"
-                    placeholder="Search by name or texture..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    style={{
-                        padding: '0.8rem 1.5rem',
-                        width: '100%',
-                        maxWidth: '480px',
-                        borderRadius: '8px',
-                        border: '1px solid var(--border-focus)',
-                        background: 'var(--bg-card)',
-                        fontSize: '0.95rem',
-                        fontFamily: 'Inter, sans-serif',
-                        boxShadow: 'var(--shadow-sm)',
-                        outline: 'none',
-                        color: 'var(--text-main)'
-                    }}
-                />
+            <div className="grid gap-4 lg:grid-cols-[0.72fr_1.28fr] lg:items-start">
+                <div className="panel-strong px-5 py-5 md:px-6 md:py-6 lg:sticky lg:top-28">
+                    <label className="text-caption text-accent">Search surfaces</label>
+                    <input
+                        type="text"
+                        placeholder="Search by name or texture..."
+                        value={searchTerm}
+                        onChange={(event) => setSearchTerm(event.target.value)}
+                        className="mt-3 w-full rounded-full border border-ink/10 bg-paper px-4 py-3 text-sm text-ink outline-none"
+                    />
 
-                {/* Categories */}
-                <div style={{ marginTop: '2rem', display: 'flex', flexWrap: 'wrap', gap: '0.6rem', justifyContent: 'center' }}>
-                    {categories.map(cat => (
-                        <button
-                            key={cat}
-                            onClick={() => setSelectedCategory(cat)}
-                            style={{
-                                padding: '0.5rem 1.25rem',
-                                borderRadius: '6px',
-                                border: selectedCategory === cat ? '1px solid var(--text-main)' : '1px solid var(--border-subtle)',
-                                background: selectedCategory === cat ? 'var(--text-main)' : 'transparent',
-                                color: selectedCategory === cat ? '#fff' : 'var(--text-muted)',
-                                fontFamily: 'Inter, sans-serif',
-                                fontSize: '0.9rem',
-                                fontWeight: 500,
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease'
-                            }}
-                        >
-                            {cat}
-                        </button>
+                    <div className="mt-6 flex flex-wrap gap-2">
+                        {categories.map((category) => (
+                            <button
+                                key={category}
+                                onClick={() => setSelectedCategory(category)}
+                                className={`rounded-full px-4 py-2 text-sm transition-all duration-300 ${
+                                    selectedCategory === category ? 'bg-ink text-paper' : 'bg-paper text-ink-soft'
+                                }`}
+                            >
+                                {category}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="mt-6 rounded-[24px] bg-forest px-5 py-5 text-paper">
+                        <p className="text-caption text-paper/70">How to use this</p>
+                        <p className="mt-3 font-display text-[2rem] leading-none">Pick what you like, then discuss it with us.</p>
+                        <p className="mt-3 text-sm leading-6 text-paper/80">
+                            We can help you match these finishes with your kitchen, wardrobes, TV unit, and the rest of the home.
+                        </p>
+                    </div>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                    {filteredLaminates.map((item) => (
+                        <LaminateCard key={item.id} data={item} onSelect={setSelectedLaminate} />
                     ))}
                 </div>
             </div>
 
-            <div className="grid-auto">
-                {filteredLaminates.map(item => (
-                    <LaminateCard
-                        key={item.id}
-                        data={item}
-                        onSelect={(data) => setSelectedLaminate(data)}
-                    />
-                ))}
-            </div>
-
-            {/* Detail Modal - Clean Paper Style */}
             {selectedLaminate && (
-                <div style={{
-                    position: 'fixed',
-                    top: 0, left: 0, right: 0, bottom: 0,
-                    background: 'rgba(255,255,255,0.6)',
-                    backdropFilter: 'blur(8px)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    zIndex: 1000,
-                    padding: '1rem'
-                }} onClick={() => setSelectedLaminate(null)}>
+                <div
+                    className="fixed inset-0 z-[130] flex items-center justify-center bg-ink/55 px-4 py-6 backdrop-blur-lg"
+                    onClick={() => setSelectedLaminate(null)}
+                >
                     <div
-                        onClick={e => e.stopPropagation()}
-                        className="bg-[#FAF8F5] w-full max-w-[900px] rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-lg max-h-[90vh] md:max-h-[80vh] border border-[#E6E1DC]"
+                        onClick={(event) => event.stopPropagation()}
+                        className="panel-strong grid max-h-[92vh] w-full max-w-4xl overflow-hidden lg:grid-cols-[0.95fr_1.05fr]"
                     >
-                        {/* Image Side */}
-                        <div className="w-full md:w-1/2 h-48 md:h-auto relative" style={{ background: selectedLaminate.color }}>
-                            {/* Texture overlay simulation */}
-                            <div style={{
-                                position: 'absolute', top: 0, left: 0, right: 0, bottom: 0,
-                                background: 'linear-gradient(45deg, rgba(255,255,255,0.1), transparent)'
-                            }}></div>
+                        <div
+                            className="min-h-[18rem]"
+                            style={{
+                                background: `linear-gradient(160deg, rgba(255,255,255,0.34), rgba(255,255,255,0.05)), ${selectedLaminate.color}`,
+                            }}
+                        >
+                            <div className="h-full bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.3),transparent_34%),linear-gradient(180deg,transparent_20%,rgba(23,20,17,0.08)_100%)]" />
                         </div>
 
-                        {/* Content Side */}
-                        <div className="w-full md:w-1/2 p-6 md:p-12 overflow-y-auto">
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                                <h2 style={{ fontSize: '1.75rem', marginBottom: '0.25rem' }}>{selectedLaminate.name}</h2>
+                        <div className="overflow-y-auto px-6 py-7 md:px-8 md:py-9">
+                            <div className="flex items-start justify-between gap-4">
+                                <div>
+                                    <p className="text-caption text-accent">{selectedLaminate.category}</p>
+                                    <h3 className="mt-3 font-display text-[3rem] leading-none text-ink">{selectedLaminate.name}</h3>
+                                </div>
                                 <button
                                     onClick={() => setSelectedLaminate(null)}
-                                    style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', color: 'var(--text-muted)' }}
+                                    className="flex h-10 w-10 items-center justify-center rounded-full border border-ink/10 bg-paper text-ink"
                                 >
-                                    ×
+                                    x
                                 </button>
                             </div>
 
-                            <p style={{ fontFamily: 'Source Serif 4', fontStyle: 'italic', fontSize: '1rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-                                {selectedLaminate.category} Collection — {selectedLaminate.texture}
+                            <p className="mt-4 text-base text-ink-soft">
+                                {selectedLaminate.texture} finish in the {selectedLaminate.category.toLowerCase()} family.
                             </p>
 
-                            <div style={{ marginBottom: '2rem' }}>
-                                <h4 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.75rem', color: 'var(--text-muted)' }}>Description</h4>
-                                <p style={{ fontSize: '0.95rem', lineHeight: '1.6', color: 'var(--text-main)' }}>
-                                    Experience the tactile depth of {selectedLaminate.name}. Designed for resilience and aesthetic versatility,
-                                    this finish brings a touch of {selectedLaminate.category.toLowerCase()} elegance to any interior surface.
-                                </p>
+                            <div className="mt-8 space-y-3">
+                                <div className="rounded-full border border-ink/10 bg-paper px-4 py-3 text-sm text-ink-soft">
+                                    Good for wardrobes, kitchens, wall panels, and custom furniture.
+                                </div>
+                                <div className="rounded-full border border-ink/10 bg-paper px-4 py-3 text-sm text-ink-soft">
+                                    Ask our team to help match this with colours, handles, and nearby finishes.
+                                </div>
                             </div>
 
-                            <button className="btn-primary w-full md:w-auto" onClick={() => alert('Sample requested.')}>
-                                Request Sample
-                            </button>
+                            <div className="mt-8 flex flex-wrap gap-3">
+                                <a href="/#contact" className="btn-primary">
+                                    Ask About This Finish
+                                </a>
+                                <button onClick={() => setSelectedLaminate(null)} className="btn-secondary">
+                                    Continue Browsing
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
             )}
-
         </section>
-    );
-};
+    )
+}
 
-export default LaminateCatalog;
+export default LaminateCatalog

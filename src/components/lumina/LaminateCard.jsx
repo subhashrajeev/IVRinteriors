@@ -1,74 +1,33 @@
-import React, { useState } from 'react';
-
 const LaminateCard = ({ data, onSelect }) => {
-    const [isHovered, setIsHovered] = useState(false);
-
     return (
-        <div
+        <button
+            type="button"
             onClick={() => onSelect(data)}
-            style={{
-                background: 'var(--bg-card)',
-                border: isHovered ? '1px solid var(--border-focus)' : '1px solid var(--border-subtle)',
-                borderRadius: '12px',
-                overflow: 'hidden',
-                boxShadow: isHovered ? 'var(--shadow-hover)' : 'var(--shadow-sm)',
-                transition: 'all 0.2s var(--ease-out)',
-                cursor: 'pointer',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                position: 'relative'
-            }}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            className="story-card group overflow-hidden text-left"
         >
-            {/* Image / Color Block */}
-            <div style={{ height: '200px', background: data.color, position: 'relative' }}>
-                <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(0,0,0,0.02) 100%)'
-                }}></div>
+            <div
+                className="tactile-swatch relative h-52"
+                style={{
+                    background: `linear-gradient(160deg, rgba(255,255,255,0.42), rgba(255,255,255,0.08)), ${data.color}`,
+                }}
+            >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.3),transparent_35%),linear-gradient(180deg,transparent_20%,rgba(23,20,17,0.08)_100%)]" />
+                <div className="absolute left-4 top-4 soft-chip border-white/20 bg-white/15 text-white">
+                    {data.category}
+                </div>
             </div>
 
-            {/* Info Block */}
-            <div style={{ padding: '1.25rem' }}>
-                <h3 style={{
-                    fontSize: '1.1rem',
-                    fontFamily: 'Inter, sans-serif',
-                    fontWeight: 600,
-                    marginBottom: '0.25rem',
-                    color: 'var(--text-main)',
-                    letterSpacing: '-0.01em'
-                }}>
-                    {data.name}
-                </h3>
-                <p style={{
-                    fontSize: '0.85rem',
-                    color: 'var(--text-muted)',
-                    fontFamily: 'Inter, sans-serif'
-                }}>
-                    {data.category} · {data.texture}
-                </p>
+            <div className="px-5 py-5">
+                <div className="flex items-start justify-between gap-3">
+                    <div>
+                        <h3 className="font-display text-[2rem] leading-none text-ink">{data.name}</h3>
+                        <p className="mt-2 text-sm text-ink-soft">{data.texture} finish</p>
+                    </div>
+                    <span className="text-lg text-accent transition-transform duration-300 group-hover:translate-x-1">→</span>
+                </div>
             </div>
+        </button>
+    )
+}
 
-            {/* Action Icon (Visible on Hover) */}
-            <div style={{
-                position: 'absolute',
-                bottom: '1.25rem',
-                right: '1.25rem',
-                opacity: isHovered ? 1 : 0,
-                transform: isHovered ? 'translateX(0)' : 'translateX(-5px)',
-                transition: 'all 0.2s ease',
-                color: 'var(--accent-primary)'
-            }}>
-                →
-            </div>
-        </div>
-    );
-};
-
-export default LaminateCard;
+export default LaminateCard

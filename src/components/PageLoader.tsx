@@ -60,29 +60,29 @@ const PageLoader = ({ onComplete }: { onComplete: () => void }) => {
                     transition={{ duration: 0.5 }}
                 >
                     {/* Background */}
-                    <div className="loader-bg absolute inset-0 bg-anthropic-beige" />
+                    <div className="loader-bg absolute inset-0 bg-ivory" />
 
                     {/* Content */}
                     <div className="loader-content relative z-10 flex flex-col items-center">
                         <div className="flex flex-col items-center mb-8">
-                            <h1 className="text-4xl md:text-5xl font-serif text-anthropic-text font-bold tracking-tight mb-2">
+                            <h1 className="text-4xl md:text-5xl font-serif text-charcoal font-light tracking-tight mb-1">
                                 IVR
                             </h1>
-                            <p className="text-anthropic-secondary text-[10px] uppercase tracking-[0.3em] font-bold">
+                            <p className="text-warm-gray text-[10px] uppercase tracking-[0.3em] font-sans">
                                 Interiors
                             </p>
                         </div>
 
                         {/* Minimal Progress Bar */}
-                        <div className="w-32 h-[1px] bg-anthropic-stone overflow-hidden relative">
+                        <div className="w-32 h-[1px] bg-stone-light overflow-hidden relative">
                             <motion.div
-                                className="absolute top-0 left-0 h-full bg-anthropic-accent"
+                                className="absolute top-0 left-0 h-full bg-accent"
                                 style={{ width: `${progress}%` }}
                                 transition={{ duration: 0.1 }}
                             />
                         </div>
 
-                        <div className="mt-2 text-anthropic-secondary text-[10px] font-mono tracking-widest opacity-60">
+                        <div className="mt-3 text-warm-gray text-[10px] font-mono tracking-widest opacity-60">
                             {Math.round(progress)}%
                         </div>
                     </div>
@@ -93,4 +93,3 @@ const PageLoader = ({ onComplete }: { onComplete: () => void }) => {
 }
 
 export default PageLoader
-

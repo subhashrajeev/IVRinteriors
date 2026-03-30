@@ -1,14 +1,15 @@
-import { ArrowRight, CheckCircle, XCircle, Loader2, Phone, Mail, MapPin } from 'lucide-react'
-import { useState, useEffect, type FormEvent } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { triggerHaptic } from '../utils/haptics'
+import { ArrowRight, CheckCircle, Clock3, Loader2, Mail, MapPin, Phone, XCircle } from 'lucide-react'
+import { useState, type FormEvent } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 
-// Web3Forms access key
 const WEB3FORMS_ACCESS_KEY = '92a287e4-5cef-4a4d-9ea4-96d2091c9dbc'
+const projectTypes = ['2BHK', '3BHK / 4BHK', 'Villa', 'Kitchen / Wardrobe', 'Renovation']
 
 interface FormData {
     name: string
     email: string
+    phone: string
+    projectType: string
     message: string
 }
 
@@ -18,70 +19,53 @@ const Contact = () => {
     const [formData, setFormData] = useState<FormData>({
         name: '',
         email: '',
-        message: ''
+        phone: '',
+        projectType: '',
+        message: '',
     })
     const [touched, setTouched] = useState<Record<keyof FormData, boolean>>({
         name: false,
         email: false,
-        message: false
+        phone: false,
+        projectType: false,
+        message: false,
     })
     const [status, setStatus] = useState<FormStatus>('idle')
     const [errorMessage, setErrorMessage] = useState('')
-    const [isMobile, setIsMobile] = useState(false)
-    const [shake, setShake] = useState(false)
 
-    // Particle/Confetti effect state
-    const [particles, setParticles] = useState<Array<{ id: number; x: number; y: number; color: string }>>([])
-
-    const validateEmail = (email: string) => {
-        return String(email)
+    const validateEmail = (email: string) =>
+        String(email)
             .toLowerCase()
             .match(
-                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            );
-    };
+                /^(([^\u003c\u003e()[\]\\.,;:\s@"]+(\.[^\u003c\u003e()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            )
+
+    const validatePhone = (phone: string) => phone.replace(/\D/g, '').length >= 10
 
     const errors = {
         name: !formData.name.trim() ? 'Name is required' : '',
-        email: !formData.email.trim() ? 'Email is required' : !validateEmail(formData.email) ? 'Invalid email format' : '',
-        message: !formData.message.trim() ? 'Message is required' : ''
+        email: !formData.email.trim() ? 'Email is required' : !validateEmail(formData.email) ? 'Enter a valid email address' : '',
+        phone: !formData.phone.trim() ? 'Phone number is required' : !validatePhone(formData.phone) ? 'Enter a valid phone number' : '',
+        projectType: !formData.projectType ? 'Select a project type' : '',
+        message: !formData.message.trim() ? 'Tell us a bit about the project' : '',
     }
 
     const handleBlur = (field: keyof FormData) => {
-        setTouched(prev => ({ ...prev, [field]: true }))
+        setTouched((previous) => ({ ...previous, [field]: true }))
     }
 
-    const triggerConfetti = () => {
-        const colors = ['#D97757', '#C1B6A6', '#1A1A1A'] // Accent, Secondary, Text
-        const newParticles = Array.from({ length: 50 }).map((_, i) => ({
-            id: i,
-            x: Math.random() * 100 - 50,
-            y: Math.random() * 50 - 25,
-            color: colors[Math.floor(Math.random() * colors.length)]
-        }))
-        setParticles(newParticles)
+    const updateField = (field: keyof FormData, value: string) => {
+        setFormData((previous) => ({ ...previous, [field]: value }))
     }
 
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth < 768)
-        checkMobile()
-        window.addEventListener('resize', checkMobile)
-        return () => window.removeEventListener('resize', checkMobile)
-    }, [])
+    const handleSubmit = async (event: FormEvent) => {
+        event.preventDefault()
+        setTouched({ name: true, email: true, phone: true, projectType: true, message: true })
 
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault()
-        triggerHaptic('heavy')
-
-        setTouched({ name: true, email: true, message: true })
-
-        const hasErrors = Object.values(errors).some(err => err !== '')
+        const hasErrors = Object.values(errors).some(Boolean)
         if (hasErrors) {
             setStatus('error')
-            setErrorMessage('Please fix the errors in the form')
-            setShake(true)
-            setTimeout(() => setShake(false), 500)
-            triggerHaptic('heavy')
+            setErrorMessage('Please fix the highlighted fields and try again.')
             return
         }
 
@@ -92,314 +76,238 @@ const Contact = () => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
+                    Accept: 'application/json',
                 },
                 body: JSON.stringify({
                     access_key: WEB3FORMS_ACCESS_KEY,
                     name: formData.name,
                     email: formData.email,
+                    phone: formData.phone,
+                    project_type: formData.projectType,
                     message: formData.message,
-                    subject: `New Contact Request from ${formData.name} - IVR Interiors`,
-                    from_name: 'IVR Interiors Website'
-                })
+                    subject: `New Consultation Request from ${formData.name} - IVR Interiors`,
+                    from_name: 'IVR Interiors Website',
+                }),
             })
 
             const result = await response.json()
 
-            if (result.success) {
-                setStatus('success')
-                triggerConfetti()
-                triggerHaptic('medium')
-                setFormData({ name: '', email: '', message: '' })
-                setTimeout(() => setStatus('idle'), 8000)
-            } else {
+            if (!result.success) {
                 throw new Error(result.message || 'Something went wrong')
             }
+
+            setStatus('success')
+            setFormData({ name: '', email: '', phone: '', projectType: '', message: '' })
+            setTouched({ name: false, email: false, phone: false, projectType: false, message: false })
+            setTimeout(() => setStatus('idle'), 5000)
         } catch (error) {
             setStatus('error')
-            setErrorMessage(error instanceof Error ? error.message : 'Failed to send message. Please try again.')
-            triggerHaptic('heavy')
+            setErrorMessage(error instanceof Error ? error.message : 'Failed to submit. Please try again.')
         }
     }
 
     return (
-        <section id="contact" className="bg-anthropic-beige border-t border-anthropic-stone overflow-hidden relative py-20">
-            <div className="container mx-auto px-6">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
-
-                    {/* Left Side: Info */}
-                    <motion.div
-                        className="flex flex-col justify-between"
-                        initial={{ opacity: 0, x: isMobile ? 0 : -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <div className="space-y-8">
-                            <div>
-                                <span className="text-anthropic-accent font-bold tracking-[0.2em] uppercase text-xs mb-4 block flex items-center gap-3">
-                                    <span className="w-6 h-[1px] bg-anthropic-accent" />
-                                    Contact
-                                </span>
-                                <h2 className="text-5xl md:text-6xl font-serif text-anthropic-text leading-tight">
-                                    Let's Talk <span className="italic text-anthropic-secondary">Future.</span>
-                                </h2>
-                            </div>
-
-                            <p className="text-anthropic-secondary max-w-md text-lg leading-relaxed">
-                                Ready to upgrade your space? We bring 15+ years of precision and modern aesthetics to your project.
+        <section id="contact" className="section-padding">
+            <div className="shell">
+                <div className="grid gap-8 xl:grid-cols-[0.82fr_1.18fr]">
+                    <div className="panel-strong flex flex-col gap-6 px-6 py-7 md:px-8 md:py-9">
+                        <div>
+                            <span className="section-rule">Start your project</span>
+                            <h2 className="section-heading text-balance text-ink">Tell us what work you need.</h2>
+                            <p className="mt-6 text-base leading-7 text-ink-soft md:text-lg">
+                                Whether you need full home interiors, a kitchen, wardrobes, or renovation work, we will understand your requirement and guide you on the next step.
                             </p>
                         </div>
 
-                        <div className="grid gap-8 mt-12">
-                            <motion.div
-                                className="group"
-                                whileHover={{ x: 5 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                <div className="flex items-center gap-5">
-                                    <div className="w-10 h-10 rounded-full bg-white border border-anthropic-stone flex items-center justify-center text-anthropic-secondary group-hover:text-anthropic-accent transition-colors">
-                                        <Phone size={18} />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-xs font-bold uppercase tracking-widest text-anthropic-secondary/60 mb-1">Call Us</h4>
-                                        <a href="tel:+918885575733" onClick={() => triggerHaptic('medium')} className="text-xl md:text-2xl text-anthropic-text font-serif hover:text-anthropic-accent transition-colors">
-                                            +91 88855 75733
-                                        </a>
-                                    </div>
+                        <div className="grid gap-4">
+                            <div className="panel flex items-start gap-4 px-5 py-5">
+                                <Phone className="mt-1 h-5 w-5 text-accent" />
+                                <div>
+                                    <p className="text-caption text-accent">Call us</p>
+                                    <a href="tel:+918885575733" className="mt-2 block font-display text-[2rem] leading-none text-ink">
+                                        +91 88855 75733
+                                    </a>
                                 </div>
-                            </motion.div>
+                            </div>
 
-                            <motion.div
-                                className="group"
-                                whileHover={{ x: 5 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                <div className="flex items-center gap-5">
-                                    <div className="w-10 h-10 rounded-full bg-white border border-anthropic-stone flex items-center justify-center text-anthropic-secondary group-hover:text-anthropic-accent transition-colors">
-                                        <Mail size={18} />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-xs font-bold uppercase tracking-widest text-anthropic-secondary/60 mb-1">Email Us</h4>
-                                        <a href="mailto:venkatarajuandco@gmail.com" onClick={() => triggerHaptic('light')} className="text-lg md:text-xl text-anthropic-text font-serif hover:text-anthropic-accent transition-colors">
-                                            venkatarajuandco@gmail.com
-                                        </a>
-                                    </div>
+                            <div className="panel flex items-start gap-4 px-5 py-5">
+                                <Mail className="mt-1 h-5 w-5 text-accent" />
+                                <div>
+                                    <p className="text-caption text-accent">Email</p>
+                                    <a href="mailto:venkatarajuandco@gmail.com" className="mt-2 block text-sm text-ink-soft md:text-base">
+                                        venkatarajuandco@gmail.com
+                                    </a>
                                 </div>
-                            </motion.div>
+                            </div>
 
-                            <motion.div
-                                className="group"
-                                whileHover={{ x: 5 }}
-                                transition={{ duration: 0.2 }}
-                            >
-                                <div className="flex items-center gap-5">
-                                    <div className="w-10 h-10 rounded-full bg-white border border-anthropic-stone flex items-center justify-center text-anthropic-secondary group-hover:text-anthropic-accent transition-colors">
-                                        <MapPin size={18} />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-xs font-bold uppercase tracking-widest text-anthropic-secondary/60 mb-1">Visit Us</h4>
-                                        <p className="text-lg text-anthropic-text font-serif">Nizampet, Hyderabad.</p>
-                                        <a href="https://maps.google.com/?q=IVR+Interiors" target="_blank" onClick={() => triggerHaptic('light')} className="inline-flex items-center gap-2 text-anthropic-accent mt-2 text-xs font-bold uppercase tracking-widest hover:text-anthropic-text transition-colors">
-                                            View Map <ArrowRight size={12} />
-                                        </a>
-                                    </div>
+                            <div className="panel flex items-start gap-4 px-5 py-5">
+                                <MapPin className="mt-1 h-5 w-5 text-accent" />
+                                <div>
+                                    <p className="text-caption text-accent">Location</p>
+                                    <p className="mt-2 text-sm text-ink-soft md:text-base">Nizampet, Hyderabad</p>
                                 </div>
-                            </motion.div>
+                            </div>
+
+                            <div className="panel flex items-start gap-4 px-5 py-5">
+                                <Clock3 className="mt-1 h-5 w-5 text-accent" />
+                                <div>
+                                    <p className="text-caption text-accent">Reply time</p>
+                                    <p className="mt-2 text-sm text-ink-soft md:text-base">Usually within a few working hours.</p>
+                                </div>
+                            </div>
                         </div>
-                    </motion.div>
+                    </div>
 
-                    {/* Right Side: Clean Form */}
                     <motion.div
-                        initial={{ opacity: 0, x: isMobile ? 0 : 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                        initial={{ opacity: 0, y: 26 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: '-80px' }}
+                        transition={{ duration: 0.6 }}
+                        className="panel-strong px-6 py-7 md:px-8 md:py-9"
                     >
-                        <div className="w-full max-w-lg mx-auto bg-white border border-anthropic-stone rounded-lg p-8 md:p-12 shadow-sm">
-                            <h3 className="text-anthropic-text text-2xl font-serif mb-8 flex items-center gap-3">
-                                Send A Request
-                            </h3>
-
-                            {status === 'success' ? (
-                                <motion.div
-                                    className="text-center py-12 space-y-6 relative overflow-hidden"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                >
-                                    {/* Particle Confetti */}
-                                    {particles.map((particle) => (
-                                        <motion.div
-                                            key={particle.id}
-                                            initial={{ opacity: 1, x: 0, y: 0, scale: Math.random() * 0.5 + 0.5 }}
-                                            animate={{ opacity: 0, x: particle.x * 20, y: particle.y * 20 - 100, rotate: Math.random() * 360 }}
-                                            transition={{ duration: 1.5 + Math.random(), ease: "easeOut" }}
-                                            style={{ backgroundColor: particle.color }}
-                                            className="absolute top-1/2 left-1/2 w-2 h-2 rounded-full"
+                        {status === 'success' ? (
+                            <div className="flex min-h-[28rem] flex-col items-center justify-center text-center">
+                                <div className="flex h-18 w-18 items-center justify-center rounded-full bg-green-500/12 text-green-600">
+                                    <CheckCircle className="h-9 w-9" />
+                                </div>
+                                <h3 className="mt-6 font-display text-[3rem] leading-none text-ink">We got your request.</h3>
+                                <p className="mt-4 max-w-xl text-base leading-7 text-ink-soft md:text-lg">
+                                    Our team will contact you shortly to understand the space, budget, and next steps.
+                                </p>
+                            </div>
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-5">
+                                <div className="grid gap-5 md:grid-cols-2">
+                                    <div className="field-shell">
+                                        <label className="text-caption text-accent">Name</label>
+                                        <input
+                                            type="text"
+                                            value={formData.name}
+                                            onChange={(event) => updateField('name', event.target.value)}
+                                            onBlur={() => handleBlur('name')}
+                                            className="mt-3 w-full bg-transparent text-base text-ink outline-none"
+                                            placeholder="Your full name"
                                         />
-                                    ))}
-
-                                    <div className="flex justify-center mb-6">
-                                        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-                                            <CheckCircle className="w-8 h-8 text-green-600" />
-                                        </div>
+                                        <AnimatePresence>
+                                            {touched.name && errors.name && (
+                                                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-3 text-sm text-red-500">
+                                                    {errors.name}
+                                                </motion.p>
+                                            )}
+                                        </AnimatePresence>
                                     </div>
 
-                                    <div>
-                                        <h4 className="text-2xl font-serif text-anthropic-text mb-2">Message Received</h4>
-                                        <p className="text-anthropic-secondary text-sm">We'll be in touch shortly.</p>
+                                    <div className="field-shell">
+                                        <label className="text-caption text-accent">Email</label>
+                                        <input
+                                            type="email"
+                                            value={formData.email}
+                                            onChange={(event) => updateField('email', event.target.value)}
+                                            onBlur={() => handleBlur('email')}
+                                            className="mt-3 w-full bg-transparent text-base text-ink outline-none"
+                                            placeholder="name@example.com"
+                                        />
+                                        <AnimatePresence>
+                                            {touched.email && errors.email && (
+                                                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-3 text-sm text-red-500">
+                                                    {errors.email}
+                                                </motion.p>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                </div>
+
+                                <div className="grid gap-5 md:grid-cols-[0.9fr_1.1fr]">
+                                    <div className="field-shell">
+                                        <label className="text-caption text-accent">Phone</label>
+                                        <input
+                                            type="tel"
+                                            value={formData.phone}
+                                            onChange={(event) => updateField('phone', event.target.value)}
+                                            onBlur={() => handleBlur('phone')}
+                                            className="mt-3 w-full bg-transparent text-base text-ink outline-none"
+                                            placeholder="+91"
+                                        />
+                                        <AnimatePresence>
+                                            {touched.phone && errors.phone && (
+                                                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-3 text-sm text-red-500">
+                                                    {errors.phone}
+                                                </motion.p>
+                                            )}
+                                        </AnimatePresence>
                                     </div>
 
-                                    <button
-                                        onClick={() => {
-                                            setStatus('idle')
-                                            setTouched({ name: false, email: false, message: false })
-                                            setParticles([])
-                                        }}
-                                        className="text-anthropic-accent hover:text-anthropic-text transition-colors text-xs font-bold uppercase tracking-widest mt-8 border-b border-transparent hover:border-anthropic-text"
-                                    >
-                                        Send Another Request
-                                    </button>
-                                </motion.div>
-                            ) : (
-                                <motion.form
-                                    animate={shake ? { x: [-5, 5, -5, 5, 0] } : {}}
-                                    transition={{ duration: 0.4 }}
-                                    onSubmit={handleSubmit}
-                                    className="space-y-6"
-                                >
-                                    <div className="space-y-5">
-                                        {/* Name Input */}
-                                        <div className="relative group">
-                                            <label htmlFor="name" className="block text-xs font-bold uppercase tracking-widest mb-2 text-anthropic-text/60 group-focus-within:text-anthropic-accent transition-colors">Full Name</label>
-                                            <input
-                                                id="name"
-                                                type="text"
-                                                value={formData.name}
-                                                onChange={(e) => {
-                                                    setFormData(prev => ({ ...prev, name: e.target.value }))
-                                                    if (touched.name) triggerHaptic('light')
-                                                }}
-                                                onBlur={() => handleBlur('name')}
-                                                className={`w-full bg-anthropic-beige/30 border py-3 px-4 text-anthropic-text outline-none transition-all duration-300 rounded focus:bg-white
-                                                    ${touched.name && errors.name
-                                                        ? 'border-red-300 focus:border-red-500'
-                                                        : 'border-anthropic-stone focus:border-anthropic-accent'}`}
-                                                placeholder="Enter your name"
-                                                disabled={status === 'submitting'}
-                                            />
-                                            <AnimatePresence>
-                                                {touched.name && errors.name && (
-                                                    <motion.p
-                                                        initial={{ opacity: 0, height: 0 }}
-                                                        animate={{ opacity: 1, height: 'auto' }}
-                                                        exit={{ opacity: 0, height: 0 }}
-                                                        className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider"
-                                                    >
-                                                        {errors.name}
-                                                    </motion.p>
-                                                )}
-                                            </AnimatePresence>
-                                        </div>
-
-                                        {/* Email Input */}
-                                        <div className="relative group">
-                                            <label htmlFor="email" className="block text-xs font-bold uppercase tracking-widest mb-2 text-anthropic-text/60 group-focus-within:text-anthropic-accent transition-colors">Email Address</label>
-                                            <input
-                                                id="email"
-                                                type="email"
-                                                value={formData.email}
-                                                onChange={(e) => {
-                                                    setFormData(prev => ({ ...prev, email: e.target.value }))
-                                                    if (touched.email) triggerHaptic('light')
-                                                }}
-                                                onBlur={() => handleBlur('email')}
-                                                className={`w-full bg-anthropic-beige/30 border py-3 px-4 text-anthropic-text outline-none transition-all duration-300 rounded focus:bg-white
-                                                    ${touched.email && errors.email
-                                                        ? 'border-red-300 focus:border-red-500'
-                                                        : 'border-anthropic-stone focus:border-anthropic-accent'}`}
-                                                placeholder="name@example.com"
-                                                disabled={status === 'submitting'}
-                                            />
-                                            <AnimatePresence>
-                                                {touched.email && errors.email && (
-                                                    <motion.p
-                                                        initial={{ opacity: 0, height: 0 }}
-                                                        animate={{ opacity: 1, height: 'auto' }}
-                                                        exit={{ opacity: 0, height: 0 }}
-                                                        className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider"
-                                                    >
-                                                        {errors.email}
-                                                    </motion.p>
-                                                )}
-                                            </AnimatePresence>
-                                        </div>
-
-                                        {/* Message Input */}
-                                        <div className="relative group">
-                                            <label htmlFor="message" className="block text-xs font-bold uppercase tracking-widest mb-2 text-anthropic-text/60 group-focus-within:text-anthropic-accent transition-colors">Message</label>
-                                            <textarea
-                                                id="message"
-                                                rows={4}
-                                                value={formData.message}
-                                                onChange={(e) => {
-                                                    setFormData(prev => ({ ...prev, message: e.target.value }))
-                                                    if (touched.message) triggerHaptic('light')
-                                                }}
-                                                onBlur={() => handleBlur('message')}
-                                                className={`w-full bg-anthropic-beige/30 border py-3 px-4 text-anthropic-text outline-none transition-all duration-300 rounded resize-none focus:bg-white
-                                                    ${touched.message && errors.message
-                                                        ? 'border-red-300 focus:border-red-500'
-                                                        : 'border-anthropic-stone focus:border-anthropic-accent'}`}
-                                                placeholder="Tell us about your project"
-                                                disabled={status === 'submitting'}
-                                            />
-                                            <AnimatePresence>
-                                                {touched.message && errors.message && (
-                                                    <motion.p
-                                                        initial={{ opacity: 0, height: 0 }}
-                                                        animate={{ opacity: 1, height: 'auto' }}
-                                                        exit={{ opacity: 0, height: 0 }}
-                                                        className="text-red-500 text-[10px] uppercase font-bold mt-1 tracking-wider"
-                                                    >
-                                                        {errors.message}
-                                                    </motion.p>
-                                                )}
-                                            </AnimatePresence>
-                                        </div>
-                                    </div>
-
-                                    {status === 'error' && (
-                                        <motion.div
-                                            className="flex items-center gap-3 p-3 bg-red-50 border border-red-200 rounded text-red-600"
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
+                                    <div className="field-shell">
+                                        <label className="text-caption text-accent">Project type</label>
+                                        <select
+                                            value={formData.projectType}
+                                            onChange={(event) => updateField('projectType', event.target.value)}
+                                            onBlur={() => handleBlur('projectType')}
+                                            className="mt-3 w-full bg-transparent text-base text-ink outline-none"
                                         >
-                                            <XCircle className="w-4 h-4 flex-shrink-0" />
-                                            <p className="text-xs font-bold">{errorMessage}</p>
-                                        </motion.div>
-                                    )}
+                                            <option value="">Select one</option>
+                                            {projectTypes.map((type) => (
+                                                <option key={type} value={type}>
+                                                    {type}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <AnimatePresence>
+                                            {touched.projectType && errors.projectType && (
+                                                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-3 text-sm text-red-500">
+                                                    {errors.projectType}
+                                                </motion.p>
+                                            )}
+                                        </AnimatePresence>
+                                    </div>
+                                </div>
 
-                                    <button
-                                        type="submit"
-                                        disabled={status === 'submitting'}
-                                        className="w-full btn-primary h-14 rounded flex items-center justify-center gap-2 mt-4"
-                                    >
-                                        {status === 'submitting' ? (
-                                            <>
-                                                <Loader2 className="w-5 h-5 animate-spin" />
-                                                Sending...
-                                            </>
-                                        ) : (
-                                            <>
-                                                Send Message
-                                                <ArrowRight className="w-4 h-4" />
-                                            </>
+                                <div className="field-shell">
+                                    <label className="text-caption text-accent">Project notes</label>
+                                    <textarea
+                                        rows={6}
+                                        value={formData.message}
+                                        onChange={(event) => updateField('message', event.target.value)}
+                                        onBlur={() => handleBlur('message')}
+                                        className="mt-3 w-full resize-none bg-transparent text-base leading-7 text-ink outline-none"
+                                        placeholder="Tell us what you need, which area of the home it is, and when you want to start."
+                                    />
+                                    <AnimatePresence>
+                                        {touched.message && errors.message && (
+                                            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-3 text-sm text-red-500">
+                                                {errors.message}
+                                            </motion.p>
                                         )}
-                                    </button>
-                                </motion.form>
-                            )}
-                        </div>
+                                    </AnimatePresence>
+                                </div>
+
+                                {status === 'error' && (
+                                    <motion.div
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className="flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
+                                        aria-live="polite"
+                                    >
+                                        <XCircle className="h-4 w-4" />
+                                        {errorMessage}
+                                    </motion.div>
+                                )}
+
+                                <button type="submit" disabled={status === 'submitting'} className="btn-primary w-full justify-center">
+                                    {status === 'submitting' ? (
+                                        <>
+                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                            Sending your request...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Send Request
+                                            <ArrowRight className="h-4 w-4" />
+                                        </>
+                                    )}
+                                </button>
+                            </form>
+                        )}
                     </motion.div>
                 </div>
             </div>

@@ -1,229 +1,179 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
-import { ChevronDown } from 'lucide-react'
-import { motion, useSpring, useTransform, useMotionValue } from 'framer-motion'
-import { triggerHaptic } from '../utils/haptics'
+import { useRef } from 'react'
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
+import { ArrowRight, ArrowUpRight, Layers3, Sparkles, Workflow } from 'lucide-react'
 
-// Hanging Image Component with Physics
-const HangingImage = ({ src, alt, className, delay = 0, angle = 5 }: { src: string, alt: string, className?: string, delay?: number, angle?: number }) => {
-    const x = useMotionValue(0)
-    const y = useMotionValue(0)
-    const rotateX = useTransform(y, [-100, 100], [30, -30])
-    const rotateY = useTransform(x, [-100, 100], [-30, 30])
+const metrics = [
+    { value: '15+', label: 'Years of experience' },
+    { value: '500+', label: 'Homes completed' },
+    { value: '4.9/5', label: 'Client rating' },
+]
 
-    // Physics-based spring for natural Sway
-    const springConfig = { damping: 15, stiffness: 150, mass: 1 }
-    const rotationSpring = useSpring(useMotionValue(angle), springConfig)
-
-    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        const rect = e.currentTarget.getBoundingClientRect()
-        const width = rect.width
-        const height = rect.height
-        const mouseX = e.clientX - rect.left
-        const mouseY = e.clientY - rect.top
-
-        const xPct = mouseX / width - 0.5
-        const yPct = mouseY / height - 0.5
-
-        x.set(xPct * 100)
-        y.set(yPct * 100)
-    }
-
-    const handleMouseLeave = () => {
-        x.set(0)
-        y.set(0)
-        rotationSpring.set(angle) // Return to resting angle
-    }
-
-    const handleMouseEnter = () => {
-        triggerHaptic('light')
-        rotationSpring.set(0) // Swing to center on hover
-    }
-
-    return (
-        <motion.div
-            className={`absolute z-20 hidden lg:block ${className}`}
-            initial={{ opacity: 0, y: -100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.5, delay: delay, type: "spring", bounce: 0.4 }}
-            style={{
-                perspective: 1000,
-                transformOrigin: "top center"
-            }}
-        >
-            {/* The String/Wire */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full w-[1px] h-32 bg-anthropic-stone/50" />
-
-            {/* The Hanging Container */}
-            <motion.div
-                style={{
-                    rotate: rotationSpring,
-                    transformOrigin: "top center",
-                }}
-                onMouseMove={handleMouseMove}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                className="relative group cursor-pointer"
-                animate={{
-                    rotate: [angle, -angle, angle],
-                }}
-                transition={{
-                    rotate: {
-                        duration: 6 + Math.random() * 2,
-                        repeat: Infinity,
-                        repeatType: "reverse",
-                        ease: "easeInOut"
-                    }
-                }}
-            >
-                {/* Clipboard Clip */}
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-12 h-4 bg-gradient-to-b from-anthropic-stone to-white rounded-sm shadow-sm z-30" />
-                <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-4 h-6 border-2 border-anthropic-stone rounded-t-full z-20" />
-
-                {/* Photo Frame (Clipboard Style) */}
-                <motion.div
-                    className="relative bg-white p-3 pb-8 shadow-xl shadow-black/5 w-64 h-80 rotate-1 border border-anthropic-stone/20"
-                    style={{
-                        rotateX: rotateX,
-                        rotateY: rotateY,
-                    }}
-                    whileHover={{ scale: 1.05 }}
-                >
-                    <div className="w-full h-full overflow-hidden bg-anthropic-beige relative">
-                        <img
-                            src={src}
-                            alt={alt}
-                            className="w-full h-full object-cover filter sepia-[0.1] contrast-[0.95] group-hover:sepia-0 group-hover:contrast-100 transition-all duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                </motion.div>
-            </motion.div>
-        </motion.div>
-    )
-}
+const pillars = [
+    {
+        icon: Sparkles,
+        title: 'Good-looking interiors',
+        description: 'Clean designs, balanced colours, and finishes that make your home look polished.',
+    },
+    {
+        icon: Workflow,
+        title: 'Smooth execution',
+        description: 'Clear planning, regular updates, and proper site work so the process stays easy to follow.',
+    },
+    {
+        icon: Layers3,
+        title: 'Useful storage',
+        description: 'Smart wardrobes, cabinets, and storage planning that help your home stay neat every day.',
+    },
+]
 
 const Hero = () => {
-    const heroRef = useRef<HTMLDivElement>(null)
-    const contentRef = useRef<HTMLDivElement>(null)
+    const heroRef = useRef<HTMLElement>(null)
+    const prefersReducedMotion = useReducedMotion()
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ['start start', 'end start'],
+    })
 
-    useEffect(() => {
-        const ctx = gsap.context(() => {
-            const tl = gsap.timeline({ defaults: { ease: "power3.out" } })
-
-            gsap.set('.hero-logo', { opacity: 0, y: 20 })
-            gsap.set('.hero-line', { y: 30, opacity: 0 })
-            gsap.set('.hero-subtitle', { opacity: 0, y: 10 })
-            gsap.set('.hero-cta', { opacity: 0, y: 10 })
-
-            tl.to('.hero-logo', {
-                opacity: 1,
-                y: 0,
-                duration: 1,
-            })
-                .to('.hero-line', {
-                    y: 0,
-                    opacity: 1,
-                    duration: 1.2,
-                    stagger: 0.15,
-                }, "-=0.5")
-                .to('.hero-subtitle', {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                }, "-=0.8")
-                .to('.hero-cta', {
-                    opacity: 1,
-                    y: 0,
-                    duration: 0.8,
-                }, "-=0.6")
-
-        }, heroRef)
-
-        return () => ctx.revert()
-    }, [])
+    const imageY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? [0, 0] : [0, -70])
+    const textY = useTransform(scrollYProgress, [0, 1], prefersReducedMotion ? [0, 0] : [0, -30])
 
     const scrollToSection = (id: string) => {
-        triggerHaptic('medium');
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+        document.getElementById(id)?.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' })
     }
 
     return (
-        <section ref={heroRef} className="relative min-h-screen w-full overflow-hidden bg-anthropic-beige flex items-center justify-center pt-20">
-            {/* Subtle Background Grain/Texture is handled by global noise-bg if applied, or we can add a specific one here */}
-
-            {/* Soft Ambient Gradients */}
-            <div className="absolute inset-0 pointer-events-none overflow-hidden">
-                <div className="absolute top-[-20%] right-[-10%] w-[800px] h-[800px] rounded-full bg-gradient-to-br from-anthropic-accent/5 to-transparent blur-3xl opacity-60" />
-                <div className="absolute bottom-[-10%] left-[-10%] w-[600px] h-[600px] rounded-full bg-gradient-to-tr from-anthropic-secondary/5 to-transparent blur-3xl opacity-40" />
+        <section ref={heroRef} className="relative overflow-hidden pb-16 pt-32 md:pb-22 md:pt-40">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-[38rem]">
+                <div className="absolute left-[8%] top-8 h-52 w-52 rounded-full bg-accent/12 blur-3xl" />
+                <div className="absolute right-[10%] top-28 h-64 w-64 rounded-full bg-forest/10 blur-3xl" />
+                <div className="absolute left-1/2 top-1/3 h-48 w-[34rem] -translate-x-1/2 rounded-full bg-white/35 blur-3xl" />
             </div>
 
-            {/* Hanging Images */}
-            <HangingImage
-                src="/assets/IMG-20251203-WA0020.jpg"
-                alt="Signature Console"
-                className="left-[5%] top-[15%]"
-                delay={0.5}
-                angle={2}
-            />
-            <HangingImage
-                src="/assets/IMG-20251203-WA0012.jpg"
-                alt="Botanical Arches"
-                className="right-[5%] top-[20%]"
-                delay={0.8}
-                angle={-3}
-            />
+            <div className="shell relative z-10">
+                <div className="grid items-end gap-14 xl:grid-cols-[1.05fr_0.95fr]">
+                    <motion.div
+                        style={{ y: textY }}
+                        initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                        <span className="section-rule">Home interiors in Hyderabad</span>
+                        <h1 className="text-hero text-balance text-ink">
+                            Homes that feel
+                            <span className="block pl-[0.12em] italic text-accent">beautiful, comfortable, and practical.</span>
+                        </h1>
+                        <p className="mt-7 max-w-2xl text-lg leading-8 text-ink-soft md:text-xl">
+                            IVR Interiors designs and completes home interiors in Hyderabad. We help with planning,
+                            materials, storage, and full execution from start to finish.
+                        </p>
 
-            <div ref={contentRef} className="container mx-auto px-6 relative z-10 text-center flex flex-col items-center">
+                        <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                            <button onClick={() => scrollToSection('projects')} className="btn-primary">
+                                See Our Work
+                                <ArrowRight className="h-4 w-4" />
+                            </button>
+                            <a href="/surfaces" className="btn-secondary">
+                                View Materials
+                                <ArrowUpRight className="h-4 w-4" />
+                            </a>
+                        </div>
 
-                <img
-                    src="/ivr-logo.png"
-                    alt="IVR Interiors Logo"
-                    className="hero-logo w-48 md:w-64 mb-10 opacity-0"
-                />
+                        <div className="mt-10 grid gap-4 md:grid-cols-3">
+                            {metrics.map((metric) => (
+                                <div key={metric.label} className="metric-card">
+                                    <p className="font-display text-4xl leading-none text-ink md:text-[2.8rem]">{metric.value}</p>
+                                    <p className="mt-3 text-sm leading-6 text-ink-soft">{metric.label}</p>
+                                </div>
+                            ))}
+                        </div>
 
-                <h1 className="text-5xl md:text-7xl lg:text-8xl leading-[1.1] font-serif font-medium text-anthropic-text mb-8 tracking-tight">
-                    <span className="hero-line block">Transform your space</span>
-                    <span className="hero-line block italic text-anthropic-accent">into a work of art.</span>
-                </h1>
+                        <div className="mt-8 flex flex-wrap gap-3 text-sm text-ink-soft">
+                            <span className="soft-chip">Residential interiors</span>
+                            <span className="soft-chip">Modular kitchens</span>
+                            <span className="soft-chip">Wardrobes + custom joinery</span>
+                            <span className="soft-chip">Site-managed execution</span>
+                        </div>
+                    </motion.div>
 
-                <div className="hero-subtitle max-w-2xl mx-auto mb-12">
-                    <p className="text-lg md:text-xl text-anthropic-secondary font-sans leading-relaxed text-balance">
-                        Premium modular kitchens, wardrobes & complete interior solutions.
-                        Bringing 15+ years of precision craftsmanship to your home.
-                    </p>
+                    <motion.div
+                        style={{ y: imageY }}
+                        initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+                        className="relative"
+                    >
+                        <div className="absolute -right-3 top-8 hidden h-28 w-28 rounded-full border border-paper/60 bg-white/35 blur-2xl md:block" />
+
+                        <div className="media-frame aspect-[4/4.8] bg-[#d8c9b7] md:aspect-[4/4.4]">
+                            <img
+                                src="/assets/IMG-20251203-WA0011.jpg"
+                                alt="Statement bedroom interior designed by IVR Interiors"
+                                className="h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-x-0 bottom-0 p-5 md:p-7">
+                                <div className="panel-strong max-w-md px-5 py-4">
+                                    <p className="text-caption text-accent">Featured project</p>
+                                    <p className="mt-3 font-display text-[2rem] leading-none text-ink md:text-[2.4rem]">
+                                        Warm colours, soft lighting, and smart storage.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="panel absolute -left-4 bottom-8 hidden max-w-[16rem] px-5 py-5 md:block">
+                            <p className="text-caption text-accent">What clients say</p>
+                            <p className="mt-3 font-display text-3xl leading-none text-ink">"This is exactly what we wanted."</p>
+                            <p className="mt-3 text-sm leading-6 text-ink-soft">
+                                We focus on clear planning and careful finishing so the final result matches what was promised.
+                            </p>
+                        </div>
+
+                        <div className="panel absolute -right-4 top-8 hidden w-[15rem] px-5 py-5 md:block">
+                            <p className="text-caption text-accent">Why clients choose us</p>
+                            <div className="mt-4 space-y-3 text-sm text-ink-soft">
+                                <div className="flex items-center justify-between border-b border-ink/10 pb-3">
+                                    <span>Style</span>
+                                    <span className="text-ink">Modern and practical</span>
+                                </div>
+                                <div className="flex items-center justify-between border-b border-ink/10 pb-3">
+                                    <span>Location</span>
+                                    <span className="text-ink">Hyderabad</span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span>Consultation</span>
+                                    <span className="text-ink">Free site visit</span>
+                                </div>
+                            </div>
+                        </div>
+                    </motion.div>
                 </div>
 
-                <div className="hero-cta flex flex-col md:flex-row gap-5 items-center justify-center">
-                    <button
-                        onClick={() => scrollToSection('projects')}
-                        className="btn-primary rounded-full px-8 py-4 text-sm tracking-wide"
-                        aria-label="View our portfolio"
-                    >
-                        View Portfolio
-                    </button>
-                    <button
-                        onClick={() => scrollToSection('contact')}
-                        className="btn-outline rounded-full px-8 py-4 text-sm tracking-wide border-anthropic-stone"
-                        aria-label="Get in touch with us"
-                    >
-                        Get In Touch
-                    </button>
+                <div className="mt-16 grid gap-4 lg:grid-cols-3">
+                    {pillars.map((pillar, index) => (
+                        <motion.article
+                            key={pillar.title}
+                            initial={prefersReducedMotion ? false : { opacity: 0, y: 22 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: '-80px' }}
+                            transition={{ duration: 0.6, delay: index * 0.1 }}
+                            className="panel px-6 py-6"
+                        >
+                            <div className="flex items-center gap-4">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-accent/10 text-accent">
+                                    <pillar.icon className="h-5 w-5" />
+                                </div>
+                                <div>
+                                    <p className="text-caption text-accent">0{index + 1}</p>
+                                    <h2 className="mt-1 text-title text-ink">{pillar.title}</h2>
+                                </div>
+                            </div>
+                            <p className="mt-4 text-sm leading-7 text-ink-soft md:text-base">{pillar.description}</p>
+                        </motion.article>
+                    ))}
                 </div>
             </div>
-
-            {/* Scroll Indicator */}
-            <button
-                onClick={() => scrollToSection('projects')}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20 text-anthropic-secondary/70 hover:text-anthropic-accent transition-all duration-300 flex flex-col items-center gap-2 group cursor-pointer"
-                aria-label="Scroll down"
-            >
-                <span className="text-[10px] uppercase tracking-[0.4em] font-bold opacity-40 group-hover:opacity-100 transition-opacity">Scroll</span>
-                <ChevronDown size={40} className="animate-pulse-glow group-hover:translate-y-2 transition-transform opacity-60 group-hover:opacity-100" />
-            </button>
         </section>
     )
 }
 
 export default Hero
-

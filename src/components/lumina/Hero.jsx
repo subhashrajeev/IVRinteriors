@@ -1,54 +1,69 @@
-import React from 'react';
+const categoryHighlights = [
+    { label: 'Wood', value: '10+ grains' },
+    { label: 'Stone', value: '10 neutral shades' },
+    { label: 'Metallic', value: 'Accent finishes' },
+]
 
 const Hero = () => {
     const scrollToCatalog = () => {
-        document.getElementById('catalog').scrollIntoView({ behavior: 'smooth' });
-    };
+        document.getElementById('catalog')?.scrollIntoView({ behavior: 'smooth' })
+    }
 
     return (
-        <section className="min-h-[80vh] flex items-center justify-center relative overflow-hidden px-6 pt-32 pb-12 md:px-8">
-            <div className="container mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">
-
-                {/* Text Content */}
-                <div className="bg-transparent z-10">
-                    <h1 className="mb-6 text-[3rem] md:text-[4.5rem] font-medium tracking-tight text-[var(--text-main)] leading-none">
-                        Surfaces for the <br />
-                        <span style={{
-                            fontFamily: 'Source Serif 4',
-                            fontStyle: 'italic',
-                            color: 'var(--accent-primary)'
-                        }}>tactile world</span>.
+        <section className="shell section-padding pt-28">
+            <div className="grid items-center gap-12 xl:grid-cols-[0.95fr_1.05fr]">
+                <div>
+                    <span className="section-rule">Material collection</span>
+                    <h1 className="section-heading text-balance text-ink">
+                        Laminates for
+                        <span className="block italic text-accent">kitchens, wardrobes, and more.</span>
                     </h1>
-                    <p className="text-xl text-[var(--text-muted)] mb-10 leading-relaxed max-w-[90%]">
-                        Curated architectural laminates that define space through texture.
-                        A collection designed for the modern interior.
+                    <p className="mt-6 max-w-xl text-base leading-7 text-ink-soft md:text-lg">
+                        Browse laminate options for kitchens, wardrobes, wall panels, and other interior work.
+                        This page helps you shortlist finishes before talking to our team.
                     </p>
-                    <div className="flex gap-4">
-                        <button
-                            onClick={scrollToCatalog}
-                            className="btn-primary px-10 py-4 text-base"
-                        >
-                            View Collection
+
+                    <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                        <button onClick={scrollToCatalog} className="btn-primary">
+                            View Options
                         </button>
+                        <a href="/#contact" className="btn-secondary">
+                            Talk to Our Team
+                        </a>
+                    </div>
+
+                    <div className="mt-10 grid gap-4 sm:grid-cols-3">
+                        {categoryHighlights.map((item) => (
+                            <div key={item.label} className="metric-card">
+                                <p className="text-caption text-accent">{item.label}</p>
+                                <p className="mt-3 font-display text-[2rem] leading-none text-ink">{item.value}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
-                {/* Hero Image - Refined Integration */}
-                <div className="relative flex justify-center w-full mt-8 md:mt-0">
-                    {/* Subtle background shape behind image */}
-                    <div className="absolute top-[5%] right-[5%] w-[90%] h-[95%] bg-[#EAE8E2] rounded-3xl -rotate-2 -z-10"></div>
+                <div className="relative">
+                    <div className="media-frame aspect-[1.18/1] overflow-hidden bg-[#ddd2c7]">
+                        <img
+                            src="/lumina/Designer_hand_pointing_2k_202601251623.jpeg"
+                            alt="Designer reviewing laminate swatches on a design board"
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
 
-                    <img
-                        src="/lumina/Designer_hand_pointing_2k_202601251623.jpeg"
-                        alt="Designer Hand Pointing"
-                        className="w-full h-auto rounded-2xl shadow-md -rotate-1 border border-black/5"
-                    />
+                    <div className="panel absolute -bottom-5 left-6 max-w-sm px-5 py-5">
+                        <p className="text-caption text-accent">Why this page helps</p>
+                        <p className="mt-3 font-display text-[2rem] leading-none text-ink">
+                            Compare finishes before your first meeting.
+                        </p>
+                        <p className="mt-3 text-sm leading-6 text-ink-soft">
+                            Pick the colours and textures you like, then we can help you use them in your home.
+                        </p>
+                    </div>
                 </div>
-
             </div>
-
         </section>
-    );
-};
+    )
+}
 
-export default Hero;
+export default Hero
