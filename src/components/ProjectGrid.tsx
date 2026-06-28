@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { LazyInViewVideo } from './LazyInViewVideo'
 
 type Category = 'All' | 'Featured' | 'Living' | 'Bedroom' | 'Kitchen'
 type Size = 'feature' | 'wide' | 'standard'
@@ -220,13 +221,16 @@ const ProjectGrid = () => {
                         >
                             <div className={`relative overflow-hidden ${project.size === 'feature' ? 'aspect-[1.12/1]' : 'aspect-[4/4.5]'}`}>
                                 {project.video ? (
-                                    <video autoPlay muted loop playsInline className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]">
-                                        <source src={project.video} type="video/mp4" />
-                                    </video>
+                                    <LazyInViewVideo
+                                        src={project.video}
+                                        className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                                    />
                                 ) : (
                                     <img
                                         src={project.image}
                                         alt={project.title}
+                                        loading="lazy"
+                                        decoding="async"
                                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
                                     />
                                 )}
@@ -288,7 +292,7 @@ const ProjectGrid = () => {
 
                                 <div className="relative bg-ink">
                                     {selectedProject.video ? (
-                                        <video autoPlay muted loop playsInline controls className="h-full min-h-[18rem] w-full object-cover">
+                                        <video autoPlay muted loop playsInline preload="metadata" className="h-full min-h-[18rem] w-full object-cover">
                                             <source src={selectedProject.video} type="video/mp4" />
                                         </video>
                                     ) : (

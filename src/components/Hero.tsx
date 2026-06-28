@@ -25,9 +25,10 @@ const Hero = () => {
                 <motion.div className="absolute inset-0" style={{ scale: imageScale, y: imageY }}>
                     <img
                         src="/assets/IMG-20251203-WA0011.jpg"
-                        alt=""
+                        alt="Bedroom interior designed by IVR Interiors"
                         className="h-full w-full object-cover"
                         fetchPriority="high"
+                        decoding="async"
                     />
                 </motion.div>
 
@@ -90,6 +91,8 @@ const Hero = () => {
                             <img
                                 src="/assets/IMG-20251203-WA0020.jpg"
                                 alt="Living room interior by IVR Interiors"
+                                loading="lazy"
+                                decoding="async"
                                 className="h-full w-full object-cover"
                             />
                         </div>
