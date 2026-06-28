@@ -70,15 +70,15 @@ const projects: Project[] = [
     },
     {
         id: 5,
-        title: 'Miyapur Entertainment Unit',
-        type: 'Living room feature wall',
-        category: 'Living',
+        title: 'Miyapur Kitchen',
+        type: 'Modular kitchen',
+        category: 'Kitchen',
         video: '/assets/VID-20251203-WA0009.mp4',
         size: 'standard',
         location: 'Miyapur',
         year: '2025',
-        summary: 'A TV and display unit designed for everyday use, with lighting that makes evenings feel warm.',
-        details: ['TV feature wall', 'Ambient lighting', 'Display and storage'],
+        summary: 'A modular kitchen with sage-green shutters, marble-look counters, and warm under-cabinet lighting for daily cooking.',
+        details: ['Modular layout', 'LED accent lighting', 'Marble-finish countertop'],
     },
     {
         id: 6,
@@ -194,8 +194,10 @@ const ProjectGrid = () => {
                             <button
                                 key={category}
                                 onClick={() => setActiveCategory(category)}
-                                className={`rounded-full px-4 py-2 text-sm transition-all duration-300 ${
-                                    activeCategory === category ? 'bg-ink text-paper shadow-[0_18px_34px_rgba(23,20,17,0.12)]' : 'bg-paper/75 text-ink-soft'
+                                className={`rounded-full px-4 py-2 text-sm uppercase tracking-wider transition-all duration-300 ${
+                                    activeCategory === category
+                                        ? 'bg-gradient-to-r from-[#ff6b9d] to-[#c084fc] text-white shadow-[0_12px_32px_rgba(255,107,157,0.35)]'
+                                        : 'border border-white/10 bg-white/5 text-ink-soft hover:border-white/20'
                                 }`}
                             >
                                 {category}
@@ -249,7 +251,7 @@ const ProjectGrid = () => {
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between gap-4 px-5 py-4 text-sm text-ink-soft">
+                            <div className="flex items-center justify-between gap-4 px-5 py-4 text-sm text-ink-soft border-t border-white/8">
                                 <span>{project.type}</span>
                                 <span>{project.location} - {project.year}</span>
                             </div>
@@ -315,7 +317,7 @@ const ProjectGrid = () => {
 
                                     <div className="mt-8 space-y-3">
                                         {selectedProject.details.map((detail) => (
-                                            <div key={detail} className="flex items-center gap-3 rounded-full border border-ink/10 bg-paper/70 px-4 py-3 text-sm text-ink-soft">
+                                            <div key={detail} className="flex items-center gap-3 rounded-full border border-white/10 bg-white/5 px-4 py-3 text-sm text-ink-soft">
                                                 <span className="h-2 w-2 rounded-full bg-accent" />
                                                 {detail}
                                             </div>

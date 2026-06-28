@@ -88,8 +88,8 @@ const About = () => {
                             <p className="text-caption text-accent">Meet the team</p>
                             <div className="mt-5 grid gap-4 sm:grid-cols-3">
                                 {team.map((member) => (
-                                    <div key={member.name} className="rounded-[24px] border border-ink/10 bg-paper/70 p-4 text-center">
-                                        <div className="mx-auto h-20 w-20 overflow-hidden rounded-full border border-ink/10">
+                                    <div key={member.name} className="rounded-[18px] border border-white/10 bg-white/5 p-4 text-center">
+                                        <div className="mx-auto h-20 w-20 overflow-hidden rounded-full border border-white/15">
                                             <img src={member.image} alt={member.name} className="h-full w-full object-cover" />
                                         </div>
                                         <p className="mt-4 font-display text-[1.6rem] leading-none text-ink">{member.name}</p>

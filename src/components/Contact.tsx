@@ -285,7 +285,7 @@ const Contact = () => {
                                     <motion.div
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
-                                        className="flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600"
+                                        className="flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300"
                                         aria-live="polite"
                                     >
                                         <XCircle className="h-4 w-4" />

@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
+import FeaturePanels from './components/FeaturePanels'
 import SmoothScroll from './components/SmoothScroll'
 import ScrollProgress from './components/ScrollProgress'
 import FloatingWhatsApp from './components/FloatingWhatsApp'
@@ -16,8 +17,8 @@ const SurfacesPage = lazy(() => import('./pages/SurfacesPage'))
 const SectionLoader = () => (
   <div className="flex min-h-[35vh] items-center justify-center">
     <div className="panel flex items-center gap-3 px-5 py-4 text-sm text-ink-soft">
-      <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-accent" />
-      Curating the next section...
+      <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-neon" />
+      Loading section...
     </div>
   </div>
 )
@@ -42,6 +43,7 @@ const App = () => {
           ) : (
             <>
               <Hero />
+              <FeaturePanels />
               <ProjectGrid />
               <Services />
               <About />

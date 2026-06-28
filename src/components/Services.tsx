@@ -62,7 +62,7 @@ const Services = () => {
 
                         <div className="mt-8 space-y-3">
                             {process.map((step, index) => (
-                                <div key={step} className="flex items-center gap-4 rounded-full border border-ink/10 bg-paper/70 px-4 py-3">
+                                <div key={step} className="flex items-center gap-4 rounded-full border border-white/10 bg-white/5 px-4 py-3">
                                     <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-sm font-semibold text-white">
                                         {index + 1}
                                     </span>
@@ -71,8 +71,8 @@ const Services = () => {
                             ))}
                         </div>
 
-                        <div className="mt-8 rounded-[26px] bg-forest px-5 py-5 text-paper">
-                            <p className="text-caption text-paper/70">What you get</p>
+                        <div className="mt-8 rounded-[20px] border border-white/10 bg-gradient-to-br from-[#ff6b9d]/20 via-[#1a1a28] to-[#0f0f18] px-5 py-5 text-paper">
+                            <p className="text-caption text-neon-soft">What you get</p>
                             <p className="mt-3 font-display text-[2.3rem] leading-none">
                                 A home that looks good and works well every day.
                             </p>
